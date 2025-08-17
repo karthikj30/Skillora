@@ -97,7 +97,20 @@
             <div class="row g-4 wow fadeInUp" data-wow-delay="0.5s ">
 
                 <center>
-                    <form class="shadow p-4" style="max-width: 550px;">
+                    <!-- Django Messages -->
+                    {% if messages %}
+                        <div class="col-12 mb-3">
+                            {% for message in messages %}
+                                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form class="shadow p-4" style="max-width: 550px;" method="POST">
+                        {% csrf_token %}
                         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                             <h1 class="mb-5 bg-white text-center px-3">Signup</h1>
 
@@ -105,20 +118,49 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="username" placeholder="Username">
-                                    <label for="Username">Username</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                                    <label for="username">Username</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" placeholder="Email Address">
+                                    <input type="text" class="form-control" id="first_name" name="first_name" placeholder="First Name" required>
+                                    <label for="first_name">First Name</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Last Name" required>
+                                    <label for="last_name">Last Name</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="email" name="email" placeholder="Email Address" required>
                                     <label for="email">Email Address</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="password" class="form-control" id="password" placeholder="Password">
-                                    <label for="password">Password</label>
+                                    <select class="form-control" id="role" name="role" required>
+                                        <option value="">Select Role</option>
+                                        <option value="student">Student</option>
+                                        <option value="teacher">Teacher</option>
+                                        <option value="company">Company</option>
+                                    </select>
+                                    <label for="role">Select Your Role</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="password1" name="password1" placeholder="Password" required>
+                                    <label for="password1">Password</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <input type="password" class="form-control" id="password2" name="password2" placeholder="Confirm Password" required>
+                                    <label for="password2">Confirm Password</label>
                                 </div>
                             </div>
 

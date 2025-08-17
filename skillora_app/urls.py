@@ -4,6 +4,9 @@ from . import views
 urlpatterns = [
     # Main pages
     path('', views.home, name='home'),
+    path('student/', views.student_home, name='student_home'),
+    path('teacher/', views.teacher_home, name='teacher_home'),
+    path('company/', views.company_home, name='company_home'),
     path('about/', views.about, name='about'),
     path('courses/', views.courses, name='courses'),
     path('course/<int:course_id>/', views.course_detail, name='course_detail'),
@@ -19,4 +22,10 @@ urlpatterns = [
     path('logout/', views.user_logout, name='logout'),
     path('signup/', views.user_signup, name='signup'),
     path('profile/', views.profile, name='profile'),
+    
+    # Teacher specific routes
+    path('teacher/courses/', views.teacher_courses, name='teacher_courses'),
+    path('teacher/students/', views.teacher_students, name='teacher_students'),
+    path('teacher/payments/', views.teacher_payments, name='teacher_payments'),
+    path('teacher/create-course/', views.create_course, name='create_course'),
 ]

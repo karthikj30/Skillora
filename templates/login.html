@@ -95,7 +95,20 @@
           
             <div class="row g-4 wow fadeInUp" data-wow-delay="0.5s ">
                 <center>
-                    <form class="shadow p-4" style="max-width: 550px;">
+                    <!-- Django Messages -->
+                    {% if messages %}
+                        <div class="col-12 mb-3">
+                            {% for message in messages %}
+                                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                                    {{ message }}
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <form class="shadow p-4" style="max-width: 550px;" method="POST">
+                        {% csrf_token %}
                         <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                             <h1 class="mb-5 bg-white text-center px-3">Login</h1>
             
@@ -103,13 +116,13 @@
                         <div class="row g-3">
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" placeholder="Email Address">
-                                    <label for="email">Email Address</label>
+                                    <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                                    <label for="username">Username</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="password" class="form-control" id="password" placeholder="Password">
+                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                                     <label for="password">Password</label>
                                 </div>
                             </div>
