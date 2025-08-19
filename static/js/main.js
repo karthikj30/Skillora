@@ -16,7 +16,7 @@
     new WOW().init();
 
 
-    // Sticky Navbar
+    // Sticky Navbar + subtle reveal
     $(window).scroll(function () {
         if ($(this).scrollTop() > 300) {
             $('.sticky-top').css('top', '0px');
@@ -24,6 +24,15 @@
             $('.sticky-top').css('top', '-100px');
         }
     });
+
+    // Animate slim progress bars when visible
+    const animateSlimBars = function() {
+        $(".progress.slim[data-progress]").each(function(){
+            const pct = $(this).data('progress');
+            $(this).find('.progress-bar').css('width', pct + '%');
+        });
+    };
+    setTimeout(animateSlimBars, 200);
 
 
     // Dropdown on mouse hover

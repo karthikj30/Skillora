@@ -102,6 +102,7 @@ class Student(models.Model):
     enrollment_date = models.DateTimeField(auto_now_add=True)
     courses_enrolled = models.ManyToManyField(Course, blank=True)
     progress = models.JSONField(default=dict, blank=True)  # Store course progress
+    saved_courses = models.ManyToManyField(Course, blank=True, related_name='saved_by_students')
     
     def __str__(self):
         return f"Student: {self.user.username}"
@@ -124,10 +125,12 @@ class Teacher(models.Model):
     
     def update_stats(self):
         """Update teacher statistics"""
-        self.total_courses = self.courses_created.count()
-        # Calculate total students across all courses
+        # Compute stats based on courses where this teacher is the instructor
+        instructor_courses = Course.objects.filter(instructor=self)
+        self.total_courses = instructor_courses.count()
+        # Calculate total students across all instructor courses
         total_students = 0
-        for course in self.courses_created.all():
+        for course in instructor_courses:
             total_students += course.students_enrolled.count() if hasattr(course, 'students_enrolled') else 0
         self.total_students = total_students
         self.save()

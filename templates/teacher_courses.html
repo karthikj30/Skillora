@@ -136,7 +136,7 @@
                     <div class="card bg-primary text-white">
                         <div class="card-body text-center">
                             <i class="fas fa-book fa-2x mb-2"></i>
-                            <h4>{{ courses.count }}</h4>
+                            <h4>{{ courses|length }}</h4>
                             <p class="mb-0">Total Courses</p>
                         </div>
                     </div>
@@ -175,7 +175,7 @@
                 {% if courses %}
                     {% for course in courses %}
                     <div class="col-lg-6 col-xl-4">
-                        <div class="card course-card h-100">
+                        <div class="card course-card card-hover h-100">
                             <div class="card-img-top position-relative">
                                 {% if course.image %}
                                     <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 200px; object-fit: cover;">
@@ -207,8 +207,8 @@
                                 
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <span class="h5 text-primary mb-0">${{ course.price }}</span>
-                                    <span class="badge bg-success stats-badge">
-                                        <i class="fas fa-users me-1"></i>{{ course.students_enrolled.count }} students
+                                    <span class="badge badge-soft stats-badge">
+                                        <i class="fas fa-users me-1"></i>{{ course.students_enrolled.all|length }} students
                                     </span>
                                 </div>
                                 

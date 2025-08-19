@@ -100,7 +100,10 @@
         <div class="container">
             <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
                 <h1 class="mb-5 bg-white text-center px-3" style="color: #fb873f;">Apply As Instructor</h1>
-                
+                {% if user.is_authenticated and user_role == 'teacher' %}
+                    <p class="mb-3">You are signed in as <strong>{{ request.user.username }}</strong>. Start creating courses below.</p>
+                    <a href="{% url 'create_course' %}" class="btn btn-primary">Create a Course</a>
+                {% endif %}
             </div>
             <div class="row g-4">
                 <div class="col-lg-12 wow fadeInUp" data-wow-delay="0.1s">
@@ -363,6 +366,43 @@
 
 
     <!-- Instructor Page End -->
+
+    <!-- Instructors List Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center px-3">Instructors</h6>
+                <h1 class="mb-5" style="color: #fb873f;">Meet Our Instructors</h1>
+            </div>
+            <div class="row g-4">
+                {% if instructors %}
+                    {% for inst in instructors %}
+                    <div class="col-lg-3 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="team-item bg-light">
+                            <div class="overflow-hidden text-center pt-4">
+                                {% if inst.image %}
+                                    <img class="img-fluid" src="{{ inst.image.url }}" alt="{{ inst.name }}" style="height: 260px; width: 200px; object-fit: cover;">
+                                {% else %}
+                                    <img class="img-fluid" src="{% static 'img/instructor-1.jpg' %}" alt="{{ inst.name }}" style="height: 260px; width: 200px; object-fit: cover;">
+                                {% endif %}
+                            </div>
+                            <div class="text-center p-3">
+                                <h6 class="mb-1">{{ inst.name }}</h6>
+                                <small class="d-block">{{ inst.specialization }}</small>
+                                <small class="text-muted">{{ inst.experience_years }} years</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="text-muted">No instructors available.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Instructors List End -->
 
 
     <!-- Footer Start -->

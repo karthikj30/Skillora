@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+import json
 from .models import Course, Instructor, Job, Testimonial, TeamMember, Contact, UserProfile, Student, Teacher, Company
 from .forms import ContactForm, UserRegistrationForm, StudentProfileForm, TeacherProfileForm, CompanyProfileForm, UserProfileForm
 
@@ -15,43 +16,142 @@ def home(request):
             elif profile.role == 'company':
                 return redirect('company_home')
             else:
-                # Student or default - show regular home page
-                return student_home(request)
+                # Student - go to student dashboard
+                return redirect('student_home')
         except UserProfile.DoesNotExist:
-            # Fallback to student home if no profile exists
-            return student_home(request)
+            # No profile - show public landing
+            courses = Course.objects.all()[:6]
+            testimonials = Testimonial.objects.all()[:4]
+            context = {
+                'courses': courses,
+                'testimonials': testimonials,
+                'user_role': None,
+            }
+            return render(request, 'index.html', context)
     else:
-        # Not logged in - show regular home page
-        return student_home(request)
+        # Not logged in - show public landing
+        courses = Course.objects.all()[:6]
+        testimonials = Testimonial.objects.all()[:4]
+        context = {
+            'courses': courses,
+            'testimonials': testimonials,
+            'user_role': None,
+        }
+        return render(request, 'index.html', context)
 
 def student_home(request):
-    """Student home page view - same as current home page"""
-    courses = Course.objects.all()[:6]  # Get latest 6 courses
-    testimonials = Testimonial.objects.all()[:4]  # Get latest 4 testimonials
+    """Student dashboard view. Falls back to landing when not authenticated."""
+    if not request.user.is_authenticated:
+        courses = Course.objects.all()[:6]
+        testimonials = Testimonial.objects.all()[:4]
+        context = {
+            'courses': courses,
+            'testimonials': testimonials,
+            'user_role': None,
+        }
+        return render(request, 'index.html', context)
+
+    # Ensure the user has a student profile
+    try:
+        profile = UserProfile.objects.get(user=request.user)
+    except UserProfile.DoesNotExist:
+        profile = UserProfile.objects.create(user=request.user, role='student')
+
+    if profile.role != 'student':
+        return redirect('home')
+
+    try:
+        student = Student.objects.get(user=request.user)
+    except Student.DoesNotExist:
+        student = Student.objects.create(user=request.user)
+
+    enrolled_courses = student.courses_enrolled.all()
+    # Compute progress stats from JSON field mapping course_id -> percent
+    progress_map = student.progress or {}
+    progress_values = list(progress_map.values()) if isinstance(progress_map, dict) else []
+    avg_progress = round(sum(progress_values) / len(progress_values), 2) if progress_values else 0.0
+    completed_courses = 0
+    if isinstance(progress_map, dict) and progress_map:
+        completed_courses = sum(1 for v in progress_map.values() if float(v) >= 100)
+
+    recommended_courses = Course.objects.exclude(id__in=enrolled_courses.values_list('id', flat=True))[:6]
+
+    # Build completed courses list (>=100%)
+    completed_course_ids = []
+    if isinstance(progress_map, dict):
+        for cid, pct in progress_map.items():
+            try:
+                if float(pct) >= 100:
+                    completed_course_ids.append(int(cid))
+            except Exception:
+                continue
+    completed_courses_qs = Course.objects.filter(id__in=completed_course_ids)
+
     context = {
-        'courses': courses,
-        'testimonials': testimonials,
-        'user_role': 'student' if request.user.is_authenticated else None,
+        'user_role': 'student',
+        'student': student,
+        'enrolled_courses': enrolled_courses,
+        'recommended_courses': recommended_courses,
+        'total_enrolled': enrolled_courses.count(),
+        'completed_courses': completed_courses,
+        'avg_progress': avg_progress,
+        'progress_map': progress_map,
+        'progress_map_json': json.dumps(progress_map or {}),
+        'completed_courses_list': completed_courses_qs,
     }
-    return render(request, 'index.html', context)
+    return render(request, 'student_home.html', context)
+
+@login_required
+def student_toggle_save(request, course_id):
+    try:
+        course = Course.objects.get(id=course_id)
+        student = Student.objects.get(user=request.user)
+        if course in student.saved_courses.all():
+            student.saved_courses.remove(course)
+            messages.success(request, 'Removed from saved courses.')
+        else:
+            student.saved_courses.add(course)
+            messages.success(request, 'Saved course!')
+    except (Course.DoesNotExist, Student.DoesNotExist):
+        messages.error(request, 'Unable to update saved courses.')
+    return redirect('student_home')
+
+@login_required
+def student_certificate(request, course_id):
+    try:
+        course = Course.objects.get(id=course_id)
+        student = Student.objects.get(user=request.user)
+    except (Course.DoesNotExist, Student.DoesNotExist):
+        messages.error(request, 'Certificate not available.')
+        return redirect('student_home')
+
+    progress_map = student.progress or {}
+    pct = 0
+    try:
+        pct = float(progress_map.get(str(course.id), progress_map.get(course.id, 0)))
+    except Exception:
+        pct = 0
+    if pct < 100:
+        messages.error(request, 'Complete the course to view certificate.')
+        return redirect('student_home')
+
+    context = {
+        'student': student,
+        'course': course,
+        'issued_on': student.enrollment_date.date(),
+    }
+    return render(request, 'student_certificate.html', context)
 
 @login_required
 def teacher_home(request):
     """Teacher home page view"""
     try:
         teacher = Teacher.objects.get(user=request.user)
-        courses_created = teacher.courses_created.all()
+        courses_created = Course.objects.filter(instructor=teacher).order_by('-created_at')
         teacher.update_stats() # Call to update teacher stats
-        sample_courses = [ # Sample data for dashboard display
-            {'title': 'React for Beginners', 'students': 6},
-            {'title': 'JavaScript Essentials', 'students': 3},
-            {'title': 'CSS for Styling', 'students': 2},
-            {'title': 'Node.js Fundamentals', 'students': 3},
-        ]
         context = {
             'teacher': teacher,
             'courses_created': courses_created,
-            'sample_courses': sample_courses,
             'user_role': 'teacher',
         }
         return render(request, 'teacher_home.html', context)
@@ -64,7 +164,8 @@ def teacher_courses(request):
     """Teacher courses management view"""
     try:
         teacher = Teacher.objects.get(user=request.user)
-        courses = teacher.courses_created.all()
+        courses = Course.objects.filter(instructor=teacher).order_by('-created_at')
+        teacher.update_stats()
         context = {
             'teacher': teacher,
             'courses': courses,
@@ -80,10 +181,10 @@ def teacher_students(request):
     """Teacher students view"""
     try:
         teacher = Teacher.objects.get(user=request.user)
+        teacher.update_stats()
         # Get all students enrolled in teacher's courses
-        students = set()
-        for course in teacher.courses_created.all():
-            students.update(course.students_enrolled.all())
+        teacher_courses = Course.objects.filter(instructor=teacher)
+        students = Student.objects.filter(enrolled_courses__in=teacher_courses).distinct()
         
         context = {
             'teacher': teacher,
@@ -142,6 +243,8 @@ def create_course(request):
                     level=level,
                     instructor=teacher
                 )
+                # Update teacher stats after course creation
+                teacher.update_stats()
                 messages.success(request, 'Course created successfully!')
                 return redirect('teacher_courses')
             except Exception as e:
@@ -368,6 +471,17 @@ def profile(request):
         if profile.role == 'student':
             role_profile = Student.objects.get(user=request.user)
             profile_form = UserProfileForm(instance=profile)  # Use UserProfileForm for students
+            # Compute completed courses for certificate section
+            progress_map = role_profile.progress or {}
+            completed_ids = []
+            if isinstance(progress_map, dict):
+                for cid, pct in progress_map.items():
+                    try:
+                        if float(pct) >= 100:
+                            completed_ids.append(int(cid))
+                    except Exception:
+                        continue
+            student_completed_courses = Course.objects.filter(id__in=completed_ids)
         elif profile.role == 'teacher':
             role_profile = Teacher.objects.get(user=request.user)
             profile_form = TeacherProfileForm(instance=role_profile)
@@ -377,6 +491,7 @@ def profile(request):
         else:
             role_profile = None
             profile_form = None
+            student_completed_courses = None
             
     except (UserProfile.DoesNotExist, Student.DoesNotExist, Teacher.DoesNotExist, Company.DoesNotExist):
         profile = UserProfile.objects.create(user=request.user, role='student')
@@ -393,5 +508,6 @@ def profile(request):
         'profile': profile,
         'role_profile': role_profile,
         'profile_form': profile_form,
+        'student_completed_courses': student_completed_courses if profile.role == 'student' else None,
     }
     return render(request, 'profile.html', context)

@@ -4,11 +4,15 @@
     --light: #F0FBFC;
     --light: #f0e4de;
     --dark: #181d38;
+    --surface: #ffffff;
+    --shadow: 0 8px 20px rgba(0,0,0,.08);
 }
 
 .btn {
     background-color: #fb873f;
     border: none;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
 }
 
 .btn a {
@@ -20,6 +24,7 @@
     background: transparent;
     color: var(--primary) !important;
     border: 1px solid var(--primary);
+    transform: translateY(-1px);
 }
 
 .btn:hover a {
@@ -50,6 +55,8 @@
     left: 45px;
     bottom: 45px;
     z-index: 99;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
 }
 
 
@@ -155,6 +162,7 @@
 .navbar-light.sticky-top {
     top: -100px;
     transition: .5s;
+    box-shadow: var(--shadow);
 }
 
 .navbar-toggler-icon {
@@ -284,6 +292,57 @@
 .header-carousel .owl-nav .owl-next:hover {
     background: var(--primary);
     border-color: var(--primary);
+}
+
+/* Generic card hover and glass styles */
+.card, .course-item, .service-item, .dashboard-card, .stats-card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+}
+
+.card-hover:hover, .course-item:hover, .dashboard-card:hover {
+    transform: translateY(-4px);
+    transition: transform .25s ease, box-shadow .25s ease;
+    box-shadow: 0 14px 32px rgba(0,0,0,.12);
+}
+
+.glass-card {
+    background: rgba(255,255,255,.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,.5);
+}
+
+/* Tabs */
+.nav-tabs .nav-link {
+    border: none;
+    color: #6c757d;
+    font-weight: 600;
+}
+.nav-tabs .nav-link.active {
+    color: var(--primary);
+    border-bottom: 3px solid var(--primary);
+}
+
+/* Slim progress bars for course cards */
+.progress.slim {
+    height: 8px;
+    background: #f1f3f5;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.progress.slim .progress-bar {
+    height: 100%;
+    width: 0;
+    background: linear-gradient(90deg, #fb873f, #f7b267);
+    transition: width .8s ease;
+}
+
+/* Status badges */
+.badge-soft {
+    background: #fff7f0;
+    color: var(--primary);
+    border: 1px solid #ffe0c7;
 }
 
 .page-header {

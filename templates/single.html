@@ -118,12 +118,12 @@
             <div class="container py-5">
                 <div class="row justify-content-center">
                     <div class="col-lg-10 text-center">
-                        <h1 class="display-3 text-white animated slideInDown">Course</h1>
+                        <h1 class="display-3 text-white animated slideInDown">{{ course.title }}</h1>
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb justify-content-center">
                                 <li class="breadcrumb-item"><a class="text-white" href="{% url 'home' %}">Home</a></li>
-                                <li class="breadcrumb-item"><a class="text-white" href="{% url 'courses' %}">Course</a></li>
-                                <li class="breadcrumb-item text-white active" aria-current="page">HTML Course for Beginners</li>
+                                <li class="breadcrumb-item"><a class="text-white" href="{% url 'courses' %}">Courses</a></li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">{{ course.title }}</li>
                             </ol>
                         </nav>
                     </div>
@@ -143,24 +143,24 @@
                     <div class="row g-5 justify-content-center">
 
                         <div class="col-lg-12 wow fadeInUp" data-wow-delay="0.3s">
-                            <h2>HTML Course for Beginners</h2>
-                            <p>Start at the beginning by learning HTML basics — an important foundation for building and editing web pages.
-
-                            </p>
+                            <h2>{{ course.title }}</h2>
+                            <p>{{ course.description }}</p>
                             <div class="d-flex">
                                 <small><i class="fa fa-star text-warning"></i>
                                     4.6</small>
                                 <small style="margin-left: 15px;"><i class="fa fa-user-graduate"></i> 5.8L+
                                     Learners
                                 </small>
-                                <small style="margin-left: 15px;"><i class="fa fa-user"></i>Beginner</small>
-                                <small style="margin-left: 15px;"><i class="fa fa-clock me-2"></i> 2.0 Hrs</small>
+                                <small style="margin-left: 15px;"><i class="fa fa-user"></i>{{ course.level }}</small>
+                                <small style="margin-left: 15px;"><i class="fa fa-clock me-2"></i> {{ course.duration }}</small>
 
                             </div>
                             <div class="image-div text-left mt-3">
-                                <img src="{% static 'img/testimonial-2.jpg' %}" alt=""
-                                    style="height: 40px; width: 40px; border-radius: 50%;">
-                                <span style="margin-left: 10px;"><b>Instructor Name</b> - Zoe Bachman</span>
+                                {% if course.instructor and course.instructor.user %}
+                                    <img src="{% static 'img/instructor-1.jpg' %}" alt=""
+                                        style="height: 40px; width: 40px; border-radius: 50%;">
+                                    <span style="margin-left: 10px;"><b>Instructor</b> - {{ course.instructor.user.get_full_name|default:course.instructor.user.username }}</span>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -309,14 +309,15 @@
             <div class="col-lg-3 col-md-6 shadow wow fadeInUp" data-wow-delay="0.3s">
 
                 <div class="image text-center">
-                    <img class="img-fluid mt-2" src="{% static 'img/course-1.jpg' %}" alt="" height="200px" width="500px">
+                    {% if course.image %}
+                        <img class="img-fluid mt-2" src="{{ course.image.url }}" alt="{{ course.title }}" height="200px" width="500px" style="object-fit: cover;">
+                    {% else %}
+                        <img class="img-fluid mt-2" src="{% static 'img/course-1.jpg' %}" alt="{{ course.title }}" height="200px" width="500px">
+                    {% endif %}
                 </div>
                 
-                <h4 class="mt-2 p-2">Free <small></small></h4>
-                
-                <h4 class="mt-2 p-2">$
-                    <small><del>20</del></small>
-                </h4>
+                <h4 class="mt-2 p-2">{% if course.price|floatformat:0 == '0' %}Free{% else %}Paid{% endif %} <small></small></h4>
+                <h4 class="mt-2 p-2">₹ {{ course.price }}</h4>
                 
 
                 <div class="buttons">
@@ -330,7 +331,7 @@
                 <div class="list mt-2">
                     <div class="list1 d-flex justify-content-between pt-2 border-bottom">
                         <p><i class="fa fa-clock"></i> Duration</p>
-                        <p>2.0 Hrs</p>
+                        <p>{{ course.duration }}</p>
                     </div>
                     <div class="list2 d-flex justify-content-between pt-2 border-bottom">
                         <p><i class="fa fa-book"></i> Lectures</p>
@@ -338,7 +339,7 @@
                     </div>
                     <div class="list3 d-flex justify-content-between pt-2 border-bottom">
                         <p><i class="fa fa-bolt"></i> Enrolled</p>
-                        <p>240 students</p>
+                        <p>{{ course.students_enrolled.count }} students</p>
                     </div>
                     <div class="list4 d-flex justify-content-between pt-2 border-bottom">
                         <p><i class="fa fa-google-translate"></i> Language</p>
@@ -346,7 +347,7 @@
                     </div>
                     <div class="list5 d-flex justify-content-between pt-2 border-bottom">
                         <p><i class="fa fa-list"></i> Skill Level</p>
-                        <p>Beginner</p>
+                        <p>{{ course.level }}</p>
                     </div>
                     <div class="list6 d-flex justify-content-between pt-2 border-bottom">
                         <p><i class="fa fa-list"></i> Deadline</p>

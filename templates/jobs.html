@@ -142,179 +142,36 @@
 
             <!-- Job Listings -->
             <div class="row g-4">
+                {% if jobs %}
+                    {% for job in jobs %}
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s">
                     <div class="course-item bg-light shadow h-100">
                         <div class="p-4">
                             <div class="d-flex justify-content-between align-items-start mb-3">
                                 <div>
-                                    <h4 class="mb-1">Senior Data Analyst</h4>
-                                    <p class="text-muted mb-2">TechCorp Inc.</p>
+                                        <h4 class="mb-1">{{ job.title }}</h4>
+                                        <p class="text-muted mb-2">{{ job.company }}</p>
                                 </div>
-                                <span class="badge bg-success">Full-time</span>
+                                    <span class="badge bg-primary">{{ job.job_type }}</span>
                             </div>
-                            <div class="mb-3">
-                                <span class="badge bg-light text-dark me-2">Python</span>
-                                <span class="badge bg-light text-dark me-2">SQL</span>
-                                <span class="badge bg-light text-dark me-2">Tableau</span>
-                                <span class="badge bg-light text-dark">Machine Learning</span>
-                            </div>
-                            <p class="mb-3">We're looking for a Senior Data Analyst to join our growing team. You'll be responsible for analyzing complex data sets and providing insights to drive business decisions.</p>
+                                <p class="mb-3">{{ job.description|truncatewords:35 }}</p>
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
-                                    <strong class="text-primary">₹85,000 - ₹110,000</strong>
+                                        <strong class="text-primary">{{ job.salary_range }}</strong>
                                     <br>
-                                    <small class="text-muted">📍 Remote • ⏰ Full-time</small>
+                                        <small class="text-muted">📍 {{ job.location }} • 🗓 {{ job.posted_date|date:"M d, Y" }}</small>
                                 </div>
-                                <button class="btn btn-primary">Apply Now</button>
+                                    <a class="btn btn-primary" href="#">Apply Now</a>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
-                    <div class="course-item bg-light shadow h-100">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h4 class="mb-1">Cloud Solutions Architect</h4>
-                                    <p class="text-muted mb-2">CloudTech Solutions</p>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12 text-center">
+                        <p class="text-muted">No jobs found{% if selected_job_type %} for "{{ selected_job_type }}"{% endif %}.</p>
                                 </div>
-                                <span class="badge bg-info">Full-time</span>
-                            </div>
-                            <div class="mb-3">
-                                <span class="badge bg-light text-dark me-2">AWS</span>
-                                <span class="badge bg-light text-dark me-2">Azure</span>
-                                <span class="badge bg-light text-dark me-2">Docker</span>
-                                <span class="badge bg-light text-dark">Kubernetes</span>
-                            </div>
-                            <p class="mb-3">Join our team as a Cloud Solutions Architect and help design scalable cloud infrastructure solutions for enterprise clients.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong class="text-primary">₹120,000 - ₹150,000</strong>
-                                    <br>
-                                    <small class="text-muted">📍 Hybrid • ⏰ Full-time</small>
-                                </div>
-                                <button class="btn btn-primary">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.5s">
-                    <div class="course-item bg-light shadow h-100">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h4 class="mb-1">Frontend Developer</h4>
-                                    <p class="text-muted mb-2">InnovateSoft</p>
-                                </div>
-                                <span class="badge bg-warning">Full-time</span>
-                            </div>
-                            <div class="mb-3">
-                                <span class="badge bg-light text-dark me-2">React</span>
-                                <span class="badge bg-light text-dark me-2">JavaScript</span>
-                                <span class="badge bg-light text-dark me-2">TypeScript</span>
-                                <span class="badge bg-light text-dark">CSS</span>
-                            </div>
-                            <p class="mb-3">We're seeking a talented Frontend Developer to create beautiful, responsive user interfaces and enhance user experience.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong class="text-primary">₹75,000 - ₹95,000</strong>
-                                    <br>
-                                    <small class="text-muted">📍 Remote • ⏰ Full-time</small>
-                                </div>
-                                <button class="btn btn-primary">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.7s">
-                    <div class="course-item bg-light shadow h-100">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h4 class="mb-1">Digital Marketing Specialist</h4>
-                                    <p class="text-muted mb-2">Growth Marketing Co.</p>
-                                </div>
-                                <span class="badge bg-success">Full-time</span>
-                            </div>
-                            <div class="mb-3">
-                                <span class="badge bg-light text-dark me-2">SEO</span>
-                                <span class="badge bg-light text-dark me-2">Google Ads</span>
-                                <span class="badge bg-light text-dark me-2">Social Media</span>
-                                <span class="badge bg-light text-dark">Analytics</span>
-                            </div>
-                            <p class="mb-3">Join our marketing team to develop and execute digital marketing strategies that drive growth and engagement.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong class="text-primary">₹60,000 - ₹80,000</strong>
-                                    <br>
-                                    <small class="text-muted">📍 On-site • ⏰ Full-time</small>
-                                </div>
-                                <button class="btn btn-primary">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.9s">
-                    <div class="course-item bg-light shadow h-100">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h4 class="mb-1">DevOps Engineer</h4>
-                                    <p class="text-muted mb-2">TechFlow Systems</p>
-                                </div>
-                                <span class="badge bg-info">Full-time</span>
-                            </div>
-                            <div class="mb-3">
-                                <span class="badge bg-light text-dark me-2">Jenkins</span>
-                                <span class="badge bg-light text-dark me-2">Docker</span>
-                                <span class="badge bg-light text-dark me-2">Kubernetes</span>
-                                <span class="badge bg-light text-dark">Linux</span>
-                            </div>
-                            <p class="mb-3">We're looking for a DevOps Engineer to streamline our development and deployment processes.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong class="text-primary">₹90,000 - ₹120,000</strong>
-                                    <br>
-                                    <small class="text-muted">📍 Hybrid • ⏰ Full-time</small>
-                                </div>
-                                <button class="btn btn-primary">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-6 wow fadeInUp" data-wow-delay="1.1s">
-                    <div class="course-item bg-light shadow h-100">
-                        <div class="p-4">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div>
-                                    <h4 class="mb-1">UI/UX Designer</h4>
-                                    <p class="text-muted mb-2">Design Studio Pro</p>
-                                </div>
-                                <span class="badge bg-warning">Full-time</span>
-                            </div>
-                            <div class="mb-3">
-                                <span class="badge bg-light text-dark me-2">Figma</span>
-                                <span class="badge bg-light text-dark me-2">Adobe XD</span>
-                                <span class="badge bg-light text-dark me-2">Sketch</span>
-                                <span class="badge bg-light text-dark">Prototyping</span>
-                            </div>
-                            <p class="mb-3">Create beautiful and intuitive user experiences. Join our design team to craft amazing digital products.</p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong class="text-primary">₹70,000 - ₹90,000</strong>
-                                    <br>
-                                    <small class="text-muted">📍 Remote • ⏰ Full-time</small>
-                                </div>
-                                <button class="btn btn-primary">Apply Now</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endif %}
             </div>
 
             <!-- Pagination -->

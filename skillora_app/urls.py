@@ -5,6 +5,9 @@ urlpatterns = [
     # Main pages
     path('', views.home, name='home'),
     path('student/', views.student_home, name='student_home'),
+    # Student actions
+    path('student/toggle-save/<int:course_id>/', views.student_toggle_save, name='student_toggle_save'),
+    path('student/certificate/<int:course_id>/', views.student_certificate, name='student_certificate'),
     path('teacher/', views.teacher_home, name='teacher_home'),
     path('company/', views.company_home, name='company_home'),
     path('about/', views.about, name='about'),

@@ -108,46 +108,26 @@
                 <p class="mb-5">Can Secret Coder courses help your career? Our learners tell us how.</p>
             </div>
             <div class="owl-carousel testimonial-carousel position-relative">
-                <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-1.jpg' %}"
-                        style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Sarah K.</h5>
-                    <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">I stumbled upon Secret Coder while searching for free courses. The quality
-                            surpassed my expectations! The content was rich, and the instructors were knowledgeable.
-                            I've already recommended it to my friends.</p>
+                {% if testimonials %}
+                    {% for t in testimonials %}
+                    <div class="testimonial-item text-center">
+                        {% if t.image %}
+                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ t.image.url }}" style="width: 80px; height: 80px;">
+                        {% else %}
+                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
+                        {% endif %}
+                        <h5 class="mb-0">{{ t.name }}</h5>
+                        <small class="text-muted">{{ t.position }}{% if t.company %} at {{ t.company }}{% endif %}</small>
+                        <div class="testimonial-text bg-light text-center p-4">
+                            <p class="mb-0">{{ t.content }}</p>
+                        </div>
                     </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-2.jpg' %}"
-                        style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">John M.</h5>
-                    <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">As a working professional, finding free courses that match my schedule was a
-                            game-changer. The courses are engaging, and the community aspect adds immense value. Highly
-                            recommended!</p>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center">
+                        <p class="text-muted">No testimonials available.</p>
                     </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-3.jpg' %}"
-                        style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">David P.</h5>
-                    <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">I've taken multiple courses here, and each one has been fantastic. The
-                            platform's design makes learning enjoyable, and the knowledge gained is invaluable. It's
-                            hard to believe these courses are free!</p>
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-4.jpg' %}"
-                        style="width: 80px; height: 80px;">
-                    <h5 class="mb-0">Lisa S.</h5>
-                    <div class="testimonial-text bg-light text-center p-4">
-                        <p class="mb-0">I'm amazed at the quality of the free courses available. The instructors are
-                            experts in their fields, and the interactive lessons make learning a breeze. Thank you for
-                            this opportunity!</p>
-                    </div>
-                </div>
+                {% endif %}
             </div>
         </div>
     </div>

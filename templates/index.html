@@ -368,30 +368,22 @@
                 <h1 class="mb-5" style="color: #fb873f;">Success Stories</h1>
             </div>
             <div class="owl-carousel testimonial-carousel position-relative">
-                <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
-                    <div class="testimonial-text rounded p-4 m-4">
-                        <p class="mb-4">"Skillora helped me transition from retail to data analysis. The courses were practical and the job matching system found me a great position within 3 months."</p>
-                        <h5 class="mb-1">Sarah Johnson</h5>
-                        <span class="fst-italic">Data Analyst at TechCorp</span>
+                {% if testimonials %}
+                    {% for t in testimonials %}
+                    <div class="testimonial-item text-center">
+                        {% if t.image %}
+                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ t.image.url }}" style="width: 80px; height: 80px;">
+                        {% else %}
+                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
+                        {% endif %}
+                        <div class="testimonial-text rounded p-4 m-4">
+                            <p class="mb-4">{{ t.content }}</p>
+                            <h5 class="mb-1">{{ t.name }}</h5>
+                            <span class="fst-italic">{{ t.position }}{% if t.company %} at {{ t.company }}{% endif %}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-2.jpg' %}" style="width: 80px; height: 80px;">
-                    <div class="testimonial-text rounded p-4 m-4">
-                        <p class="mb-4">"The cloud computing courses were exactly what I needed. I got certified and landed a job as a Cloud Engineer with a 40% salary increase."</p>
-                        <h5 class="mb-1">Mike Chen</h5>
-                        <span class="fst-italic">Cloud Engineer at CloudTech</span>
-                    </div>
-                </div>
-                <div class="testimonial-item text-center">
-                    <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-3.jpg' %}" style="width: 80px; height: 80px;">
-                    <div class="testimonial-text rounded p-4 m-4">
-                        <p class="mb-4">"Skillora's programming courses gave me the skills I needed to become a software developer. The job matching feature connected me with the perfect opportunity."</p>
-                        <h5 class="mb-1">Emily Rodriguez</h5>
-                        <span class="fst-italic">Software Developer at InnovateSoft</span>
-                    </div>
-                </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
     </div>

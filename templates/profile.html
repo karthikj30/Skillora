@@ -35,14 +35,7 @@
 </head>
 
 <body>
-    <!-- Spinner Start -->
-    <div id="spinner"
-        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="sr-only">Loading...</span>
-        </div>
-    </div>
-    <!-- Spinner End -->
+    <!-- Spinner removed -->
 
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
@@ -70,12 +63,12 @@
     <!-- Navbar End -->
 
     <!-- Header Start -->
-    <div class="container-fluid bg-primary py-5 mb-5 hero-header">
-        <div class="container py-5">
+    <div class="container-fluid bg-primary py-3 mb-3 hero-header">
+        <div class="container py-3">
             <div class="row justify-content-center py-5">
-                <div class="col-lg-10 pt-lg-5 mt-lg-5 text-center">
+                <div class="col-lg-10 text-center">
                     <h1 class="display-3 text-white animated slideInDown">Profile Settings</h1>
-                    <p class="fs-4 text-white animated slideInDown">Update your {{ profile.role|title }} profile information</p>
+                    <p class="fs-5 text-white animated slideInDown mb-0">Update your {{ profile.role|title }} profile information</p>
                 </div>
             </div>
         </div>
@@ -83,7 +76,7 @@
     <!-- Header End -->
 
     <!-- Profile Start -->
-    <div class="container-xxl py-5">
+    <div class="container-xxl py-5" style="position: relative; z-index: 2;">
         <div class="container">
             <div class="row g-4">
                 <!-- Profile Form -->
@@ -246,9 +239,49 @@
                                         <li><strong>Courses Enrolled:</strong> {{ role_profile.courses_enrolled.count }}</li>
                                     </ul>
                                 </div>
+                                {% if student_completed_courses %}
+                                <div class="mt-3">
+                                    <h6 class="mb-2">Certificates</h6>
+                                    <div class="list-group small">
+                                        {% for c in student_completed_courses %}
+                                            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="{% url 'student_certificate' c.id %}">
+                                                <span>{{ c.title|truncatechars:32 }}</span>
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                        {% empty %}
+                                            <div class="text-muted">No certificates yet.</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
                             {% endif %}
                         </div>
                     </div>
+
+                    {% if profile.role == 'student' %}
+                    <!-- Certificates Panel -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Certificates</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="list-group small">
+                                {% if student_completed_courses %}
+                                    {% for c in student_completed_courses %}
+                                        <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="{% url 'student_certificate' c.id %}">
+                                            <span>{{ c.title|truncatechars:40 }}</span>
+                                            <i class="fas fa-external-link-alt"></i>
+                                        </a>
+                                    {% empty %}
+                                        <div class="text-muted">No certificates yet.</div>
+                                    {% endfor %}
+                                {% else %}
+                                    <div class="text-muted">No certificates yet.</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
 
                     <!-- Quick Actions -->
                     <div class="card mt-4">

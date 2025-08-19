@@ -144,38 +144,35 @@
                 </div>
 
                 <div class="col-lg-6 col-md-12 wow fadeInUp" data-wow-delay="0.5s">
-                    <form>
+                    <form method="POST" action="{% url 'contact' %}">
+                        {% csrf_token %}
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="name" required placeholder="Your Name">
-                                    <label for="name">Your Name</label>
+                                    {{ form.name }}
+                                    <label for="id_name">Your Name</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="email" required
-                                        placeholder="Your Email">
-                                    <label for="email">Your Email</label>
+                                    {{ form.email }}
+                                    <label for="id_email">Your Email</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="subject" required placeholder="Subject">
-                                    <label for="subject">Subject</label>
+                                    {{ form.subject }}
+                                    <label for="id_subject">Subject</label>
                                 </div>
                             </div>
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea class="form-control" required placeholder="Leave a message here"
-                                        id="message" style="height: 150px"></textarea>
-                                    <label for="message">Message</label>
+                                    {{ form.message }}
+                                    <label for="id_message">Message</label>
                                 </div>
                             </div>
                             <div class="col-12">
-                                <button class="btn btn-primary w-100 py-3" type="submit"><a
-                                        href="mailto:keertidvcorai@gmail.com" class="text-decoration-none"
-                                        style="color: #fff;" type="submit">Send Message</a></button>
+                                <button class="btn btn-primary w-100 py-3" type="submit">Send Message</button>
                             </div>
                         </div>
                     </form>
