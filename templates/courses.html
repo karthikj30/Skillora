@@ -10,7 +10,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="{% static 'img/icon.png' %}" rel="icon">
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -49,7 +49,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icon.png' %}" alt="" height="50px">Skill<span
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span
                     style="color: #fb873f;">ora</span></p>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
@@ -110,7 +110,7 @@
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
 
-                        <img src="{% static 'img/cat1.png' %}" class="img-fluid" alt="categories"></i>
+                        <img src="{% static 'img/categories/cat1.png' %}" class="img-fluid" alt="categories"></i>
 
                         <h5 class="my-2">
                             <a href="#" class="text-center">Microsoft Excel</a>
@@ -120,7 +120,7 @@
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
 
-                        <img src="{% static 'img/cat2.png' %}" class="img-fluid" alt="categories"></i>
+                        <img src="{% static 'img/categories/cat2.png' %}" class="img-fluid" alt="categories"></i>
 
                         <h5 class="my-2">
                             <a href="#" class="text-center"> AWS</a>
@@ -130,7 +130,7 @@
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
 
-                        <img src="{% static 'img/cat3.png' %}" class="img-fluid" alt="categories"></i>
+                        <img src="{% static 'img/categories/cat3.png' %}" class="img-fluid" alt="categories"></i>
 
                         <h5 class="my-2">
                             <a href="#" class="text-center">Python</a>
@@ -140,7 +140,7 @@
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
 
-                        <img src="{% static 'img/cat4.png' %}" class="img-fluid" alt="categories"></i>
+                        <img src="{% static 'img/categories/cat4.png' %}" class="img-fluid" alt="categories"></i>
 
                         <h5 class="my-2">
                             <a href="#" class="text-center">Java</a>
@@ -150,7 +150,7 @@
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
 
-                        <img src="{% static 'img/cat5.png' %}" class="img-fluid" alt="categories"></i>
+                        <img src="{% static 'img/categories/cat5.png' %}" class="img-fluid" alt="categories"></i>
 
                         <h5 class="my-2">
                             <a href="#" class="text-center">Web Design</a>
@@ -160,7 +160,7 @@
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
 
-                        <img src="{% static 'img/cat6.png' %}" class="img-fluid" alt="categories"></i>
+                        <img src="{% static 'img/categories/cat6.png' %}" class="img-fluid" alt="categories"></i>
 
                         <h5 class="my-2">
                             <a href="#" class="text-center">Web Development</a>
@@ -170,7 +170,7 @@
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
 
-                        <img src="{% static 'img/cat7.png' %}" class="img-fluid" alt="categories"></i>
+                        <img src="{% static 'img/categories/cat7.png' %}" class="img-fluid" alt="categories"></i>
 
                         <h5 class="my-2">
                             <a href="#" class="text-center">MySQL</a>
@@ -180,7 +180,7 @@
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
 
-                        <img src="{% static 'img/cat8.png' %}" class="img-fluid" alt="categories"></i>
+                        <img src="{% static 'img/categories/cat8.png' %}" class="img-fluid" alt="categories"></i>
 
                         <h5 class="my-2">
                             <a href="#" class="text-center">UI/UX Design</a>
@@ -210,7 +210,7 @@
                                 {% if course.image %}
                                     <img class="img-fluid" src="{{ course.image.url }}" alt="{{ course.title }}">
                                 {% else %}
-                                    <img class="img-fluid" src="{% static 'img/course-1.jpg' %}" alt="{{ course.title }}">
+                                    <img class="img-fluid" src="{% static 'img/courses/course-1.jpg' %}" alt="{{ course.title }}">
                                 {% endif %}
                                 <div style="position:absolute;top: 15px;left: 16px; font-size:12px; border-radius:3px; background-color:{% if course.price|floatformat:0 == '0' %}#fb873f{% else %}#0ed44c{% endif %};"
                                     class="px-2 py-1 fw-bold text-uppercase">{% if course.price|floatformat:0 == '0' %}FREE{% else %}PAID{% endif %}</div>

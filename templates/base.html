@@ -13,7 +13,7 @@
     <meta content="Skillora - Learn in-demand skills and get matched with relevant job opportunities" name="description">
 
     <!-- Favicon -->
-    <link href="{% static 'img/icon.png' %}" rel="icon">
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,7 +52,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icon.png' %}" alt="" height="50px">Skill<span
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span
                     style="color: #fb873f;">ora</span></p>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -63,6 +63,7 @@
                 <a href="{% url 'home' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}">Home</a>
                 <a href="{% url 'about' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}">About</a>
                 <a href="{% url 'courses' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'courses' %}active{% endif %}">Skills</a>
+                <a href="{% url 'internships_list' %}" class="nav-item nav-link {% if 'internship' in request.resolver_match.url_name %}active{% endif %}">Internships</a>
                 <a href="{% url 'jobs' %}" class="nav-item nav-link {% if request.resolver_match.url_name == 'jobs' %}active{% endif %}">Jobs</a>
                 <div class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>

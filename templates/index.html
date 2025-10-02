@@ -13,7 +13,7 @@
     <meta content="Skillora - Learn in-demand skills and get matched with relevant job opportunities" name="description">
 
     <!-- Favicon -->
-    <link href="{% static 'img/icon.png' %}" rel="icon">
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -52,7 +52,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icon.png' %}" alt="" height="50px">Skill<span
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span
                     style="color: #fb873f;">ora</span></p>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -93,7 +93,7 @@
         <div class="position-relative" style="height: 100vh; overflow: hidden;">
             <!-- Video Background -->
             <video autoplay loop id="myVideo" style="position: absolute; right: 0; bottom: 0; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -1; object-fit: cover;">
-                <source src="{% static 'img/Skillora2.mp4' %}" type="video/mp4">
+                <source src="{% static 'media/videos/Skillora2.mp4' %}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
             
@@ -223,7 +223,7 @@
                 </div>
                 <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
                     <div class="position-relative h-100">
-                        <img class="img-fluid position-absolute w-100 h-100" src="{% static 'img/banner-1.jpg' %}" alt=""
+                        <img class="img-fluid position-absolute w-100 h-100" src="{% static 'img/banners/banner-1.jpg' %}" alt=""
                             style="object-fit: cover;">
                     </div>
                 </div>
@@ -242,7 +242,7 @@
             <div class="row g-2 m-2">
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
-                        <img src="{% static 'img/cat1.png' %}" class="img-fluid" alt="categories">
+                        <img src="{% static 'img/categories/cat1.png' %}" class="img-fluid" alt="categories">
                         <h5 class="my-2">
                             <a href="{% url 'courses' %}" class="text-center">Data Analysis</a>
                         </h5>
@@ -251,7 +251,7 @@
                 </div>
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
-                        <img src="{% static 'img/cat2.png' %}" class="img-fluid" alt="categories">
+                        <img src="{% static 'img/categories/cat2.png' %}" class="img-fluid" alt="categories">
                         <h5 class="my-2">
                             <a href="{% url 'courses' %}" class="text-center">Cloud Computing</a>
                         </h5>
@@ -260,7 +260,7 @@
                 </div>
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
-                        <img src="{% static 'img/cat3.png' %}" class="img-fluid" alt="categories">
+                        <img src="{% static 'img/categories/cat3.png' %}" class="img-fluid" alt="categories">
                         <h5 class="my-2">
                             <a href="courses.html" class="text-center">Programming</a>
                         </h5>
@@ -269,7 +269,7 @@
                 </div>
                 <div class="col-lg-3 col-md-6  text-center">
                     <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
-                        <img src="{% static 'img/cat4.png' %}" class="img-fluid" alt="categories">
+                        <img src="{% static 'img/categories/cat4.png' %}" class="img-fluid" alt="categories">
                         <h5 class="my-2">
                             <a href="courses.html" class="text-center">Digital Marketing</a>
                         </h5>
@@ -374,7 +374,7 @@
                         {% if t.image %}
                             <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ t.image.url }}" style="width: 80px; height: 80px;">
                         {% else %}
-                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
+                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonials/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
                         {% endif %}
                         <div class="testimonial-text rounded p-4 m-4">
                             <p class="mb-4">{{ t.content }}</p>

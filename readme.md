@@ -17,42 +17,47 @@ A comprehensive learning platform that connects skill development with job oppor
 
 ```
 Skillora/
-├── manage.py                 # Django management script
-├── requirements.txt          # Python dependencies
-├── README.md                # Project documentation
+├── assets/                   # Development assets
+│   ├── media/videos/        # Source video files
+│   └── scss/                # SCSS source files
+├── docs/                    # Project documentation
+├── scripts/                 # Utility scripts
+│   └── setup.py            # Automated setup script
 ├── skillora_project/        # Django project settings
-│   ├── __init__.py
 │   ├── settings.py          # Django settings
 │   ├── urls.py              # Main URL configuration
 │   ├── wsgi.py              # WSGI configuration
 │   └── asgi.py              # ASGI configuration
 ├── skillora_app/            # Django application
-│   ├── __init__.py
+│   ├── management/          # Custom Django commands
+│   ├── migrations/          # Database migrations
+│   ├── templatetags/        # Custom template tags
 │   ├── admin.py             # Admin interface configuration
 │   ├── apps.py              # App configuration
 │   ├── forms.py             # Django forms
 │   ├── models.py            # Database models
 │   ├── urls.py              # App URL patterns
 │   └── views.py             # View functions
+├── static/                  # Static files (organized)
+│   ├── css/                 # Compiled CSS files
+│   ├── js/                  # JavaScript files
+│   ├── lib/                 # Third-party libraries
+│   ├── img/                 # Images (organized by category)
+│   │   ├── banners/         # Banner and carousel images
+│   │   ├── categories/      # Category images
+│   │   ├── courses/         # Course images
+│   │   ├── icons/           # Icon images
+│   │   ├── team/            # Team member images
+│   │   └── testimonials/    # Testimonial images
+│   └── media/videos/        # Video files
 ├── templates/               # HTML templates
-│   ├── base.html            # Base template
-│   ├── index.html           # Home page
-│   ├── about.html           # About page
-│   ├── courses.html         # Courses listing
-│   ├── single.html          # Course detail
-│   ├── jobs.html            # Job listings
-│   ├── instructor.html      # Instructor profiles
-│   ├── team.html            # Team page
-│   ├── testimonial.html     # Testimonials
-│   ├── contact.html         # Contact page
-│   ├── login.html           # Login page
-│   └── signup.html          # Registration page
-└── static/                  # Static files
-    ├── css/                 # Stylesheets
-    ├── js/                  # JavaScript files
-    ├── img/                 # Images
-    └── lib/                 # Third-party libraries
+├── manage.py               # Django management script
+├── requirements.txt        # Python dependencies
+├── README.md              # Project documentation
+└── .gitignore             # Git ignore rules
 ```
+
+> 📁 **New Organized Structure**: The project has been reorganized for better maintainability with clear separation between development assets, static files, and organized media categories.
 
 ## Database Models
 
@@ -71,7 +76,20 @@ Skillora/
 - Python 3.8 or higher
 - pip (Python package installer)
 
-### Step 1: Clone or Download the Project
+### Quick Setup (Recommended)
+
+```bash
+# Clone the project
+git clone <repository-url>
+cd Skillora
+
+# Run the automated setup script
+python scripts/setup.py
+```
+
+### Manual Setup
+
+#### Step 1: Clone or Download the Project
 
 ```bash
 # If using git
@@ -81,7 +99,7 @@ cd Skillora
 # Or download and extract the project files
 ```
 
-### Step 2: Create Virtual Environment (Recommended)
+#### Step 2: Create Virtual Environment (Recommended)
 
 ```bash
 # Create virtual environment
@@ -95,13 +113,13 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### Step 3: Install Dependencies
+#### Step 3: Install Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 4: Database Setup
+#### Step 4: Database Setup
 
 ```bash
 # Create database migrations
@@ -111,13 +129,13 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-### Step 5: Create Superuser (Admin)
+#### Step 5: Create Superuser (Admin)
 
 ```bash
 python manage.py createsuperuser
 ```
 
-### Step 6: Run Development Server
+#### Step 6: Run Development Server
 
 ```bash
 python manage.py runserver

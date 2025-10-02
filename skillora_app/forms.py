@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Contact, Student, Teacher, Company, UserProfile
+from .models import (Contact, Student, Teacher, Company, UserProfile, Course, 
+                     CourseMaterial, Assignment, CourseAnnouncement, AssignmentSubmission)
+import re
 
 class ContactForm(forms.ModelForm):
     class Meta:
@@ -80,3 +82,164 @@ class CompanyProfileForm(forms.ModelForm):
             'website': forms.URLInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
         }
+
+# Teacher Classroom Forms
+
+class CourseMaterialForm(forms.ModelForm):
+    youtube_url = forms.URLField(
+        required=False,
+        widget=forms.URLInput(attrs={
+            'class': 'form-control',
+            'placeholder': 'https://www.youtube.com/watch?v=...'
+        }),
+        help_text='Paste YouTube video URL here'
+    )
+    
+    class Meta:
+        model = CourseMaterial
+        fields = ['title', 'description', 'material_type', 'content', 'file', 'url']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Material title'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Description (optional)'
+            }),
+            'material_type': forms.Select(attrs={'class': 'form-control'}),
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 8,
+                'placeholder': 'Enter your notes/content here...'
+            }),
+            'file': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': '.pdf,.doc,.docx,.ppt,.pptx,.mp4,.avi,.mov,.wmv'
+            }),
+            'url': forms.URLInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'External link URL'
+            }),
+        }
+    
+    def clean_youtube_url(self):
+        youtube_url = self.cleaned_data.get('youtube_url')
+        if youtube_url:
+            # Extract YouTube video ID from URL
+            youtube_regex = r'(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})'
+            match = re.search(youtube_regex, youtube_url)
+            if match:
+                return match.group(1)
+            else:
+                raise forms.ValidationError('Please enter a valid YouTube URL')
+        return youtube_url
+    
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        youtube_url = self.cleaned_data.get('youtube_url')
+        
+        if youtube_url and instance.material_type == 'video':
+            # Extract video ID and set it
+            youtube_regex = r'(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})'
+            match = re.search(youtube_regex, youtube_url)
+            if match:
+                instance.youtube_video_id = match.group(1)
+                instance.url = youtube_url
+        
+        if commit:
+            instance.save()
+        return instance
+
+class AssignmentForm(forms.ModelForm):
+    class Meta:
+        model = Assignment
+        fields = ['title', 'description', 'assignment_type', 'due_date', 'max_points', 
+                 'allow_late_submission', 'attachment']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Assignment title'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Assignment instructions and description...'
+            }),
+            'assignment_type': forms.Select(attrs={'class': 'form-control'}),
+            'due_date': forms.DateTimeInput(attrs={
+                'class': 'form-control',
+                'type': 'datetime-local'
+            }),
+            'max_points': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '1',
+                'value': '100'
+            }),
+            'allow_late_submission': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+            'attachment': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': '.pdf,.doc,.docx,.ppt,.pptx,.zip,.rar'
+            }),
+        }
+
+class CourseAnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = CourseAnnouncement
+        fields = ['title', 'content', 'is_important']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Announcement title'
+            }),
+            'content': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Announcement content...'
+            }),
+            'is_important': forms.CheckboxInput(attrs={
+                'class': 'form-check-input'
+            }),
+        }
+
+class AssignmentSubmissionForm(forms.ModelForm):
+    class Meta:
+        model = AssignmentSubmission
+        fields = ['submission_text', 'submission_file']
+        widgets = {
+            'submission_text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 8,
+                'placeholder': 'Enter your submission text here...'
+            }),
+            'submission_file': forms.FileInput(attrs={
+                'class': 'form-control',
+                'accept': '.pdf,.doc,.docx,.ppt,.pptx,.zip,.rar,.txt'
+            }),
+        }
+
+class GradeSubmissionForm(forms.ModelForm):
+    class Meta:
+        model = AssignmentSubmission
+        fields = ['points_earned', 'feedback']
+        widgets = {
+            'points_earned': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': '0'
+            }),
+            'feedback': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 4,
+                'placeholder': 'Feedback for the student...'
+            }),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        assignment = kwargs.pop('assignment', None)
+        super().__init__(*args, **kwargs)
+        if assignment:
+            self.fields['points_earned'].widget.attrs['max'] = assignment.max_points
+            self.fields['points_earned'].help_text = f'Maximum points: {assignment.max_points}'

@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Apply for {{ internship.title }} - Skillora{% endblock %}
+
+{% block content %}
+<!-- Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">Apply for Internship</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'internships_list' %}">Internships</a></li>
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'internship_detail' internship.id %}">{{ internship.title }}</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Apply</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Application Form Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Internship Summary -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">{{ internship.title }}</h5>
+                        <small>{{ internship.company.company_name }} - {{ internship.location }}</small>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <p><strong>Type:</strong> {{ internship.get_internship_type_display }}</p>
+                                <p><strong>Duration:</strong> {{ internship.duration_months }} months</p>
+                            </div>
+                            <div class="col-md-6">
+                                {% if internship.stipend_min %}
+                                <p><strong>Stipend:</strong> ₹{{ internship.stipend_min }}{% if internship.stipend_max %} - ₹{{ internship.stipend_max }}{% endif %}/month</p>
+                                {% endif %}
+                                <p><strong>Deadline:</strong> {{ internship.application_deadline|date:"M d, Y H:i" }}</p>
+                            </div>
+                        </div>
+                        {% if internship.has_placement_potential %}
+                        <div class="alert alert-info">
+                            <i class="fa fa-briefcase me-2"></i>This internship has placement potential with {{ internship.placement_conversion_rate }}% conversion rate.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Application Form -->
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Application Form</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <!-- Cover Letter -->
+                            <div class="mb-4">
+                                <label for="cover_letter" class="form-label">Cover Letter *</label>
+                                <textarea class="form-control" id="cover_letter" name="cover_letter" rows="8" 
+                                          placeholder="Write a compelling cover letter explaining why you're interested in this internship and how your skills align with the requirements..." required></textarea>
+                                <small class="text-muted">Tip: Mention specific skills from the requirements and explain your motivation for applying.</small>
+                            </div>
+                            
+                            <!-- Additional Documents -->
+                            <div class="mb-4">
+                                <label for="additional_documents" class="form-label">Additional Documents (Optional)</label>
+                                <input type="file" class="form-control" id="additional_documents" name="additional_documents" 
+                                       accept=".pdf,.doc,.docx,.txt">
+                                <small class="text-muted">Upload resume, portfolio, or other relevant documents (PDF, DOC, DOCX, TXT - Max 10MB)</small>
+                            </div>
+                            
+                            <!-- Required Skills Check -->
+                            <div class="mb-4">
+                                <h6>Required Skills for this Internship:</h6>
+                                <div class="mb-3">
+                                    {% for skill in internship.get_required_skills_list %}
+                                    <span class="badge bg-secondary me-1 mb-1">{{ skill }}</span>
+                                    {% endfor %}
+                                </div>
+                                <div class="alert alert-warning">
+                                    <i class="fa fa-exclamation-triangle me-2"></i>
+                                    <strong>Important:</strong> Make sure to highlight your experience with these skills in your cover letter.
+                                </div>
+                            </div>
+                            
+                            <!-- Application Guidelines -->
+                            <div class="mb-4">
+                                <div class="alert alert-info">
+                                    <h6><i class="fa fa-info-circle me-2"></i>Application Process:</h6>
+                                    <ol class="mb-0">
+                                        <li>Submit your application with a detailed cover letter</li>
+                                        <li>Your application will be reviewed by your assigned mentor</li>
+                                        <li>If approved by mentor, it will be forwarded to the company</li>
+                                        <li>Company will review and may schedule an interview</li>
+                                        <li>Final selection will be communicated via email</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            
+                            <!-- Terms and Conditions -->
+                            <div class="mb-4">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="terms_accepted" required>
+                                    <label class="form-check-label" for="terms_accepted">
+                                        I agree to the terms and conditions and confirm that all information provided is accurate *
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Submit Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'internship_detail' internship.id %}" class="btn btn-outline-secondary">
+                                    <i class="fa fa-arrow-left me-2"></i>Back to Details
+                                </a>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-paper-plane me-2"></i>Submit Application
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Application Tips -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h6 class="mb-0"><i class="fa fa-lightbulb me-2"></i>Application Tips</h6>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-unstyled mb-0">
+                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Tailor your cover letter to the specific role</li>
+                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Highlight relevant skills and experience</li>
+                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Show enthusiasm for the company and role</li>
+                            <li class="mb-2"><i class="fa fa-check text-success me-2"></i>Proofread for grammar and spelling</li>
+                            <li class="mb-0"><i class="fa fa-check text-success me-2"></i>Keep it concise but comprehensive</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Deadline Reminder -->
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h6 class="mb-0"><i class="fa fa-clock me-2"></i>Application Deadline</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center">
+                            <h5 class="text-danger">{{ internship.application_deadline|date:"M d, Y" }}</h5>
+                            <p class="mb-0">{{ internship.application_deadline|timeuntil }} remaining</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Application Form End -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Character counter for cover letter
+    const coverLetter = document.getElementById('cover_letter');
+    const charCount = document.createElement('small');
+    charCount.className = 'text-muted float-end';
+    coverLetter.parentNode.appendChild(charCount);
+    
+    function updateCharCount() {
+        const count = coverLetter.value.length;
+        charCount.textContent = `${count} characters`;
+        
+        if (count < 200) {
+            charCount.className = 'text-danger float-end';
+        } else if (count < 500) {
+            charCount.className = 'text-warning float-end';
+        } else {
+            charCount.className = 'text-success float-end';
+        }
+    }
+    
+    coverLetter.addEventListener('input', updateCharCount);
+    updateCharCount();
+    
+    // File size validation
+    document.getElementById('additional_documents').addEventListener('change', function() {
+        const file = this.files[0];
+        if (file && file.size > 10 * 1024 * 1024) { // 10MB
+            alert('File size must be less than 10MB');
+            this.value = '';
+        }
+    });
+});
+</script>
+{% endblock %}

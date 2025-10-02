@@ -10,7 +10,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="{% static 'img/icon.png' %}" rel="icon">
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,7 +50,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icon.png' %}" alt="" height="50px">Skill<span
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span
                     style="color: #fb873f;">ora</span></p>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
@@ -114,7 +114,7 @@
                         {% if t.image %}
                             <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ t.image.url }}" style="width: 80px; height: 80px;">
                         {% else %}
-                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
+                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonials/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
                         {% endif %}
                         <h5 class="mb-0">{{ t.name }}</h5>
                         <small class="text-muted">{{ t.position }}{% if t.company %} at {{ t.company }}{% endif %}</small>

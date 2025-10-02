@@ -1,0 +1,262 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Mentor Dashboard - Skillora{% endblock %}
+
+{% block content %}
+<!-- Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">Mentor Dashboard</h1>
+                <p class="fs-5 text-white mb-4 pb-2">{{ mentor.designation }}, {{ mentor.department }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Dashboard Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <!-- Statistics Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-lg-4 col-sm-6">
+                <div class="card bg-warning text-white">
+                    <div class="card-body text-center">
+                        <i class="fa fa-clock fa-3x mb-3"></i>
+                        <h3>{{ pending_count }}</h3>
+                        <p class="mb-0">Pending Approvals</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="card bg-success text-white">
+                    <div class="card-body text-center">
+                        <i class="fa fa-check-circle fa-3x mb-3"></i>
+                        <h3>{{ approved_count }}</h3>
+                        <p class="mb-0">Approved Applications</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-sm-6">
+                <div class="card bg-info text-white">
+                    <div class="card-body text-center">
+                        <i class="fa fa-users fa-3x mb-3"></i>
+                        <h3>{{ total_mentees }}</h3>
+                        <p class="mb-0">Total Mentees</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Pending Approvals -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0">
+                            <i class="fa fa-clock me-2"></i>Pending Approvals ({{ pending_count }})
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        {% if pending_approvals %}
+                        {% for application in pending_approvals %}
+                        <div class="card mb-3 border-warning">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-8">
+                                        <h6 class="card-title mb-1">{{ application.internship.title }}</h6>
+                                        <p class="card-subtitle text-muted mb-2">{{ application.internship.company.company_name }}</p>
+                                        <div class="mb-2">
+                                            <strong>Student:</strong> {{ application.student.user.get_full_name|default:application.student.user.username }}
+                                            <br><small class="text-muted">{{ application.student.user.email }}</small>
+                                        </div>
+                                        <div class="mb-2">
+                                            <small class="text-muted">
+                                                <i class="fa fa-calendar me-1"></i>Applied: {{ application.applied_at|date:"M d, Y H:i" }}
+                                                <i class="fa fa-clock ms-3 me-1"></i>Deadline: {{ application.internship.application_deadline|date:"M d, Y" }}
+                                            </small>
+                                        </div>
+                                        <div class="mb-2">
+                                            <small class="text-info">
+                                                <i class="fa fa-map-marker-alt me-1"></i>{{ application.internship.location }}
+                                                <i class="fa fa-calendar-alt ms-3 me-1"></i>{{ application.internship.duration_months }} months
+                                            </small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 text-end">
+                                        <a href="{% url 'mentor_approve_application' application.id %}" class="btn btn-primary btn-sm">
+                                            <i class="fa fa-eye me-1"></i>Review & Approve
+                                        </a>
+                                        <div class="mt-2">
+                                            <span class="badge bg-warning">{{ application.get_status_display }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Cover Letter Preview -->
+                                <div class="mt-3">
+                                    <h6>Cover Letter:</h6>
+                                    <p class="text-muted small">{{ application.cover_letter|truncatewords:30 }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% else %}
+                        <div class="text-center py-5">
+                            <i class="fa fa-check-circle fa-3x text-success mb-3"></i>
+                            <h5>All Caught Up!</h5>
+                            <p class="text-muted">No pending approvals at the moment.</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mentor Profile & Recent Activity -->
+            <div class="col-lg-4">
+                <!-- Mentor Profile -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h5 class="mb-0">
+                            <i class="fa fa-user me-2"></i>Mentor Profile
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="text-center mb-3">
+                            <i class="fa fa-user-circle fa-4x text-primary mb-2"></i>
+                            <h6>{{ mentor.user.get_full_name|default:mentor.user.username }}</h6>
+                            <small class="text-muted">{{ mentor.designation }}</small>
+                        </div>
+                        <hr>
+                        <div class="mb-2">
+                            <strong>Department:</strong> {{ mentor.department }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>Specialization:</strong> {{ mentor.specialization }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>Experience:</strong> {{ mentor.experience_years }} years
+                        </div>
+                        <div class="mb-2">
+                            <strong>Max Mentees:</strong> {{ mentor.max_mentees }}
+                        </div>
+                        <div class="mb-2">
+                            <strong>Current Mentees:</strong> {{ total_mentees }}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="mb-0">
+                            <i class="fa fa-chart-bar me-2"></i>Quick Stats
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center mb-3">
+                            <div class="col-6 border-end">
+                                <h4 class="text-warning">{{ pending_count }}</h4>
+                                <small class="text-muted">Pending</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-success">{{ approved_count }}</h4>
+                                <small class="text-muted">Approved</small>
+                            </div>
+                        </div>
+                        <div class="progress mb-2">
+                            <div class="progress-bar bg-success" role="progressbar" 
+                                 style="width: {% if total_mentees > 0 %}{{ approved_count|div:total_mentees|mul:100 }}{% else %}0{% endif %}%">
+                            </div>
+                        </div>
+                        <small class="text-muted">Approval Rate</small>
+                        
+                        <hr>
+                        
+                        <div class="text-center">
+                            <h5 class="text-primary">{{ total_mentees }}</h5>
+                            <small class="text-muted">Total Mentees</small>
+                        </div>
+                        
+                        {% if mentor.max_mentees > total_mentees %}
+                        <div class="mt-3 text-center">
+                            <small class="text-success">
+                                <i class="fa fa-check-circle me-1"></i>
+                                {{ mentor.max_mentees|sub:total_mentees }} more mentees can be assigned
+                            </small>
+                        </div>
+                        {% else %}
+                        <div class="mt-3 text-center">
+                            <small class="text-warning">
+                                <i class="fa fa-exclamation-triangle me-1"></i>
+                                Maximum mentee capacity reached
+                            </small>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Approved Applications -->
+        {% if approved_applications %}
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fa fa-check-circle me-2"></i>Recently Approved Applications
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Student</th>
+                                        <th>Internship</th>
+                                        <th>Company</th>
+                                        <th>Status</th>
+                                        <th>Approved Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for application in approved_applications|slice:":10" %}
+                                    <tr>
+                                        <td>
+                                            <div>
+                                                <strong>{{ application.student.user.get_full_name|default:application.student.user.username }}</strong>
+                                                <br><small class="text-muted">{{ application.student.user.email }}</small>
+                                            </div>
+                                        </td>
+                                        <td>{{ application.internship.title }}</td>
+                                        <td>{{ application.internship.company.company_name }}</td>
+                                        <td>
+                                            <span class="badge 
+                                                {% if application.status == 'mentor_approved' %}bg-success
+                                                {% elif application.status == 'shortlisted' %}bg-info
+                                                {% elif application.status == 'interview_scheduled' %}bg-warning
+                                                {% elif application.status == 'selected' %}bg-primary
+                                                {% else %}bg-secondary
+                                                {% endif %}">
+                                                {{ application.get_status_display }}
+                                            </span>
+                                        </td>
+                                        <td>{{ application.mentor_approval_date|date:"M d, Y" }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- Dashboard End -->
+{% endblock %}

@@ -31,4 +31,29 @@ urlpatterns = [
     path('teacher/students/', views.teacher_students, name='teacher_students'),
     path('teacher/payments/', views.teacher_payments, name='teacher_payments'),
     path('teacher/create-course/', views.create_course, name='create_course'),
+    
+    # Teacher Classroom Routes
+    path('teacher/course/<int:course_id>/', views.teacher_course_detail, name='teacher_course_detail'),
+    path('teacher/course/<int:course_id>/add-material/', views.add_course_material, name='add_course_material'),
+    path('teacher/course/<int:course_id>/add-assignment/', views.add_assignment, name='add_assignment'),
+    path('teacher/course/<int:course_id>/add-announcement/', views.add_announcement, name='add_announcement'),
+    path('teacher/course/<int:course_id>/student-progress/', views.teacher_student_progress, name='teacher_student_progress'),
+    path('teacher/assignment/<int:assignment_id>/submissions/', views.view_assignment_submissions, name='view_assignment_submissions'),
+    path('teacher/submission/<int:submission_id>/grade/', views.grade_submission, name='grade_submission'),
+    
+    # Internship/Placement System Routes
+    path('internships/', views.internships_list, name='internships_list'),
+    path('internships/<int:internship_id>/', views.internship_detail, name='internship_detail'),
+    path('internships/<int:internship_id>/apply/', views.apply_internship, name='apply_internship'),
+    path('student/applications/', views.student_applications, name='student_applications'),
+    path('student/placement-profile/', views.student_placement_profile, name='student_placement_profile'),
+    
+    # Placement Cell Routes
+    path('placement-cell/', views.placement_cell_home, name='placement_cell_home'),
+    path('placement-cell/internships/', views.placement_cell_internships, name='placement_cell_internships'),
+    path('placement-cell/create-internship/', views.create_internship, name='create_internship'),
+    
+    # Mentor Routes
+    path('mentor/', views.mentor_home, name='mentor_home'),
+    path('mentor/approve/<int:application_id>/', views.mentor_approve_application, name='mentor_approve_application'),
 ]

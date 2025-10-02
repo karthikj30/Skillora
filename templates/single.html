@@ -13,7 +13,7 @@
     <meta content="" name="description">
 
     <!-- Favicon -->
-    <link href="{% static 'img/icon.png' %}" rel="icon">
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
 
     <!-- Google Web Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -80,7 +80,7 @@
     <!-- Navbar Start -->
     <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
         <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
-            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icon.png' %}" alt="" height="50px">Skill<span
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span
                     style="color: #fb873f;">ora</span></p>
         </a>
         <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
@@ -263,7 +263,7 @@
                             <div class="image-div text-left mt-4">
                                 <div class="row">
                                     <div class="col-lg-3 col-md-6">
-                                        <img src="{% static 'img/testimonial-2.jpg' %}" alt=""
+                                        <img src="{% static 'img/testimonials/testimonial-2.jpg' %}" alt=""
                                             style="height: 150px; width: 150px; border-radius: 50%;">
                                     </div>
                                     <div class="col-lg-9 col-md-6 mt-2">
@@ -312,7 +312,7 @@
                     {% if course.image %}
                         <img class="img-fluid mt-2" src="{{ course.image.url }}" alt="{{ course.title }}" height="200px" width="500px" style="object-fit: cover;">
                     {% else %}
-                        <img class="img-fluid mt-2" src="{% static 'img/course-1.jpg' %}" alt="{{ course.title }}" height="200px" width="500px">
+                        <img class="img-fluid mt-2" src="{% static 'img/courses/course-1.jpg' %}" alt="{{ course.title }}" height="200px" width="500px">
                     {% endif %}
                 </div>
                 
