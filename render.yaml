@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: skillora
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn skillora_project.wsgi:application"
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.4
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        sync: false
+    autoDeploy: false
+  
+  - type: pserv
+    name: skillora-db
+    env: postgresql
+    plan: free
+    ipAllowList: []
