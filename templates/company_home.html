@@ -1,0 +1,2381 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skillora Portal - Company Dashboard</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        :root {
+            --primary-color: #ff6b35;
+            --secondary-color: #2c3e50;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #3498db;
+            --light-color: #f8f9fa;
+            --dark-color: #2c3e50;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f6fa;
+            overflow-x: hidden;
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .sidebar-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .sidebar-brand img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .sidebar-brand-text h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .sidebar-brand-text p {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-info h6 {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .user-info p {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .sidebar-nav {
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin: 0.25rem 0;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1.5rem;
+            color: #6c757d;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-radius: 0;
+        }
+
+        .nav-link:hover {
+            background: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        .nav-link.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            background: #f5f6fa;
+        }
+
+        .top-header {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin: 0;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .user-dropdown-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        .content-area {
+            padding: 2rem;
+        }
+
+        /* Card Styles */
+        .stats-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: none;
+            transition: transform 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stats-card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .stats-card-title {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .stats-card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        /* Button Styles */
+        .btn-primary-custom {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary-custom:hover {
+            background: #e55a2b;
+            transform: translateY(-1px);
+        }
+
+        .btn-outline-custom {
+            border: 1px solid #dee2e6;
+            color: #6c757d;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-custom:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Table Styles */
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .table {
+            margin: 0;
+        }
+
+        .table th {
+            background: #f8f9fa;
+            border: none;
+            font-weight: 600;
+            color: var(--dark-color);
+            padding: 1rem;
+        }
+
+        .table td {
+            border: none;
+            padding: 1rem;
+            vertical-align: middle;
+        }
+
+        .table tbody tr {
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-placed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-entrepreneur {
+            background: #e2e3e5;
+            color: #383d41;
+        }
+
+        /* Search and Filter */
+        .search-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .search-input {
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .content-area {
+                padding: 1rem;
+            }
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+            position: relative;
+            height: 250px;
+        }
+        
+        .chart-container.large {
+            height: 300px;
+        }
+        
+        .chart-container.medium {
+            height: 250px;
+        }
+        
+        .chart-container.small {
+            height: 200px;
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    {% csrf_token %}
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-brand">
+                    <img src="{% static 'img/icons/icon.png' %}" alt="Logo">
+                    <div class="sidebar-brand-text">
+                        <h4>Skillora Portal</h4>
+                        <p>Company Dashboard</p>
+        </div>
+    </div>
+                <div class="user-profile">
+                    <div class="user-avatar">{{ company.company_name|first|upper }}</div>
+                    <div class="user-info">
+                        <h6>{{ company.company_name }}</h6>
+                        <p>Company Access</p>
+                        <p>All Departments</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <div class="nav-item">
+                    <a href="#" class="nav-link active" data-tab="dashboard">
+                        <i class="fas fa-th-large"></i>
+                        Dashboard
+                    </a>
+            </div>
+                <div class="nav-item">
+                    <a href="{% url 'post_job' %}" class="nav-link">
+                        <i class="fas fa-briefcase"></i>
+                        Post Job
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" data-tab="placements">
+                        <i class="fas fa-briefcase"></i>
+                        Placements
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#" class="nav-link" data-tab="reports">
+                        <i class="fas fa-chart-bar"></i>
+                        Reports
+                    </a>
+                </div>
+                <div class="nav-item mt-4">
+                    <a href="{% url 'logout' %}" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </a>
+        </div>
+    </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header -->
+            <div class="top-header">
+                <h1 class="page-title" id="page-title">Dashboard</h1>
+                <div class="header-actions">
+                    <div class="user-dropdown">
+                        <div class="user-dropdown-avatar">{{ company.company_name|first|upper }}</div>
+                        <span>{{ company.company_name }}</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Content Area -->
+            <div class="content-area">
+                <!-- Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <!-- Admin Card -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="stats-card">
+                                <div class="d-flex align-items-center">
+                                    <div class="stats-card-icon" style="background: var(--primary-color);">
+                                        <i class="fas fa-building"></i>
+    </div>
+                                    <div class="ms-3">
+                                        <h4 class="mb-1">Admin {{ company.company_name }}</h4>
+                                        <p class="text-muted mb-0">Manage students, placements, and company data</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Jobs Posted by Company -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="stats-card">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h5 class="mb-0"><i class="fas fa-briefcase me-2"></i>Jobs Posted</h5>
+                                    <a href="{% url 'post_job' %}" class="btn btn-primary-custom btn-sm">Post Job</a>
+                                </div>
+                                <div class="data-table">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Title</th>
+                                                <th>Location</th>
+                                                <th>Type</th>
+                                                <th>Salary</th>
+                                                <th>Posted On</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for job in jobs_posted %}
+                                            <tr>
+                                                <td>{{ job.title }}</td>
+                                                <td>{{ job.location }}</td>
+                                                <td>{{ job.job_type }}</td>
+                                                <td>{{ job.salary_range }}</td>
+                                                <td>{{ job.posted_date|date:"M d, Y" }}</td>
+                                            </tr>
+                                            {% empty %}
+                                            <tr>
+                                                <td colspan="5" class="text-center text-muted">No jobs posted yet.</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-0">Dashboard</h3>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <select class="form-select" style="width: auto;">
+                                        <option>All Batches</option>
+                                        <option>2024</option>
+                                        <option>2025</option>
+                                        <option>2026</option>
+                                    </select>
+                                    <button class="btn btn-outline-custom">
+                                        <i class="fas fa-download"></i> Export
+                                    </button>
+                                    <button class="btn btn-outline-custom">
+                                        <i class="fas fa-sync-alt"></i> Refresh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+            </div>
+
+                    <!-- Key Statistics -->
+                    <div class="row mb-4">
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--info-color);">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <div class="stats-card-title">Total Students</div>
+                                <div class="stats-card-value">{{ total_applications|default:0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--success-color);">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                                <div class="stats-card-title">Accepted Students</div>
+                                <div class="stats-card-value">{{ accepted_applications|default:0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--danger-color);">
+                                    <i class="fas fa-times"></i>
+                                </div>
+                                <div class="stats-card-title">Rejected Students</div>
+                                <div class="stats-card-value">{{ rejected_applications|default:0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--warning-color);">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                                <div class="stats-card-title">Pending Students</div>
+                                <div class="stats-card-value">{{ pending_applications|default:0 }}</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-4 col-sm-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--warning-color);">
+                                    <i class="fas fa-briefcase"></i>
+                                </div>
+                                <div class="stats-card-title">No of Offers</div>
+                                <div class="stats-card-value">{{ jobs_posted.count|default:0 }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Students Tab - REMOVED -->
+
+                <!-- Placements Tab -->
+                <div id="placements" class="tab-content">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h3 class="mb-1"><i class="fas fa-briefcase me-2"></i>Placements</h3>
+                                    <p class="text-muted mb-0">Manage student placement records and company partnerships.</p>
+                        </div>
+                                <div class="d-flex gap-2">
+                                    <button class="btn btn-outline-custom">
+                                        <i class="fas fa-sync-alt"></i> Refresh
+                                    </button>
+                                    <button class="btn btn-outline-custom">
+                                        <i class="fas fa-download"></i> Export
+                                    </button>
+                                    <button class="btn btn-outline-custom">
+                                        <i class="fas fa-upload"></i> Upload Placement
+                                    </button>
+                                    <button class="btn btn-primary-custom">
+                                        <i class="fas fa-plus"></i> Add Placement
+                                    </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+                    <!-- Search and Filter -->
+                    <div class="search-container">
+                <div class="row">
+                            <div class="col-md-8">
+                                <div class="position-relative">
+                                    <i class="fas fa-search position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%); color: #6c757d;"></i>
+                                    <input type="text" class="search-input" placeholder="Search by registration number, company, posit" style="padding-left: 40px;">
+                    </div>
+                </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-outline-custom w-100">
+                                    <i class="fas fa-filter"></i> Filters
+                                </button>
+            </div>
+        </div>
+    </div>
+
+                    <!-- Job Applications by Company -->
+                    {% if applications_by_company %}
+                        {% for company_name, applications in applications_by_company.items %}
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-building me-2"></i>{{ company_name }}
+                                    <span class="badge bg-primary ms-2">{{ applications|length }} Application{{ applications|length|pluralize }}</span>
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    {% for app in applications %}
+                                    <div class="col-12">
+                                        <div class="card border">
+                                            <div class="card-body d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <h6 class="mb-1">{{ app.job.title }} 
+                                                        <span class="badge bg-secondary ms-2">{{ app.job.job_type }}</span>
+                                                    </h6>
+                                                    <small class="text-muted">
+                                                        <strong>Applicant:</strong> {{ app.full_name }} • 
+                                                        <strong>Applied on:</strong> {{ app.applied_date|date:"M d, Y" }}
+                                                    </small>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        <strong>Email:</strong> {{ app.email }} • 
+                                                        <strong>Phone:</strong> {{ app.phone }}
+                                                    </small>
+                                                </div>
+                                                <div class="text-end">
+                                                    <span class="badge {% if app.status == 'pending' %}bg-warning text-dark{% elif app.status == 'accepted' %}bg-success{% elif app.status == 'rejected' %}bg-danger{% else %}bg-info{% endif %} mb-2 d-block">
+                                                        {{ app.get_status_display }}
+                                                    </span>
+                                                    <div class="d-flex gap-2">
+                                                        <a href="{% url 'view_job_application' app.id %}" class="btn btn-sm btn-outline-primary">
+                                                            <i class="fas fa-eye me-1"></i>View
+                                                        </a>
+                                                        <button class="btn btn-sm btn-outline-success" onclick="updateApplicationStatus({{ app.id }}, 'accepted')">
+                                                            <i class="fas fa-check me-1"></i>Accept
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-danger" onclick="updateApplicationStatus({{ app.id }}, 'rejected')">
+                                                            <i class="fas fa-times me-1"></i>Reject
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="card shadow-sm">
+                            <div class="card-body text-center py-5">
+                                <i class="fas fa-briefcase fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">No Job Applications Yet</h5>
+                                <p class="text-muted">Job applications will appear here once students start applying to your posted jobs.</p>
+                                <a href="{% url 'post_job' %}" class="btn btn-primary">
+                                    <i class="fas fa-plus me-1"></i>Post a Job
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Reports Tab -->
+                <div id="reports" class="tab-content">
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h3 class="mb-1"><i class="fas fa-chart-bar me-2"></i>Reports</h3>
+                            <p class="text-muted mb-0">Generate comprehensive reports and analytics.</p>
+                        </div>
+                    </div>
+
+                    <!-- Report Sections -->
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <h5 class="mb-3">Report Sections</h5>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="stats-card" style="border: 2px solid var(--primary-color);">
+                                <div class="stats-card-icon" style="background: var(--primary-color);">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                                <h6 class="mb-2">Executive Overview</h6>
+                                <p class="text-muted mb-0">Key metrics and Insights</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--info-color);">
+                                    <i class="fas fa-graduation-cap"></i>
+                                </div>
+                                <h6 class="mb-2">Student Outcomes</h6>
+                                <p class="text-muted mb-0">Career paths and destinations</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--warning-color);">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <h6 class="mb-2">Company Analytics</h6>
+                                <p class="text-muted mb-0">Recruiter performance and trends</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--success-color);">
+                                    <i class="fas fa-dollar-sign"></i>
+                                </div>
+                                <h6 class="mb-2">Compensation Analysis</h6>
+                                <p class="text-muted mb-0">Package and stipend insights</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--info-color);">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h6 class="mb-2">Department Comparison</h6>
+                                <p class="text-muted mb-0">Cross-department performance</p>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="stats-card">
+                                <div class="stats-card-icon" style="background: var(--warning-color);">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                                <h6 class="mb-2">Placement Trends</h6>
+                                <p class="text-muted mb-0">Historical and predictive analysis</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts -->
+                    <div class="row">
+                        <div class="col-lg-6 mb-4">
+                            <div class="chart-container medium">
+                                <h6 class="chart-title">Student Outcomes Distribution</h6>
+                                <canvas id="outcomesChart" width="400" height="200"></canvas>
+                                <div class="mt-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="me-2" style="width: 12px; height: 12px; background: #27ae60; border-radius: 50%;"></div>
+                                                <span class="small">Placed - 50.0%</span>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="me-2" style="width: 12px; height: 12px; background: #3498db; border-radius: 50%;"></div>
+                                                <span class="small">Higher Studies - 0.0%</span>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="me-2" style="width: 12px; height: 12px; background: #ff6b35; border-radius: 50%;"></div>
+                                                <span class="small">Entrepreneur - 50.0%</span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="me-2" style="width: 12px; height: 12px; background: #9b59b6; border-radius: 50%;"></div>
+                                                <span class="small">Family Business - 0.0%</span>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="me-2" style="width: 12px; height: 12px; background: #f39c12; border-radius: 50%;"></div>
+                                                <span class="small">Competitive Exam - 0.0%</span>
+                                            </div>
+                                            <div class="d-flex align-items-center mb-2">
+                                                <div class="me-2" style="width: 12px; height: 12px; background: #e74c3c; border-radius: 50%;"></div>
+                                                <span class="small">Not Placed - 0.0%</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 mb-4">
+                            <div class="chart-container medium">
+                                <h6 class="chart-title">Top Recruiting Companies</h6>
+                                <canvas id="companiesChart" width="400" height="200"></canvas>
+                                <div class="mt-3">
+                                    <p class="text-muted mb-0">Top 1 companies by student recruitment</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Users Tab - REMOVED -->
+
+    <!-- JavaScript -->
+    <script>
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link[data-tab]');
+            const tabContents = document.querySelectorAll('.tab-content');
+            const pageTitle = document.getElementById('page-title');
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remove active class from all nav links
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    
+                    // Add active class to clicked link
+                    this.classList.add('active');
+                    
+                    // Hide all tab contents
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    
+                    // Show selected tab content
+                    const targetTab = this.getAttribute('data-tab');
+                    const targetContent = document.getElementById(targetTab);
+                    if (targetContent) {
+                        targetContent.classList.add('active');
+                        
+                        // Update page title
+                        const tabNames = {
+                            'dashboard': 'Dashboard',
+                            'students': 'Students',
+                            'placements': 'Placements',
+                            'reports': 'Reports',
+                            'users': 'Users'
+                        };
+                        pageTitle.textContent = tabNames[targetTab] || 'Dashboard';
+                        
+                        // Load data for the selected tab
+                        loadTabData(targetTab);
+                    }
+                });
+            });
+
+            // Initialize charts
+            initializeCharts();
+            
+            // Initialize button handlers
+            initializeButtonHandlers();
+            
+            // Load initial dashboard data
+            loadDashboardData();
+        });
+
+        // Chart initialization
+        function initializeCharts() {
+            // Student Outcomes Distribution Chart
+            const outcomesCtx = document.getElementById('outcomesChart');
+            if (outcomesCtx) {
+                new Chart(outcomesCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Placed', 'Entrepreneur'],
+                        datasets: [{
+                            data: [50, 50],
+                            backgroundColor: ['#27ae60', '#ff6b35'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Top Recruiting Companies Chart
+            const companiesCtx = document.getElementById('companiesChart');
+            if (companiesCtx) {
+                new Chart(companiesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['SOME COMPANY 1'],
+                        datasets: [{
+                            label: 'Number of Placements',
+                            data: [1],
+                            backgroundColor: '#ff6b35',
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    stepSize: 1
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Load dashboard data
+        function loadDashboardData() {
+            fetch('{% url "company_dashboard_data" %}')
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Dashboard data loaded:', data);
+                    // Update statistics cards with real data
+                    updateStatisticsCards(data);
+                })
+                .catch(error => {
+                    console.error('Error loading dashboard data:', error);
+                });
+        }
+
+        // Load students data
+        function loadStudentsData(searchQuery = '') {
+            let url = '{% url "dashboard_students_api" %}';
+            if (searchQuery) {
+                url += `?search=${encodeURIComponent(searchQuery)}`;
+            }
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    updateStudentsTable(data.students);
+                })
+                .catch(error => {
+                    console.error('Error loading students data:', error);
+                });
+        }
+
+        // Load placements data
+        function loadPlacementsData(searchQuery = '') {
+            let url = '{% url "dashboard_placements_api" %}';
+            if (searchQuery) {
+                url += `?search=${encodeURIComponent(searchQuery)}`;
+            }
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    updatePlacementsTable(data.placements);
+                })
+                .catch(error => {
+                    console.error('Error loading placements data:', error);
+                });
+        }
+
+        // Load reports data
+        function loadReportsData() {
+            fetch('{% url "dashboard_reports_api" %}')
+                .then(response => response.json())
+                .then(data => {
+                    updateReportsTable(data.reports);
+                    updateReportsCharts(data.company_performance);
+                })
+                .catch(error => {
+                    console.error('Error loading reports data:', error);
+                });
+        }
+
+        // Load users data
+        function loadUsersData(searchQuery = '') {
+            let url = '{% url "dashboard_users_api" %}';
+            if (searchQuery) {
+                url += `?search=${encodeURIComponent(searchQuery)}`;
+            }
+            
+            console.log('Loading users data from:', url);
+            
+            fetch(url)
+                .then(response => {
+                    console.log('Users API response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Users API response data:', data);
+                    updateUsersTable(data.users);
+                })
+                .catch(error => {
+                    console.error('Error loading users data:', error);
+                });
+        }
+
+        // Update statistics cards
+        function updateStatisticsCards(stats) {
+            console.log('Updating statistics with real data:', stats);
+            
+            // Update dashboard statistics
+            document.querySelectorAll('.stats-card-value').forEach(card => {
+                const title = card.previousElementSibling.textContent;
+                if (title.includes('Total Students')) {
+                    card.textContent = stats.total_students || 0;
+                } else if (title.includes('No of Offers')) {
+                    card.textContent = stats.total_offers || 0;
+                } else if (title.includes('Placement Rate')) {
+                    card.textContent = (stats.placement_rate || 0).toFixed(2) + '%';
+                } else if (title.includes('Placed')) {
+                    card.textContent = stats.placed_students || 0;
+                }
+            });
+            
+            // Update students tab statistics
+            const studentsCards = document.querySelectorAll('#students .stats-card-value');
+            studentsCards.forEach(card => {
+                const title = card.previousElementSibling.textContent;
+                if (title.includes('Total Students')) {
+                    card.textContent = stats.students_total || 0;
+                } else if (title.includes('Departments')) {
+                    card.textContent = stats.students_departments || 0;
+                } else if (title.includes('Batches')) {
+                    card.textContent = stats.students_batches || 0;
+                } else if (title.includes('Active Records')) {
+                    card.textContent = stats.students_active || 0;
+                }
+            });
+            
+            // Update placements tab statistics
+            const placementsCards = document.querySelectorAll('#placements .stats-card-value');
+            placementsCards.forEach(card => {
+                const title = card.previousElementSibling.textContent;
+                if (title.includes('Total Students')) {
+                    card.textContent = stats.placements_total_students || 0;
+                } else if (title.includes('Highest Package')) {
+                    card.textContent = '₹' + (stats.placements_highest_package || 0).toLocaleString();
+                } else if (title.includes('Average Package')) {
+                    card.textContent = '₹' + (stats.placements_average_package || 0).toLocaleString();
+                } else if (title.includes('Maximum Stipend')) {
+                    card.textContent = '₹' + (stats.placements_max_stipend || 0).toLocaleString();
+                } else if (title.includes('Total Offers')) {
+                    card.textContent = stats.placements_total_offers || 0;
+                } else if (title.includes('IQAC Approved')) {
+                    card.textContent = stats.placements_iqac_approved || 0;
+                } else if (title.includes('IQAC Pending')) {
+                    card.textContent = stats.placements_iqac_pending || 0;
+                } else if (title.includes('IQAC Rejected')) {
+                    card.textContent = stats.placements_iqac_rejected || 0;
+                } else if (title.includes('Partner Companies')) {
+                    card.textContent = stats.placements_partner_companies || 0;
+                }
+            });
+            
+            // Update users tab statistics
+            const usersCards = document.querySelectorAll('#users .stats-card-value');
+            usersCards.forEach(card => {
+                const title = card.previousElementSibling.textContent;
+                if (title.includes('Total Users')) {
+                    card.textContent = stats.users_total || 0;
+                } else if (title.includes('Active Users')) {
+                    card.textContent = stats.users_active || 0;
+                } else if (title.includes('Pending Approval')) {
+                    card.textContent = stats.users_pending || 0;
+                } else if (title.includes('Suspended')) {
+                    card.textContent = stats.users_suspended || 0;
+                }
+            });
+        }
+
+        // Update students table
+        function updateStudentsTable(students) {
+            const tbody = document.querySelector('#students .table tbody');
+            if (tbody) {
+                tbody.innerHTML = students.map(student => `
+                    <tr data-student-id="${student.id}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar me-3" style="width: 35px; height: 35px; font-size: 0.8rem;">
+                                    ${student.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">${student.name}</div>
+                                    <small class="text-muted">${student.email}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div>${student.email}</div>
+                            <small class="text-muted">${student.phone || 'N/A'}</small>
+                        </td>
+                        <td>${student.department || 'N/A'}</td>
+                        <td>${student.batch || 'N/A'}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-custom" onclick="viewRecord(this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-custom" onclick="editRecord(this)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-custom" onclick="deleteRecord(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Update placements table
+        function updatePlacementsTable(placements) {
+            const tbody = document.querySelector('#placements .table tbody');
+            if (tbody) {
+                tbody.innerHTML = placements.map(placement => `
+                    <tr data-placement-id="${placement.id}">
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar me-3" style="width: 35px; height: 35px; font-size: 0.8rem;">
+                                    ${placement.student_name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">${placement.student_name}</div>
+                                    <small class="text-muted">${placement.student_email}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <i class="fas fa-briefcase me-2"></i>1
+                        </td>
+                        <td>
+                            <div>${placement.job_title}</div>
+                            <small class="text-muted">Company</small>
+                        </td>
+                        <td>${placement.package_amount ? '₹' + placement.package_amount.toLocaleString() : '-'}</td>
+                        <td>${placement.stipend_amount ? '₹' + placement.stipend_amount.toLocaleString() : '-'}</td>
+                        <td>
+                            <span class="status-badge status-placed">
+                                <i class="fas fa-check me-1"></i>Placed
+                            </span>
+                        </td>
+                        <td>
+                            <span class="status-badge status-pending">
+                                <i class="fas fa-clock me-1"></i>${placement.iqac_status}
+                            </span>
+                        </td>
+                        <td>
+                            <i class="fas fa-briefcase me-2"></i>0
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-custom" onclick="viewRecord(this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-custom" onclick="editRecord(this)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-custom" onclick="deleteRecord(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+        }
+
+        // Update reports table
+        function updateReportsTable(reports) {
+            // This would update the reports section
+            console.log('Reports data:', reports);
+        }
+
+        // Update reports charts with real data
+        function updateReportsCharts(performance) {
+            // Update Student Outcomes Distribution Chart
+            const outcomesCtx = document.getElementById('outcomesChart');
+            if (outcomesCtx) {
+                const outcomesChart = new Chart(outcomesCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Placed', 'Higher Studies', 'Entrepreneur', 'Family Business', 'Competitive Exam', 'Not Placed'],
+                        datasets: [{
+                            data: [
+                                performance.placed_students || 0,
+                                performance.higher_studies || 0,
+                                performance.entrepreneurs || 0,
+                                performance.family_business || 0,
+                                performance.competitive_exam || 0,
+                                performance.not_placed || 0
+                            ],
+                            backgroundColor: [
+                                '#27ae60',
+                                '#3498db',
+                                '#9b59b6',
+                                '#f39c12',
+                                '#e74c3c',
+                                '#95a5a6'
+                            ],
+                            borderWidth: 2,
+                            borderColor: '#fff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 20,
+                                    usePointStyle: true
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Update Top Recruiting Companies Chart
+            const companiesCtx = document.getElementById('companiesChart');
+            if (companiesCtx) {
+                const companiesChart = new Chart(companiesCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: performance.department_stats.map(dept => dept.department),
+                        datasets: [{
+                            label: 'Placement Rate (%)',
+                            data: performance.department_stats.map(dept => dept.placement_rate),
+                            backgroundColor: '#3498db',
+                            borderColor: '#2980b9',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 100
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Update users table
+        function updateUsersTable(users) {
+            console.log('Updating users table with:', users);
+            const tbody = document.querySelector('#users .table tbody');
+            if (tbody) {
+                tbody.innerHTML = users.map(user => `
+                    <tr data-user-id="${user.id}">
+                        <td>
+                            <input type="checkbox" class="user-checkbox" value="${user.id}" onchange="updateBulkDeleteButton()">
+                        </td>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar me-3" style="width: 35px; height: 35px; font-size: 0.8rem;">
+                                    ${user.name.charAt(0).toUpperCase()}
+                                </div>
+                                <div>
+                                    <div class="fw-bold">${user.name}</div>
+                                    <small class="text-muted">${user.email}</small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${user.role}</td>
+                        <td>
+                            <span class="status-badge ${user.is_active ? 'status-placed' : 'status-pending'}">
+                                <i class="fas fa-check me-1"></i>${user.is_active ? 'Active' : 'Inactive'}
+                            </span>
+                        </td>
+                        <td>${user.last_login}</td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-sm btn-outline-custom" onclick="viewRecord(this)">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-custom" onclick="editRecord(this)">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-sm btn-outline-custom" onclick="deleteRecord(this)">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+                console.log('Users table updated with', users.length, 'users');
+            } else {
+                console.error('Users table tbody not found');
+            }
+        }
+
+        // Load data when tab is switched
+        function loadTabData(tabName) {
+            // Always load dashboard data first to get real statistics
+            loadDashboardData();
+            
+            switch(tabName) {
+                case 'dashboard':
+                    // Dashboard data already loaded above
+                    break;
+                case 'students':
+                    loadStudentsData();
+                    break;
+                case 'placements':
+                    loadPlacementsData();
+                    break;
+                case 'reports':
+                    loadReportsData();
+                    break;
+                case 'users':
+                    loadUsersData();
+                    break;
+            }
+        }
+
+        // Add event listeners for all buttons
+        function initializeButtonHandlers() {
+            // Use a single event listener for better performance
+            document.addEventListener('click', function(e) {
+                const button = e.target.closest('button');
+                if (!button) return;
+                
+                const buttonText = button.textContent.trim();
+                const buttonClass = button.className;
+                
+                
+                // Add Student button
+                if (buttonText.includes('Add Student')) {
+                    e.preventDefault();
+                    showAddStudentModal();
+                    return;
+                }
+                
+                // Add Placement button
+                if (buttonText.includes('Add Placement')) {
+                    e.preventDefault();
+                    showAddPlacementModal();
+                    return;
+                }
+                
+                // Add User button
+                if (buttonText.includes('Add User')) {
+                    e.preventDefault();
+                    showAddUserModal();
+                    return;
+                }
+                
+                // Refresh buttons
+                if (buttonText.includes('Refresh')) {
+                    e.preventDefault();
+                    const currentTab = document.querySelector('.nav-link.active').getAttribute('data-tab');
+                    loadTabData(currentTab);
+                    return;
+                }
+                
+                // Export buttons
+                if (buttonText.includes('Export')) {
+                    e.preventDefault();
+                    exportData();
+                    return;
+                }
+                
+                // Upload buttons
+                if (buttonText.includes('Upload')) {
+                    e.preventDefault();
+                    showUploadModal();
+                    return;
+                }
+                
+                // Filter buttons
+                if (buttonText.includes('Filters')) {
+                    e.preventDefault();
+                    showFilterModal();
+                    return;
+                }
+                
+                // Action buttons (View, Edit, Delete)
+                if (buttonClass.includes('btn-outline-custom')) {
+                    const icon = button.querySelector('i');
+                    if (icon) {
+                        if (icon.classList.contains('fa-eye')) {
+                            e.preventDefault();
+                            viewRecord(button);
+                        } else if (icon.classList.contains('fa-edit')) {
+                            e.preventDefault();
+                            editRecord(button);
+                        } else if (icon.classList.contains('fa-trash')) {
+                            e.preventDefault();
+                            deleteRecord(button);
+                        }
+                    }
+                }
+            });
+
+            // Search functionality
+            document.addEventListener('input', function(e) {
+                if (e.target.classList.contains('search-input')) {
+                    const searchQuery = e.target.value;
+                    const currentTab = document.querySelector('.nav-link.active').getAttribute('data-tab');
+                    performSearch(currentTab, searchQuery);
+                }
+            });
+        }
+
+        // Show Add Student Modal
+        function showAddStudentModal() {
+            const modal = `
+                <div class="modal fade" id="addStudentModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New Student</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addStudentForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">First Name</label>
+                                            <input type="text" class="form-control" name="first_name" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" name="last_name" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="email" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Phone</label>
+                                            <input type="tel" class="form-control" name="phone">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Department</label>
+                                            <select class="form-control" name="department">
+                                                <option value="CSE">Computer Science Engineering</option>
+                                                <option value="IOTIS">Internet of Things & Intelligent Systems</option>
+                                                <option value="ECE">Electronics & Communication</option>
+                                                <option value="ME">Mechanical Engineering</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Batch Year</label>
+                                            <input type="number" class="form-control" name="batch_year" min="2020" max="2030">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">CGPA</label>
+                                            <input type="number" class="form-control" name="cgpa" step="0.01" min="0" max="10">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="submitAddStudent()">Add Student</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('addStudentModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            // Show modal
+            const modalElement = new bootstrap.Modal(document.getElementById('addStudentModal'));
+            modalElement.show();
+        }
+
+        // Show Add Placement Modal
+        function showAddPlacementModal() {
+            const modal = `
+                <div class="modal fade" id="addPlacementModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New Placement</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addPlacementForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Student</label>
+                                            <select class="form-control" name="student_id" required>
+                                                <option value="">Select Student</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Job Title</label>
+                                            <input type="text" class="form-control" name="job_title" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Package Amount (₹)</label>
+                                            <input type="number" class="form-control" name="package_amount" step="0.01">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Stipend Amount (₹)</label>
+                                            <input type="number" class="form-control" name="stipend_amount" step="0.01">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Placement Date</label>
+                                            <input type="date" class="form-control" name="placement_date" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Offer Letter</label>
+                                            <input type="file" class="form-control" name="offer_letter" accept=".pdf,.doc,.docx">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="submitAddPlacement()">Add Placement</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('addPlacementModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            // Load students for dropdown
+            loadStudentsForPlacement();
+            
+            // Show modal
+            const modalElement = new bootstrap.Modal(document.getElementById('addPlacementModal'));
+            modalElement.show();
+        }
+
+        // Show Add User Modal
+        function showAddUserModal() {
+            const modal = `
+                <div class="modal fade" id="addUserModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Add New User</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="addUserForm">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">First Name</label>
+                                            <input type="text" class="form-control" name="first_name" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" name="last_name" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="email" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Role</label>
+                                            <select class="form-control" name="role" required>
+                                                <option value="">Select Role</option>
+                                                <option value="student">Student</option>
+                                                <option value="teacher">Teacher</option>
+                                                <option value="company">Company</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="submitAddUser()">Add User</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('addUserModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            // Show modal
+            const modalElement = new bootstrap.Modal(document.getElementById('addUserModal'));
+            modalElement.show();
+        }
+
+        // Submit Add Student
+        function submitAddStudent() {
+            const form = document.getElementById('addStudentForm');
+            const formData = new FormData(form);
+            
+            fetch('{% url "add_student" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Student added successfully!');
+                    bootstrap.Modal.getInstance(document.getElementById('addStudentModal')).hide();
+                    loadStudentsData(); // Refresh students list
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding student');
+            });
+        }
+
+        // Submit Add Placement
+        function submitAddPlacement() {
+            const form = document.getElementById('addPlacementForm');
+            const formData = new FormData(form);
+            
+            fetch('{% url "add_placement" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Placement record added successfully!');
+                    bootstrap.Modal.getInstance(document.getElementById('addPlacementModal')).hide();
+                    loadPlacementsData(); // Refresh placements list
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error adding placement');
+            });
+        }
+
+        // Submit Add User
+        function submitAddUser() {
+            const form = document.getElementById('addUserForm');
+            const formData = new FormData(form);
+            
+            // For now, just show success message
+            alert('User added successfully!');
+            bootstrap.Modal.getInstance(document.getElementById('addUserModal')).hide();
+            loadUsersData(); // Refresh users list
+        }
+
+        // Load students for placement dropdown
+        function loadStudentsForPlacement() {
+            fetch('{% url "dashboard_students_api" %}')
+                .then(response => response.json())
+                .then(data => {
+                    const select = document.querySelector('#addPlacementModal select[name="student_id"]');
+                    if (select) {
+                        select.innerHTML = '<option value="">Select Student</option>' +
+                            data.students.map(student => 
+                                `<option value="${student.id}">${student.name} (${student.email})</option>`
+                            ).join('');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading students:', error);
+                });
+        }
+
+        // View Record
+        function viewRecord(button) {
+            const row = button.closest('tr');
+            const name = row.querySelector('.fw-bold').textContent;
+            alert(`Viewing details for: ${name}`);
+        }
+
+        // Edit Record
+        function editRecord(button) {
+            const row = button.closest('tr');
+            const name = row.querySelector('.fw-bold').textContent;
+            const currentTab = document.querySelector('.nav-link.active').getAttribute('data-tab');
+            
+            if (currentTab === 'students') {
+                const studentId = row.querySelector('td:first-child').textContent;
+                showEditStudentModal(studentId, row);
+            } else if (currentTab === 'placements') {
+                const placementId = row.querySelector('td:first-child').textContent;
+                showEditPlacementModal(placementId, row);
+            } else {
+                alert(`Editing: ${name}`);
+            }
+        }
+
+        // Show Edit Student Modal
+        function showEditStudentModal(studentId, row) {
+            // Get current data from the row
+            const cells = row.querySelectorAll('td');
+            const currentData = {
+                name: cells[1].textContent.trim(),
+                email: cells[2].textContent.trim(),
+                phone: cells[3].textContent.trim(),
+                department: cells[4].textContent.trim(),
+                batch: cells[5].textContent.trim(),
+                cgpa: cells[6].textContent.trim()
+            };
+            
+            const modal = `
+                <div class="modal fade" id="editStudentModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Student</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editStudentForm">
+                                    <input type="hidden" name="student_id" value="${studentId}">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">First Name</label>
+                                            <input type="text" class="form-control" name="first_name" value="${currentData.name.split(' ')[0]}" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Last Name</label>
+                                            <input type="text" class="form-control" name="last_name" value="${currentData.name.split(' ').slice(1).join(' ')}" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Email</label>
+                                            <input type="email" class="form-control" name="email" value="${currentData.email}" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Phone</label>
+                                            <input type="tel" class="form-control" name="phone" value="${currentData.phone}">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Department</label>
+                                            <select class="form-control" name="department">
+                                                <option value="CSE" ${currentData.department === 'CSE' ? 'selected' : ''}>Computer Science Engineering</option>
+                                                <option value="IOTIS" ${currentData.department === 'IOTIS' ? 'selected' : ''}>Internet of Things & Intelligent Systems</option>
+                                                <option value="ECE" ${currentData.department === 'ECE' ? 'selected' : ''}>Electronics & Communication</option>
+                                                <option value="ME" ${currentData.department === 'ME' ? 'selected' : ''}>Mechanical Engineering</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Batch Year</label>
+                                            <input type="number" class="form-control" name="batch_year" value="${currentData.batch}" min="2020" max="2030">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">CGPA</label>
+                                            <input type="number" class="form-control" name="cgpa" value="${currentData.cgpa}" step="0.01" min="0" max="10">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="submitEditStudent()">Update Student</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('editStudentModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            // Show modal
+            const modalElement = new bootstrap.Modal(document.getElementById('editStudentModal'));
+            modalElement.show();
+        }
+
+        // Show Edit Placement Modal
+        function showEditPlacementModal(placementId, row) {
+            // Get current data from the row
+            const cells = row.querySelectorAll('td');
+            const currentData = {
+                student_name: cells[1].textContent.trim(),
+                job_title: cells[2].textContent.trim(),
+                package: cells[3].textContent.trim(),
+                stipend: cells[4].textContent.trim(),
+                date: cells[5].textContent.trim(),
+                iqac_status: cells[6].textContent.trim()
+            };
+            
+            const modal = `
+                <div class="modal fade" id="editPlacementModal" tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Edit Placement</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editPlacementForm">
+                                    <input type="hidden" name="placement_id" value="${placementId}">
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Job Title</label>
+                                            <input type="text" class="form-control" name="job_title" value="${currentData.job_title}" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Package Amount (₹)</label>
+                                            <input type="number" class="form-control" name="package_amount" value="${currentData.package.replace('₹', '').replace(',', '')}" step="0.01">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Stipend Amount (₹)</label>
+                                            <input type="number" class="form-control" name="stipend_amount" value="${currentData.stipend.replace('₹', '').replace(',', '')}" step="0.01">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Placement Date</label>
+                                            <input type="date" class="form-control" name="placement_date" value="${currentData.date}" required>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">IQAC Status</label>
+                                            <select class="form-control" name="iqac_status">
+                                                <option value="pending" ${currentData.iqac_status === 'Pending' ? 'selected' : ''}>Pending</option>
+                                                <option value="approved" ${currentData.iqac_status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                                <option value="rejected" ${currentData.iqac_status === 'Rejected' ? 'selected' : ''}>Rejected</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label class="form-label">Offer Letter</label>
+                                            <input type="file" class="form-control" name="offer_letter" accept=".pdf,.doc,.docx">
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" onclick="submitEditPlacement()">Update Placement</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Remove existing modal if any
+            const existingModal = document.getElementById('editPlacementModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            // Show modal
+            const modalElement = new bootstrap.Modal(document.getElementById('editPlacementModal'));
+            modalElement.show();
+        }
+
+        // Submit Edit Student
+        function submitEditStudent() {
+            const form = document.getElementById('editStudentForm');
+            const formData = new FormData(form);
+            
+            fetch('{% url "edit_student" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Student updated successfully!');
+                    bootstrap.Modal.getInstance(document.getElementById('editStudentModal')).hide();
+                    loadStudentsData(); // Refresh students list
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating student');
+            });
+        }
+
+        // Submit Edit Placement
+        function submitEditPlacement() {
+            const form = document.getElementById('editPlacementForm');
+            const formData = new FormData(form);
+            
+            fetch('{% url "edit_placement" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Placement record updated successfully!');
+                    bootstrap.Modal.getInstance(document.getElementById('editPlacementModal')).hide();
+                    loadPlacementsData(); // Refresh placements list
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating placement');
+            });
+        }
+
+        // Delete Record
+        function deleteRecord(button) {
+            console.log('Delete record clicked');
+            const row = button.closest('tr');
+            const name = row.querySelector('.fw-bold').textContent;
+            const currentTab = document.querySelector('.nav-link.active').getAttribute('data-tab');
+            
+            console.log('Row:', row);
+            console.log('Name:', name);
+            console.log('Current tab:', currentTab);
+            
+            if (confirm(`Are you sure you want to delete ${name}?`)) {
+                // Get the record ID from the row - look for data attributes or hidden inputs
+                let recordId = null;
+                
+                if (currentTab === 'students') {
+                    // Try to get student ID from data attribute or hidden input
+                    recordId = row.getAttribute('data-student-id') || 
+                              row.querySelector('[data-student-id]')?.getAttribute('data-student-id') ||
+                              row.querySelector('input[name="student_id"]')?.value;
+                    
+                    if (!recordId) {
+                        // Fallback: try to get from first column or look for ID in the row
+                        const firstCell = row.querySelector('td:first-child');
+                        if (firstCell) {
+                            recordId = firstCell.textContent.trim();
+                        }
+                    }
+                    
+                    if (recordId) {
+                        deleteStudent(recordId);
+                    } else {
+                        alert('Could not find student ID');
+                    }
+                } else if (currentTab === 'placements') {
+                    recordId = row.getAttribute('data-placement-id') || 
+                              row.querySelector('[data-placement-id]')?.getAttribute('data-placement-id') ||
+                              row.querySelector('input[name="placement_id"]')?.value;
+                    
+                    if (!recordId) {
+                        const firstCell = row.querySelector('td:first-child');
+                        if (firstCell) {
+                            recordId = firstCell.textContent.trim();
+                        }
+                    }
+                    
+                    if (recordId) {
+                        deletePlacement(recordId);
+                    } else {
+                        alert('Could not find placement ID');
+                    }
+                } else if (currentTab === 'users') {
+                    recordId = row.getAttribute('data-user-id') || 
+                              row.querySelector('[data-user-id]')?.getAttribute('data-user-id') ||
+                              row.querySelector('input[name="user_id"]')?.value;
+                    
+                    console.log('User ID found:', recordId);
+                    console.log('Row attributes:', row.attributes);
+                    
+                    if (!recordId) {
+                        const firstCell = row.querySelector('td:first-child');
+                        if (firstCell) {
+                            recordId = firstCell.textContent.trim();
+                        }
+                    }
+                    
+                    if (recordId) {
+                        deleteUser(recordId);
+                    } else {
+                        alert('Could not find user ID');
+                    }
+                }
+            }
+        }
+
+        // Delete Student
+        function deleteStudent(studentId) {
+            console.log('Deleting student with ID:', studentId);
+            
+            const formData = new FormData();
+            formData.append('student_id', studentId);
+            
+            fetch('{% url "delete_student" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => {
+                console.log('Delete response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Delete response data:', data);
+                if (data.success) {
+                    alert('Student deleted successfully!');
+                    loadStudentsData(); // Refresh students list
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting student: ' + error.message);
+            });
+        }
+
+        // Delete Placement
+        function deletePlacement(placementId) {
+            const formData = new FormData();
+            formData.append('placement_id', placementId);
+            
+            fetch('{% url "delete_placement" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Placement record deleted successfully!');
+                    loadPlacementsData(); // Refresh placements list
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting placement');
+            });
+        }
+
+
+        // Delete User
+        function deleteUser(userId) {
+            console.log('Deleting user with ID:', userId);
+            
+            const formData = new FormData();
+            formData.append('user_id', userId);
+            
+            // Get CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            if (!csrfToken) {
+                alert('CSRF token not found. Please refresh the page.');
+                return;
+            }
+            
+            fetch('{% url "delete_user" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': csrfToken.value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => {
+                console.log('Delete user response status:', response.status);
+                console.log('Delete user response headers:', response.headers);
+                
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    throw new Error(`Expected JSON response, got ${contentType}`);
+                }
+                
+                return response.json();
+            })
+            .then(data => {
+                console.log('Delete user response data:', data);
+                if (data.success) {
+                    alert('User deleted successfully!');
+                    loadUsersData(); // Refresh users list
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error deleting user: ' + error.message);
+            });
+        }
+
+        // Export Data
+        function exportData() {
+            const currentTab = document.querySelector('.nav-link.active').getAttribute('data-tab');
+            alert(`Exporting ${currentTab} data...`);
+        }
+
+        // Bulk Delete Functions
+        function toggleSelectAllUsers() {
+            const selectAllCheckbox = document.getElementById('selectAllUsers');
+            const userCheckboxes = document.querySelectorAll('.user-checkbox');
+            
+            userCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            
+            updateBulkDeleteButton();
+        }
+
+        function updateBulkDeleteButton() {
+            const selectedCheckboxes = document.querySelectorAll('.user-checkbox:checked');
+            const bulkDeleteBtn = document.getElementById('bulkDeleteBtn');
+            
+            if (selectedCheckboxes.length > 0) {
+                bulkDeleteBtn.style.display = 'inline-block';
+                bulkDeleteBtn.innerHTML = `<i class="fas fa-trash"></i> Delete Selected (${selectedCheckboxes.length})`;
+            } else {
+                bulkDeleteBtn.style.display = 'none';
+            }
+        }
+
+        function bulkDeleteUsers() {
+            const selectedCheckboxes = document.querySelectorAll('.user-checkbox:checked');
+            const selectedIds = Array.from(selectedCheckboxes).map(checkbox => checkbox.value);
+            
+            if (selectedIds.length === 0) {
+                alert('Please select users to delete');
+                return;
+            }
+            
+            const userNames = selectedIds.map(id => {
+                const row = document.querySelector(`tr[data-user-id="${id}"]`);
+                return row ? row.querySelector('.fw-bold').textContent : 'Unknown';
+            });
+            
+            if (confirm(`Are you sure you want to delete ${selectedIds.length} user(s)?\n\nUsers to delete:\n${userNames.join('\n')}`)) {
+                console.log('Bulk deleting users:', selectedIds);
+                
+                // Delete users one by one
+                let deletedCount = 0;
+                let errorCount = 0;
+                
+                selectedIds.forEach((userId, index) => {
+                    const formData = new FormData();
+                    formData.append('user_id', userId);
+                    
+                    fetch('{% url "delete_user" %}', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            deletedCount++;
+                            console.log(`User ${userId} deleted successfully`);
+                        } else {
+                            errorCount++;
+                            console.error(`Error deleting user ${userId}:`, data.error);
+                        }
+                        
+                        // Check if all deletions are complete
+                        if (deletedCount + errorCount === selectedIds.length) {
+                            if (deletedCount > 0) {
+                                alert(`Successfully deleted ${deletedCount} user(s)!`);
+                                loadUsersData(); // Refresh the table
+                            }
+                            if (errorCount > 0) {
+                                alert(`Failed to delete ${errorCount} user(s). Please check console for details.`);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        errorCount++;
+                        console.error(`Error deleting user ${userId}:`, error);
+                        
+                        if (deletedCount + errorCount === selectedIds.length) {
+                            if (deletedCount > 0) {
+                                alert(`Successfully deleted ${deletedCount} user(s)!`);
+                                loadUsersData(); // Refresh the table
+                            }
+                            if (errorCount > 0) {
+                                alert(`Failed to delete ${errorCount} user(s). Please check console for details.`);
+                            }
+                        }
+                    });
+                });
+            }
+        }
+
+        // Show Upload Modal
+        function showUploadModal() {
+            alert('Upload functionality will be implemented here');
+        }
+
+        // Show Filter Modal
+        function showFilterModal() {
+            alert('Filter options will be shown here');
+        }
+
+        // Perform Search
+        function performSearch(tabName, query) {
+            console.log(`Searching ${tabName} for: ${query}`);
+            // Implement search functionality based on tab
+            switch(tabName) {
+                case 'students':
+                    loadStudentsData(query);
+                    break;
+                case 'placements':
+                    loadPlacementsData(query);
+                    break;
+                case 'users':
+                    loadUsersData(query);
+                    break;
+            }
+        }
+
+        // Update Application Status
+        function updateApplicationStatus(applicationId, newStatus) {
+            if (!confirm(`Are you sure you want to ${newStatus} this application?`)) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('application_id', applicationId);
+            formData.append('status', newStatus);
+            
+            fetch('{% url "update_application_status" %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert(`Application ${newStatus} successfully!`);
+                    location.reload(); // Refresh the page to show updated status
+                } else {
+                    alert('Error: ' + data.error);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating application status');
+            });
+        }
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

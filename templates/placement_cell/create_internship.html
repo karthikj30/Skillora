@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Create Internship - Skillora{% endblock %}
+
+{% block content %}
+<!-- Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">Create New Internship</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'placement_cell_home' %}">Dashboard</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Create Internship</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Create Internship Form Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Internship Details</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <!-- Basic Information -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Basic Information</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-md-8">
+                                    <label for="title" class="form-label">Internship Title *</label>
+                                    <input type="text" class="form-control" id="title" name="title" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="internship_type" class="form-label">Type *</label>
+                                    <select class="form-select" id="internship_type" name="internship_type" required>
+                                        <option value="internship">Internship</option>
+                                        <option value="industrial_training">Industrial Training</option>
+                                        <option value="placement">Full-time Placement</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="company" class="form-label">Company *</label>
+                                    <select class="form-select" id="company" name="company" required>
+                                        <option value="">Select Company</option>
+                                        {% for company in companies %}
+                                        <option value="{{ company.id }}">{{ company.company_name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="location" class="form-label">Location *</label>
+                                    <input type="text" class="form-control" id="location" name="location" placeholder="e.g., Jaipur, Rajasthan" required>
+                                </div>
+                            </div>
+
+                            <!-- Description & Requirements -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Description & Requirements</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-12">
+                                    <label for="description" class="form-label">Description *</label>
+                                    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Describe the internship role, responsibilities, and learning opportunities..." required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label for="requirements" class="form-label">Requirements *</label>
+                                    <textarea class="form-control" id="requirements" name="requirements" rows="4" placeholder="List the qualifications, skills, and prerequisites..." required></textarea>
+                                </div>
+                                <div class="col-12">
+                                    <label for="required_skills" class="form-label">Required Skills *</label>
+                                    <input type="text" class="form-control" id="required_skills" name="required_skills" placeholder="e.g., Python, Django, JavaScript, HTML, CSS (comma-separated)" required>
+                                    <small class="text-muted">Enter skills separated by commas</small>
+                                </div>
+                            </div>
+
+                            <!-- Duration & Compensation -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Duration & Compensation</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="duration_months" class="form-label">Duration (Months) *</label>
+                                    <input type="number" class="form-control" id="duration_months" name="duration_months" min="1" max="24" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="stipend_min" class="form-label">Minimum Stipend (₹/month)</label>
+                                    <input type="number" class="form-control" id="stipend_min" name="stipend_min" min="0" step="0.01">
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="stipend_max" class="form-label">Maximum Stipend (₹/month)</label>
+                                    <input type="number" class="form-control" id="stipend_max" name="stipend_max" min="0" step="0.01">
+                                </div>
+                            </div>
+
+                            <!-- Dates & Seats -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Dates & Availability</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="seats_available" class="form-label">Seats Available *</label>
+                                    <input type="number" class="form-control" id="seats_available" name="seats_available" min="1" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="start_date" class="form-label">Start Date *</label>
+                                    <input type="date" class="form-control" id="start_date" name="start_date" required>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="end_date" class="form-label">End Date *</label>
+                                    <input type="date" class="form-control" id="end_date" name="end_date" required>
+                                </div>
+                                <div class="col-12">
+                                    <label for="application_deadline" class="form-label">Application Deadline *</label>
+                                    <input type="datetime-local" class="form-control" id="application_deadline" name="application_deadline" required>
+                                </div>
+                            </div>
+
+                            <!-- Additional Options -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Additional Options</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="has_placement_potential" name="has_placement_potential">
+                                        <label class="form-check-label" for="has_placement_potential">
+                                            Has Placement Potential
+                                        </label>
+                                    </div>
+                                    <small class="text-muted">Check if this internship may lead to full-time employment</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="department_preference" class="form-label">Preferred Department</label>
+                                    <input type="text" class="form-control" id="department_preference" name="department_preference" placeholder="e.g., Computer Science, Electronics">
+                                </div>
+                            </div>
+
+                            <!-- Submit Buttons -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <hr>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{% url 'placement_cell_home' %}" class="btn btn-outline-secondary">
+                                            <i class="fa fa-arrow-left me-2"></i>Cancel
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-save me-2"></i>Create Internship
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Create Internship Form End -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Set minimum date for start date to today
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('start_date').min = today;
+    
+    // Set minimum date for end date based on start date
+    document.getElementById('start_date').addEventListener('change', function() {
+        document.getElementById('end_date').min = this.value;
+    });
+    
+    // Set minimum datetime for application deadline to now
+    const now = new Date();
+    now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+    document.getElementById('application_deadline').min = now.toISOString().slice(0, 16);
+    
+    // Validate stipend range
+    document.getElementById('stipend_max').addEventListener('change', function() {
+        const minStipend = parseFloat(document.getElementById('stipend_min').value) || 0;
+        const maxStipend = parseFloat(this.value) || 0;
+        
+        if (maxStipend > 0 && maxStipend < minStipend) {
+            alert('Maximum stipend cannot be less than minimum stipend');
+            this.value = '';
+        }
+    });
+});
+</script>
+{% endblock %}

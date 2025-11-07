@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Certificate of Completion</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        body { background: #f5f7fb; }
+        .certificate {
+            background: #fff;
+            border: 8px solid #eaeaea;
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 900px;
+            margin: 40px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,.06);
+        }
+        .brand { color: #fb873f; }
+    </style>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+    <div class="certificate">
+        <div class="d-flex justify-content-end align-items-center mb-3">
+            <button class="btn btn-primary btn-sm" onclick="window.print()"><i class="fa fa-download me-1"></i> Download as PDF</button>
+        </div>
+        <div class="text-center mb-4">
+            <h2 class="brand">Skillora</h2>
+            <h5>Certificate of Completion</h5>
+        </div>
+        <p>This is to certify that</p>
+        <h3 class="fw-bold">{{ student.user.get_full_name|default:student.user.username }}</h3>
+        <p>has successfully completed the course</p>
+        <h4 class="fw-bold">{{ course.title }}</h4>
+        <p class="text-muted">Issued on {{ issued_on|date:'M d, Y' }}</p>
+        <hr/>
+        <div class="d-flex justify-content-between">
+            <div>
+                <small>Instructor</small>
+                <div class="fw-bold">{{ course.instructor.user.get_full_name|default:course.instructor.user.username }}</div>
+            </div>
+            <div class="text-end">
+                <small>Authorized by</small>
+                <div class="fw-bold brand">Skillora</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+

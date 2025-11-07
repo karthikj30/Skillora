@@ -1,0 +1,209 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment - Skillora{% endblock %}
+
+{% block content %}
+<!-- Payment Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center px-3">Payment</h6>
+            <h1 class="mb-5" style="color: #fb873f;">Complete Your Payment</h1>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Payment Details</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                <h6>Payment ID:</h6>
+                                <p class="text-muted">{{ payment.payment_id }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <h6>Amount:</h6>
+                                <p class="text-primary h5">₹{{ payment.amount }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <h6>Courses:</h6>
+                            {% for course in courses %}
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span>{{ course.title }}</span>
+                                <span class="text-muted">₹{{ course.price }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        {% if payment.amount == 0 %}
+                        <!-- Free Course Payment -->
+                        <div class="alert alert-success mb-4">
+                            <i class="fa fa-gift me-2"></i>
+                            <strong>Free Course!</strong> This course is completely free. Click "Complete Enrollment" to enroll immediately.
+                        </div>
+                        
+                        <form method="post" id="payment_form">
+                            {% csrf_token %}
+                            <input type="hidden" name="payment_mode" value="free">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fa fa-check me-2"></i>Complete Enrollment
+                                </button>
+                                <a href="{% url 'cart' %}" class="btn btn-outline-secondary">
+                                    <i class="fa fa-arrow-left me-2"></i>Back to Cart
+                                </a>
+                            </div>
+                        </form>
+                        
+                        {% else %}
+                        <!-- Paid Course Payment -->
+                        <!-- Payment Mode Selection -->
+                        <div class="mb-4">
+                            <h6>Select Payment Mode:</h6>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment_mode" id="card_payment" value="card" checked>
+                                        <label class="form-check-label" for="card_payment">
+                                            <i class="fa fa-credit-card me-2"></i>Credit/Debit Card
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="payment_mode" id="netbanking_payment" value="netbanking">
+                                        <label class="form-check-label" for="netbanking_payment">
+                                            <i class="fa fa-university me-2"></i>Netbanking
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card Details Form -->
+                        <div id="card_details" class="mb-4">
+                            <h6>Card Details:</h6>
+                            <div class="row">
+                                <div class="col-md-12 mb-3">
+                                    <label for="card_number" class="form-label">Card Number</label>
+                                    <input type="text" class="form-control" id="card_number" placeholder="1234 5678 9012 3456" maxlength="19">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="expiry_date" class="form-label">Expiry Date</label>
+                                    <input type="text" class="form-control" id="expiry_date" placeholder="MM/YY" maxlength="5">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cvv" placeholder="123" maxlength="3">
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <label for="cardholder_name" class="form-label">Cardholder Name</label>
+                                    <input type="text" class="form-control" id="cardholder_name" placeholder="John Doe">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Netbanking Info -->
+                        <div id="netbanking_info" class="mb-4" style="display: none;">
+                            <h6>Netbanking:</h6>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="bank_name" class="form-label">Select Bank</label>
+                                    <select id="bank_name" class="form-control">
+                                        <option value="sbi">SBI</option>
+                                        <option value="hdfc">HDFC Bank</option>
+                                        <option value="icici">ICICI Bank</option>
+                                        <option value="axis">Axis Bank</option>
+                                        <option value="kotak">Kotak Mahindra Bank</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label for="netbanking_user" class="form-label">Netbanking ID</label>
+                                    <input type="text" id="netbanking_user" class="form-control" placeholder="username or customer id">
+                                </div>
+                            </div>
+                            <div class="alert alert-info">
+                                <i class="fa fa-info-circle me-2"></i>
+                                This is a demo. Click Pay Now to simulate netbanking success.
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle me-2"></i>
+                            This is a demo payment. Click "Pay Now" to simulate a successful payment.
+                        </div>
+                        
+                        <form method="post" id="payment_form">
+                            {% csrf_token %}
+                            <input type="hidden" name="payment_mode" id="selected_payment_mode" value="card">
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    <i class="fa fa-credit-card me-2"></i>Pay Now
+                                </button>
+                                <a href="{% url 'cart' %}" class="btn btn-outline-secondary">
+                                    <i class="fa fa-arrow-left me-2"></i>Cancel Payment
+                                </a>
+                            </div>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if payment.amount > 0 %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const cardPayment = document.getElementById('card_payment');
+    const netbankingPayment = document.getElementById('netbanking_payment');
+    const cardDetails = document.getElementById('card_details');
+    const netbankingInfo = document.getElementById('netbanking_info');
+    const selectedPaymentMode = document.getElementById('selected_payment_mode');
+    
+    function togglePaymentForms() {
+        if (cardPayment.checked) {
+            cardDetails.style.display = 'block';
+            netbankingInfo.style.display = 'none';
+            selectedPaymentMode.value = 'card';
+        } else if (netbankingPayment.checked) {
+            cardDetails.style.display = 'none';
+            netbankingInfo.style.display = 'block';
+            selectedPaymentMode.value = 'netbanking';
+        }
+    }
+    
+    cardPayment.addEventListener('change', togglePaymentForms);
+    netbankingPayment.addEventListener('change', togglePaymentForms);
+    
+    // Format card number input
+    document.getElementById('card_number').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\s/g, '').replace(/[^0-9]/gi, '');
+        let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+        e.target.value = formattedValue;
+    });
+    
+    // Format expiry date input
+    document.getElementById('expiry_date').addEventListener('input', function(e) {
+        let value = e.target.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+        }
+        e.target.value = value;
+    });
+    
+    // Format CVV input
+    document.getElementById('cvv').addEventListener('input', function(e) {
+        e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+});
+</script>
+{% endif %}
+<!-- Payment End -->
+{% endblock %}

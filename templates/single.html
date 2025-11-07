@@ -1,0 +1,624 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="google-translate-customization" content="9f841e7780177523-3214ceb76f765f38-gc38c6fe6f9d06436-c">
+    </meta>
+
+    <title>Skillora : Online Courses</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+   
+</head>
+<style>
+    .tabs ul li {
+        list-style-type: none;
+    }
+
+    .tabs ul li a {
+        font-size: 25px;
+        color: #4e4e4e !important;
+        font-weight: 500;
+    }
+
+    .tabs ul li a.active {
+        color: #f69050 !important;
+    }
+
+    .tabs ul li a:hover {
+        color: #f69050 !important;
+    }
+
+    #more {
+        display: none;
+    }
+
+    button {
+        border: none;
+        color: #f69050;
+    }
+</style>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span
+                    style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
+                <a href="{% url 'about' %}" class="nav-item nav-link">About</a>
+                <a href="{% url 'courses' %}" class="nav-item nav-link">Courses</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="{% url 'testimonials' %}" class="dropdown-item">Testimonial</a>
+
+                    </div>
+                </div>
+                <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
+                <a href="{% url 'login' %}" class="nav-item nav-link"><i class="fa fa-user"></i></a>
+                <a href="#" class="nav-item nav-link">
+
+                <div id="google_translate_element">
+                </div>
+
+
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Header Start -->
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+            <div class="container py-5">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10 text-center">
+                        <h1 class="display-3 text-white animated slideInDown">{{ course.title }}</h1>
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb justify-content-center">
+                                <li class="breadcrumb-item"><a class="text-white" href="{% url 'home' %}">Home</a></li>
+                                <li class="breadcrumb-item"><a class="text-white" href="{% url 'courses' %}">Courses</a></li>
+                                <li class="breadcrumb-item text-white active" aria-current="page">{{ course.title }}</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+    </div>
+    <!-- Header End -->
+
+
+<!-- Course Detail Start -->
+<div class="container-xxl py-2">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 wow fadeInUp">
+
+                <div class="container">
+                    <div class="row g-5 justify-content-center">
+
+                        <div class="col-lg-12 wow fadeInUp" data-wow-delay="0.3s">
+                            <h2>{{ course.title }}</h2>
+                            <p>{{ course.description }}</p>
+                            <div class="d-flex">
+                                <small><i class="fa fa-star text-warning"></i>
+                                    4.6</small>
+                                <small style="margin-left: 15px;"><i class="fa fa-user-graduate"></i> 5.8L+
+                                    Learners
+                                </small>
+                                <small style="margin-left: 15px;"><i class="fa fa-user"></i>{{ course.level }}</small>
+                                <small style="margin-left: 15px;"><i class="fa fa-clock me-2"></i> {{ course.duration }}</small>
+
+                            </div>
+                            <div class="image-div text-left mt-3">
+                                {% if course.instructor and course.instructor.user %}
+                                    <img src="{% static 'img/instructor-1.jpg' %}" alt=""
+                                        style="height: 40px; width: 40px; border-radius: 50%;">
+                                    <span style="margin-left: 10px;"><b>Instructor</b> - {{ course.instructor.user.get_full_name|default:course.instructor.user.username }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                <div class="container-fluid wow fadeInUp mt-5 tabs">
+
+
+                    <!-- Tab panes -->
+                    <div class="tab-content mt-4">
+
+                        <div class="tab-pane container active" id="Overview">
+                            <h2>About this Course</h2>
+                            {% if course.title == 'dsa' %}
+                            <p>Data Structures and Algorithms (DSA) form the backbone of computer science and programming. This comprehensive course covers fundamental data structures like arrays, linked lists, stacks, queues, trees, and graphs, along with essential algorithms including sorting, searching, and dynamic programming. Master DSA concepts to solve complex problems efficiently and excel in technical interviews at top tech companies.</p>
+                            {% elif course.title == 'DS' %}
+                            <p>Data Science is the interdisciplinary field that uses scientific methods, processes, algorithms and systems to extract knowledge and insights from structured and unstructured data. This course covers essential data science concepts including statistics, data analysis, machine learning, data visualization, and programming with Python and R. Learn to work with real-world datasets and build predictive models.</p>
+                            {% elif course.title == 'Cybersecurity' %}
+                            <p>Cybersecurity is the practice of protecting systems, networks, and programs from digital attacks. This comprehensive course covers network security, ethical hacking, vulnerability assessment, incident response, and security best practices. Learn to identify threats, implement security measures, and respond to cyber incidents effectively.</p>
+                            {% elif course.title == 'Digital Marketing' %}
+                            <p>Digital marketing encompasses all marketing efforts that use electronic devices or the internet. This course covers SEO, social media marketing, content marketing, email marketing, PPC advertising, and analytics. Learn to create effective digital marketing campaigns that drive engagement and conversions.</p>
+                            {% elif course.title == 'AI and Machine Learning' %}
+                            <p>Artificial Intelligence and Machine Learning are transforming industries worldwide. This advanced course covers neural networks, deep learning, natural language processing, computer vision, and reinforcement learning. Learn to build intelligent applications and solve complex problems using AI/ML techniques.</p>
+                            {% elif course.title == 'Cloud Computing' %}
+                            <p>Cloud computing delivers computing services over the internet, including servers, storage, databases, networking, software, and analytics. This course covers AWS, Azure, and Google Cloud platforms, cloud architecture, deployment strategies, and cloud security. Master the skills needed for modern cloud-based solutions.</p>
+                            {% elif course.title == 'Project Management' %}
+                            <p>Project management is the application of knowledge, skills, tools, and techniques to project activities to meet project requirements. This course covers Agile, Scrum, risk management, team leadership, project planning, and stakeholder management. Learn to deliver successful projects on time and within budget.</p>
+                            {% elif course.title == 'Microsoft Excel' %}
+                            <p>Microsoft Excel is a powerful spreadsheet application used for data analysis, visualization, and business intelligence. This course covers formulas, functions, pivot tables, charts, data analysis tools, and VBA automation. Master Excel to enhance your productivity and analytical capabilities.</p>
+                            {% elif course.title == 'AWS' %}
+                            <p>Amazon Web Services (AWS) is the world's most comprehensive and broadly adopted cloud platform. This course covers EC2, S3, RDS, Lambda, CloudFormation, and other AWS services. Learn cloud architecture, deployment, and management to build scalable cloud solutions.</p>
+                            {% elif course.title == 'Python' %}
+                            <p>Python is a versatile programming language used for web development, data science, automation, and more. This comprehensive course covers Python syntax, data structures, object-oriented programming, web frameworks, and data science libraries. Build real-world applications and automate tasks.</p>
+                            {% elif course.title == 'Java' %}
+                            <p>Java is a robust, object-oriented programming language used for enterprise applications, Android development, and web applications. This course covers Java fundamentals, OOP concepts, collections, multithreading, Spring framework, and enterprise development patterns.</p>
+                            {% elif course.title == 'Web Design' %}
+                            <p>Web design involves creating visually appealing and user-friendly websites. This course covers HTML5, CSS3, JavaScript, responsive design, UI/UX principles, and modern design tools. Learn to create beautiful and functional websites that provide excellent user experiences.</p>
+                            {% elif course.title == 'Web Development' %}
+                            <p>Web development encompasses both frontend and backend development to create complete web applications. This course covers HTML, CSS, JavaScript, Node.js, Express, databases, and deployment. Learn full-stack development to build dynamic and interactive web applications.</p>
+                            {% elif course.title == 'MySQL' %}
+                            <p>MySQL is a popular relational database management system used for web applications and data warehousing. This course covers SQL queries, database design, normalization, indexing, optimization, and administration. Master database management and query optimization techniques.</p>
+                            {% elif course.title == 'UI/UX Design' %}
+                            <p>UI/UX design focuses on creating user-centered digital experiences. This course covers user research, wireframing, prototyping, visual design, usability testing, and design tools. Learn to create intuitive and engaging user interfaces that meet user needs and business goals.</p>
+                            {% else %}
+                            <p>Fun fact: all websites use HTML — even this one. It's a fundamental part of every web developer's toolkit. HTML provides the content that gives web pages structure, by using elements and tags, you can add text, images, videos, forms, and more. Learning HTML basics is an important first step in your web development journey and an essential skill for front- and back-end developers.</p>
+                            {% endif %}
+
+                           
+                            <h2 class="mt-4">
+                                Skills you'll gain
+                            </h2>
+                            
+                            {% if course.get_skills_list %}
+                                {% for skill in course.get_skills_list %}
+                                <span class="badge rounded-pill text-white bg-primary px-4 py-2 m-2"
+                                    style="font-size: 15px; font-weight: normal;">{{ skill }}</span>
+                                {% endfor %}
+                            {% else %}
+                                <span class="badge rounded-pill text-white bg-primary px-4 py-2 m-2"
+                                    style="font-size: 15px; font-weight: normal;">Course Skills</span>
+                            {% endif %}
+                           
+
+                        </div>
+
+                        <div class="container" id="Curriculum">
+
+                            <h2 class="mt-4">
+                                Syllabus
+                            </h2>
+                            {% if course.get_syllabus_list %}
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                {% for topic in course.get_syllabus_list %}
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse{{ forloop.counter0 }}" aria-expanded="false" aria-controls="flush-collapse{{ forloop.counter0 }}">
+                                        {{ topic }}
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapse{{ forloop.counter0 }}" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">
+                                        <ul>
+                                            <li><i class="fa fa-video text-danger"></i> {{ topic }} - Introduction</li>
+                                            <li><i class="fa fa-video text-danger"></i> {{ topic }} - Advanced Concepts</li>
+                                            <li><i class="fa fa-video text-danger"></i> {{ topic }} - Practical Applications</li>
+                                        </ul>
+                                    </div>
+                                  </div>
+                                </div>
+                                {% endfor %}
+                              </div>
+                            {% elif course.title == 'dsa' %}
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        Arrays and Linked Lists
+                                    
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> Introduction to Arrays</li>
+                                        <li><i class="fa fa-video text-danger"></i> Linked List Implementation</li>
+                                        <li><i class="fa fa-video text-danger"></i> Array vs Linked List</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                       Stacks and Queues
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> Stack Operations</li>
+                                        <li><i class="fa fa-video text-danger"></i> Queue Implementation</li>
+                                        <li><i class="fa fa-video text-danger"></i> Applications of Stacks and Queues</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                       Trees and Graphs
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> Binary Trees</li>
+                                        <li><i class="fa fa-video text-danger"></i> Tree Traversals</li>
+                                        <li><i class="fa fa-video text-danger"></i> Graph Representation</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                                         Sorting and Searching Algorithms
+                                      </button>
+                                    </h2>
+                                    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                      <div class="accordion-body"><ul>
+                                          <li><i class="fa fa-video text-danger"></i> Bubble Sort and Quick Sort</li>
+                                          <li><i class="fa fa-video text-danger"></i> Binary Search</li>
+                                          <li><i class="fa fa-video text-danger"></i> Time Complexity Analysis</li>
+                                      </ul></div>
+                                    </div>
+                                  </div>
+                              </div>
+                            {% elif course.title == 'DS' %}
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        Introduction to Data Science
+                                    
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> What is Data Science?</li>
+                                        <li><i class="fa fa-video text-danger"></i> Data Science Lifecycle</li>
+                                        <li><i class="fa fa-video text-danger"></i> Tools and Technologies</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                       Data Analysis with Python
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> Pandas for Data Manipulation</li>
+                                        <li><i class="fa fa-video text-danger"></i> NumPy for Numerical Computing</li>
+                                        <li><i class="fa fa-video text-danger"></i> Data Cleaning and Preprocessing</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                       Machine Learning Basics
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> Supervised vs Unsupervised Learning</li>
+                                        <li><i class="fa fa-video text-danger"></i> Regression and Classification</li>
+                                        <li><i class="fa fa-video text-danger"></i> Model Evaluation</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                                         Data Visualization
+                                      </button>
+                                    </h2>
+                                    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                      <div class="accordion-body"><ul>
+                                          <li><i class="fa fa-video text-danger"></i> Matplotlib and Seaborn</li>
+                                          <li><i class="fa fa-video text-danger"></i> Creating Effective Charts</li>
+                                          <li><i class="fa fa-video text-danger"></i> Dashboard Design</li>
+                                      </ul></div>
+                                    </div>
+                                  </div>
+                              </div>
+                            {% else %}
+                            <div class="accordion accordion-flush" id="accordionFlushExample">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                                        Elements and Structure
+                                    
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> Introduction to HTML</li>
+                                        <li><i class="fa fa-video text-danger"></i> HTMl Document Standards</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                                       Tables
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> HTML Tables</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+                                       Forms
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapseThree" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body"><ul>
+                                        <li><i class="fa fa-video text-danger"></i> HTML Forms</li>
+                                        <li><i class="fa fa-video text-danger"></i> Form Validation</li>
+                                    </ul></div>
+                                  </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseFour" aria-expanded="false" aria-controls="flush-collapseFour">
+                                         Semantic HTML
+                                      </button>
+                                    </h2>
+                                    <div id="flush-collapseFour" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                                      <div class="accordion-body"><ul>
+                                          <li><i class="fa fa-video text-danger"></i> Semantic HTML</li>
+                                      </ul></div>
+                                    </div>
+                                  </div>
+                              </div>
+                            {% endif %}
+
+
+
+                        </div>
+
+                        <div class="container" id="Instructor">
+                            <h2 class="mt-4">About the Instructor</h2>
+                            <div class="image-div text-left mt-4">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-6">
+                                        <img src="{% static 'img/testimonials/testimonial-2.jpg' %}" alt=""
+                                            style="height: 150px; width: 150px; border-radius: 50%;">
+                                    </div>
+                                    <div class="col-lg-9 col-md-6 mt-2">
+                                        <h5>Zoe Bachman</h5>
+                                        <p>Developer</p>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p><i class="fa fa-star"></i>
+                                                    4.87 Instructor rating</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <p> <i class="fa fa-check
+                                                    
+                                                    
+                                                     "></i>
+                                                    1,533 reviews</p>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <p><i class="fa fa-user"></i>
+                                                    20 Students</p>
+                                            </div>
+                                            <div class="col-6">
+                                                <p><i class="fa fa-video"></i>
+                                                    29 courses</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="des mt-4 mb-5">
+                                    Curriculum Director at Codecademy and creative technologist. She has designed a range of Codecademy courses, including Learn HTML, Learn C#, Learn Alexa, and the beginner-friendly Learn How to Code.
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+
+                </div>
+
+            </div>
+            <div class="col-lg-3 col-md-6 shadow wow fadeInUp" data-wow-delay="0.3s">
+
+                <div class="image text-center">
+                    {% if course.image %}
+                        <img class="img-fluid mt-2" src="{{ course.image.url }}" alt="{{ course.title }}" height="200px" width="500px" style="object-fit: cover;">
+                    {% else %}
+                        {% with course_image_path=course.get_static_image_path %}
+                            {% if course_image_path %}
+                                <img class="img-fluid mt-2" src="{% static course_image_path %}" alt="{{ course.title }}" height="200px" width="500px" style="object-fit: cover;">
+                            {% else %}
+                                <img class="img-fluid mt-2" src="{% static 'img/courses/course-1.jpg' %}" alt="{{ course.title }}" height="200px" width="500px">
+                            {% endif %}
+                        {% endwith %}
+                    {% endif %}
+                </div>
+                
+                <h4 class="mt-2 p-2">{% if course.price|floatformat:0 == '0' %}Free{% else %}Paid{% endif %} <small></small></h4>
+                <h4 class="mt-2 p-2">₹ {{ course.price }}</h4>
+                
+
+                <div class="buttons">
+                    {% if course.price|floatformat:0 == '0' %}
+                        <a href="{% url 'add_to_cart' course.id %}"
+                            class="text-decoration-none text-white btn p-3 w-100 mb-2">ADD TO CART</a>
+                    {% else %}
+                        <a href="{% url 'add_to_cart' course.id %}"
+                            class="text-decoration-none text-white btn p-3 w-100 mb-2">ADD TO CART</a>
+                    {% endif %}
+                </div>
+                <div class="list mt-2">
+                    <div class="list1 d-flex justify-content-between pt-2 border-bottom">
+                        <p><i class="fa fa-clock"></i> Duration</p>
+                        <p>{{ course.duration }}</p>
+                    </div>
+                    <div class="list2 d-flex justify-content-between pt-2 border-bottom">
+                        <p><i class="fa fa-book"></i> Lectures</p>
+                        <p>{{ course.lectures|default:'0' }}</p>
+                    </div>
+                    <div class="list3 d-flex justify-content-between pt-2 border-bottom">
+                        <p><i class="fa fa-bolt"></i> Enrolled</p>
+                        <p>{{ course.students_enrolled.count }} students</p>
+                    </div>
+                    <div class="list4 d-flex justify-content-between pt-2 border-bottom">
+                        <p><i class="fa fa-google-translate"></i> Language</p>
+                        <p>{{ course.language|default:'English' }}</p>
+                    </div>
+                    <div class="list5 d-flex justify-content-between pt-2 border-bottom">
+                        <p><i class="fa fa-list"></i> Skill Level</p>
+                        <p>{{ course.level }}</p>
+                    </div>
+                    <div class="list6 d-flex justify-content-between pt-2 border-bottom">
+                        <p><i class="fa fa-list"></i> Deadline</p>
+                        <p>{{ course.deadline|default:'Life Time' }}</p>
+                    </div>
+                    <div class="list7 d-flex justify-content-between pt-2 border-bottom">
+                        <p><i class="fa fa-certificate"></i> Certificate</p>
+                        <p>{% if course.certificate %}Yes{% else %}No{% endif %}</p>
+                    </div>
+                    <div class="button pt-4 text-center mb-4">
+                        <i class="fa fa-share"></i><a href=""> Share this Course</a>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Course Detail End -->
+
+
+<!-- Footer Start -->
+<div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+    <div class="container py-5">
+        <div class="row g-5">
+            <div class="col-lg-4 col-md-6">
+                <h4 class="text-white mb-3">Quick Link</h4>
+                <p><a class="text-light" href="about.html">About Us</a></p>
+                <p><a class="text-light" href="contact.html">Contact Us</a></p>
+                <p><a class="text-light" href="">Privacy Policy</a></p>
+                <p><a class="text-light" href="">Terms & Condition</a></p>
+                <p><a class="text-light" href="">FAQs & Help</a></p>
+            </div>
+            <div class="col-lg-4 col-md-6">
+                <h4 class="text-white mb-3">Contact</h4>
+                <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, Bangalore, Karnataka</p>
+                <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+91 8683045908</p>
+                <p class="mb-2"><i class="fa fa-envelope me-3"></i>skillora@gmail.com</p>
+                <div class="d-flex pt-2">
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                    <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <h4 class="text-white mb-3">Subscribe to our Newsletter</h4>
+                <p>Subscribe now and join our growing community of learners committed to lifelong education! </p>
+                <div class="position-relative mx-auto" style="max-width: 400px;">
+                    <form action="#">
+                        <input class="form-control border-0 w-100 py-3 ps-4 pe-5" type="email"
+                            placeholder="Your email" required>
+                        <button type="submit"
+                            class="btn btn-primary py-2 position-absolute top-0 end-0 mt-2 me-2"><a
+                                href="mailto:keertidvcorai@gmail.com">Subscribe</a></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="copyright">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="index.html">Skillora</a>, All Right Reserved.
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->
+
+<!-- Back to Top -->
+<a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{% static 'lib/wow/wow.min.js' %}"></script>
+<script src="{% static 'lib/easing/easing.min.js' %}"></script>
+<script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+<script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+<!-- Template Javascript -->
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

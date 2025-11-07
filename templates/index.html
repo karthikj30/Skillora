@@ -1,0 +1,470 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="google-translate-customization" content="9f841e7780177523-3214ceb76f765f38-gc38c6fe6f9d06436-c">
+    </meta>
+
+    <title>Skillora : Learn Skills, Get Jobs</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="skill-based learning, job matching, career development" name="keywords">
+    <meta content="Skillora - Learn in-demand skills and get matched with relevant job opportunities" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+   
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span
+                    style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'home' %}" class="nav-item nav-link active">Home</a>
+                <a href="{% url 'about' %}" class="nav-item nav-link">About</a>
+                <a href="{% url 'courses' %}" class="nav-item nav-link">Skills</a>
+                <a href="{% url 'jobs' %}" class="nav-item nav-link">Jobs</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="{% url 'testimonials' %}" class="dropdown-item">Success Stories</a>
+                        <a href="{% url 'career_paths' %}" class="dropdown-item">Career Paths</a>
+                    </div>
+                </div>
+                <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile' %}" class="nav-item nav-link"><i class="fa fa-user"></i></a>
+                    <a href="{% url 'logout' %}" class="nav-item nav-link"><i class="fa fa-sign-out-alt"></i></a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="nav-item nav-link"><i class="fa fa-user"></i></a>
+                {% endif %}
+                <a href="#" class="nav-item nav-link">
+                    <div id="google_translate_element"></div>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+
+    <!-- Video Background Start -->
+    <div class="container-fluid p-0 mb-4">
+        <div class="position-relative" style="height: 100vh; overflow: hidden;">
+            <!-- Video Background -->
+            <video autoplay loop id="myVideo" style="position: absolute; right: 0; bottom: 0; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -1; object-fit: cover;">
+                <source src="{% static 'media/videos/Skillora2.mp4' %}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            
+            <!-- Overlay -->
+            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center"
+                style="background: rgba(24, 29, 56, .7);">
+                <div class="container">
+                    <div class="row justify-content-start">
+                        <div class="col-sm-10 col-lg-8">
+                            <h5 class="text-uppercase mb-3 animated slideInDown" style="color: #fb873f;">Learn Skills, Get Jobs</h5>
+                            <h1 class="display-3 text-white animated slideInDown">Master In-Demand Skills and Land Your Dream Job</h1>
+                            <p class="text-white mb-4 pb-2">Connect your learning directly to career opportunities. Our skill-based courses are designed to match you with real job openings in your field.</p>
+                            <a href="{% url 'courses' %}"
+                                class="btn btn-primary py-md-3 px-md-5 me-3 animated slideInLeft">Explore Skills</a>
+                            <a href="{% url 'jobs' %}" class="btn btn-light py-md-3 px-md-5 animated slideInRight">Find Jobs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Video Background End -->
+
+
+    <!-- Service Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-2 text-center">
+                <div class="col-12 wow fadeInUp" data-wow-delay="0.3s">
+                    <h1 style="color: #fb873f;">Transform Your Career with Skillora</h1>
+                    <p class="mb-5">Learn skills that matter in today's job market and get matched with opportunities that fit your expertise and career goals.</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item text-center pt-3 shadow">
+                        <div class="p-4">
+                            <i class="fa fa-graduation-cap fa-3x mb-4" style="color: #fb873f;"></i>
+                            <h5 class="mb-3">Learn Market Skills</h5>
+                            <p>Master skills that are in high demand by employers across various industries</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item text-center pt-3 shadow">
+                        <div class="p-4">
+                            <i class="fa fa-briefcase fa-3x mb-4" style="color: #fb873f;"></i>
+                            <h5 class="mb-3">Job Matching</h5>
+                            <p>Get matched with job opportunities that align with your skills and experience</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item text-center pt-3 shadow">
+                        <div class="p-4">
+                            <i class="fa fa-chart-line fa-3x mb-4" style="color: #fb873f;"></i>
+                            <h5 class="mb-3">Career Growth</h5>
+                            <p>Track your progress and advance your career with structured learning paths</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-sm-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="service-item text-center pt-3 shadow">
+                        <div class="p-4">
+                            <i class="fa fa-certificate fa-3x mb-4" style="color: #fb873f;"></i>
+                            <h5 class="mb-3">Industry Certifications</h5>
+                            <p>Earn recognized certifications that boost your resume and job prospects</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Service End -->
+
+
+    <!-- About Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="img-fluid position-absolute w-100 h-100" src="{% static 'img/about.jpg' %}" alt=""
+                            style="object-fit: cover;">
+                    </div>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <h6 class="section-title bg-white text-start pe-3">About Us</h6>
+                    <h1 class="mb-4" style="color: #fb873f;">Welcome to Skillora</h1>
+                    <p class="mb-4">Skillora bridges the gap between learning and employment. We believe that education should lead directly to career opportunities. Our platform connects skill development with real job market needs.</p>
+                    <p class="mb-4">We partner with industry leaders to ensure our courses teach the most relevant skills. Our AI-powered job matching system helps you find opportunities that match your newly acquired expertise.</p>
+                    <div class="row gy-2 gx-4 mb-4">
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right  me-2"></i>Industry-Aligned Skills</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right me-2"></i>AI Job Matching</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right me-2"></i>Career Path Guidance</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right me-2"></i>Employer Partnerships</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right me-2"></i>Skill Assessment</p>
+                        </div>
+                        <div class="col-sm-6">
+                            <p class="mb-0"><i class="fa fa-arrow-right me-2"></i>Job Placement Support</p>
+                        </div>
+                    </div>
+                    <a class="btn text-light py-3 px-5 mt-2" href="{% url 'about' %}">Read More</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+
+    <!-- Banner-1 Start -->
+    <div class="container-xxl py-5 pt-5 bg-light">
+        <div class="container">
+            <div class="row g-5 ">
+                <div class="col-lg-6 p-5 wow fadeInUp" data-wow-delay="0.3s">
+                    <h1 class="mb-4" style="color: #fb873f;">High-Demand Skills</h1>
+                    <p class="mb-4">Focus on skills that employers are actively seeking. Our courses are designed based on real job market analysis and employer feedback.</p>
+                    <a class="btn text-light py-3 px-5 mt-2" href="{% url 'courses' %}">Explore Skills</a>
+                </div>
+                <div class="col-lg-6 wow fadeInUp" data-wow-delay="0.1s" style="min-height: 400px;">
+                    <div class="position-relative h-100">
+                        <img class="img-fluid position-absolute w-100 h-100" src="{% static 'img/banners/banner-1.jpg' %}" alt=""
+                            style="object-fit: cover;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Banner-1 End -->
+
+    <!-- Categories Start -->
+    <div class="container-xxl py-5 category">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center px-3">Skill Categories</h6>
+                <h1 class="mb-5" style="color: #fb873f;">Popular Skills in High Demand</h1>
+            </div>
+            <div class="row g-2 m-2">
+                <div class="col-lg-3 col-md-6  text-center">
+                    <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
+                        <img src="{% static 'img/categories/cat1.png' %}" class="img-fluid" alt="categories">
+                        <h5 class="my-2">
+                            <a href="{% url 'courses' %}" class="text-center">Data Analysis</a>
+                        </h5>
+                        <p class="text-muted">Excel, SQL, Python</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6  text-center">
+                    <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
+                        <img src="{% static 'img/categories/cat2.png' %}" class="img-fluid" alt="categories">
+                        <h5 class="my-2">
+                            <a href="{% url 'courses' %}" class="text-center">Cloud Computing</a>
+                        </h5>
+                        <p class="text-muted">AWS, Azure, GCP</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6  text-center">
+                    <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
+                        <img src="{% static 'img/categories/cat3.png' %}" class="img-fluid" alt="categories">
+                        <h5 class="my-2">
+                            <a href="courses.html" class="text-center">Programming</a>
+                        </h5>
+                        <p class="text-muted">Python, Java, JavaScript</p>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6  text-center">
+                    <div class="content shadow p-3 mb-2 wow fadeInUp" data-wow-delay="0.3s">
+                        <img src="{% static 'img/categories/cat4.png' %}" class="img-fluid" alt="categories">
+                        <h5 class="my-2">
+                            <a href="courses.html" class="text-center">Digital Marketing</a>
+                        </h5>
+                        <p class="text-muted">SEO, Social Media, Analytics</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Categories End -->
+
+    <!-- Job Matching Section Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center px-3">Job Matching</h6>
+                <h1 class="mb-5" style="color: #fb873f;">Find Jobs That Match Your Skills</h1>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="course-item bg-light">
+                        <div class="text-center p-4 pb-0">
+                            <h3 class="mb-0">Data Analyst</h3>
+                            <div class="mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small>(123)</small>
+                            </div>
+                            <h5 class="mb-4">₹65,000 - ₹85,000</h5>
+                        </div>
+                        <div class="d-flex border-top">
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>Full-time</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-user text-primary me-2"></i>Remote</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-star text-primary me-2"></i>4.5</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="course-item bg-light">
+                        <div class="text-center p-4 pb-0">
+                            <h3 class="mb-0">Software Developer</h3>
+                            <div class="mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small>(89)</small>
+                            </div>
+                            <h5 class="mb-4">₹75,000 - ₹95,000</h5>
+                        </div>
+                        <div class="d-flex border-top">
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>Full-time</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-user text-primary me-2"></i>Hybrid</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-star text-primary me-2"></i>4.7</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="course-item bg-light">
+                        <div class="text-center p-4 pb-0">
+                            <h3 class="mb-0">Cloud Engineer</h3>
+                            <div class="mb-3">
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small class="fa fa-star text-primary"></small>
+                                <small>(67)</small>
+                            </div>
+                            <h5 class="mb-4">₹80,000 - ₹110,000</h5>
+                        </div>
+                        <div class="d-flex border-top">
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-clock text-primary me-2"></i>Full-time</small>
+                            <small class="flex-fill text-center border-end py-2"><i class="fa fa-user text-primary me-2"></i>Remote</small>
+                            <small class="flex-fill text-center py-2"><i class="fa fa-star text-primary me-2"></i>4.6</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a href="{% url 'jobs' %}" class="btn btn-primary py-3 px-5">View All Jobs</a>
+            </div>
+        </div>
+    </div>
+    <!-- Job Matching Section End -->
+
+    <!-- Testimonial Start -->
+    <div class="container-xxl py-5 wow fadeInUp" data-wow-delay="0.1s">
+        <div class="container">
+            <div class="text-center">
+                <h6 class="section-title bg-white text-center px-3">Testimonial</h6>
+                <h1 class="mb-5" style="color: #fb873f;">Success Stories</h1>
+            </div>
+            <div class="owl-carousel testimonial-carousel position-relative">
+                {% if testimonials %}
+                    {% for t in testimonials %}
+                    <div class="testimonial-item text-center">
+                        {% if t.image %}
+                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{{ t.image.url }}" style="width: 80px; height: 80px;">
+                        {% else %}
+                            <img class="border rounded-circle p-2 mx-auto mb-3" src="{% static 'img/testimonials/testimonial-1.jpg' %}" style="width: 80px; height: 80px;">
+                        {% endif %}
+                        <div class="testimonial-text rounded p-4 m-4">
+                            <p class="mb-4">{{ t.content }}</p>
+                            <h5 class="mb-1">{{ t.name }}</h5>
+                            <span class="fst-italic">{{ t.position }}{% if t.company %} at {{ t.company }}{% endif %}</span>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Testimonial End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Get In Touch</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Skill Street, Learning City, LC 12345</p>
+                    <p class="mb-2"><i class="fa fa-phone me-3"></i>+012 345 67890</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@skillora.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Quick Links</h5>
+                    <a class="btn btn-link" href="">About Us</a>
+                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="">Our Services</a>
+                    <a class="btn btn-link" href="">Privacy Policy</a>
+                    <a class="btn btn-link" href="">Terms & Condition</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Popular Skills</h5>
+                    <a class="btn btn-link" href="">Data Analysis</a>
+                    <a class="btn btn-link" href="">Programming</a>
+                    <a class="btn btn-link" href="">Cloud Computing</a>
+                    <a class="btn btn-link" href="">Digital Marketing</a>
+                    <a class="btn btn-link" href="">UI/UX Design</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Newsletter</h5>
+                    <p>Subscribe to our newsletter for job opportunities and skill updates</p>
+                    <div class="position-relative mx-auto" style="max-width: 400px;">
+                        <input class="form-control border-0 rounded-pill w-100 ps-4 pe-5 py-3" type="text" placeholder="Your Email" style="height: 48px;">
+                        <button type="button" class="btn shadow-none position-absolute top-0 end-0 mt-1 me-2"><i class="fa fa-paper-plane text-primary"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">Skillora</a>, All Right Reserved. 
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <div class="footer-menu">
+                            <a href="">Home</a>
+                            <a href="">Cookies</a>
+                            <a href="">Help</a>
+                            <a href="">FQAs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>   
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

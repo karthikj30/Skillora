@@ -1,0 +1,319 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Student Progress - {{ student.user.get_full_name|default:student.user.username }} - {{ course.title }}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}">
+    <style>
+        .progress-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 15px;
+        }
+        .progress-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .navbar-nav .nav-link.active {
+            background-color: #fb873f;
+            color: white !important;
+            border-radius: 5px;
+        }
+        .progress-bar-custom {
+            border-radius: 10px;
+            height: 25px;
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Django Messages -->
+    {% if messages %}
+        <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050;">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'teacher_home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'home' %}" class="nav-item nav-link">HOME</a>
+                <a href="{% url 'teacher_home' %}" class="nav-item nav-link">DASHBOARD</a>
+                <a href="{% url 'teacher_students' %}" class="nav-item nav-link active">STUDENTS</a>
+                <a href="{% url 'logout' %}" class="nav-item nav-link">LOGOUT</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Progress Content -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2">Student Progress</h2>
+                            <p class="text-muted mb-0">{{ student.user.get_full_name|default:student.user.username }} - {{ course.title }}</p>
+                        </div>
+                        <a href="{% url 'teacher_students' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Students
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Student Info Card -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card progress-card">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-8">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-4" style="width: 80px; height: 80px;">
+                                            <i class="fas fa-user text-white fa-3x"></i>
+                                        </div>
+                                        <div>
+                                            <h4 class="mb-1">{{ student.user.get_full_name|default:student.user.username }}</h4>
+                                            <p class="text-muted mb-1"><i class="fas fa-envelope me-2"></i>{{ student.user.email }}</p>
+                                            <p class="text-muted mb-0"><i class="fas fa-calendar me-2"></i>Enrolled: {{ student.enrollment_date|date:"M d, Y" }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 text-md-end">
+                                    <div class="mb-2">
+                                        <h3 class="mb-0 text-primary">{{ progress.progress_percentage }}%</h3>
+                                        <small class="text-muted">Overall Progress</small>
+                                    </div>
+                                    <div class="progress progress-bar-custom">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: {{ progress.progress_percentage }}%" aria-valuenow="{{ progress.progress_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Stats -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card stats-card text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-book fa-2x mb-2"></i>
+                            <h4>{{ viewed_materials_count }}/{{ total_materials }}</h4>
+                            <p class="mb-0">Materials Viewed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-tasks fa-2x mb-2"></i>
+                            <h4>{{ completed_assignments_count }}/{{ total_assignments }}</h4>
+                            <p class="mb-0">Assignments Completed</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-clock fa-2x mb-2"></i>
+                            <h4>{{ progress.total_time_spent|default:"0:00:00" }}</h4>
+                            <p class="mb-0">Time Spent</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-calendar-check fa-2x mb-2"></i>
+                            <h4>{{ progress.last_accessed|date:"M d" }}</h4>
+                            <p class="mb-0">Last Accessed</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Materials Progress -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card progress-card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-book me-2"></i>Course Materials ({{ viewed_materials_count }}/{{ total_materials }})</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if all_materials %}
+                                <div class="list-group">
+                                    {% for material in all_materials %}
+                                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <h6 class="mb-1">
+                                                {% if material in viewed_materials %}
+                                                    <i class="fas fa-check-circle text-success me-2"></i>
+                                                {% else %}
+                                                    <i class="far fa-circle text-muted me-2"></i>
+                                                {% endif %}
+                                                {{ material.title }}
+                                            </h6>
+                                            <small class="text-muted">{{ material.material_type|title }}</small>
+                                        </div>
+                                        {% if material in viewed_materials %}
+                                            <span class="badge bg-success">Viewed</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary">Not Viewed</span>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted text-center py-3">No materials available for this course.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignments Progress -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card progress-card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-tasks me-2"></i>Assignments ({{ completed_assignments_count }}/{{ total_assignments }})</h5>
+                        </div>
+                        <div class="card-body">
+                            {% if all_assignments %}
+                                <div class="list-group">
+                                    {% for assignment in all_assignments %}
+                                    <div class="list-group-item">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="mb-1">
+                                                    {% if assignment in completed_assignments %}
+                                                        <i class="fas fa-check-circle text-success me-2"></i>
+                                                    {% else %}
+                                                        <i class="far fa-circle text-muted me-2"></i>
+                                                    {% endif %}
+                                                    {{ assignment.title }}
+                                                </h6>
+                                                <small class="text-muted">{{ assignment.description|truncatewords:20 }}</small>
+                                            </div>
+                                            {% if assignment in completed_assignments %}
+                                                <span class="badge bg-success">Completed</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Not Completed</span>
+                                            {% endif %}
+                                        </div>
+                                        {% if assignment.due_date %}
+                                        <small class="text-muted"><i class="fas fa-calendar me-1"></i>Due: {{ assignment.due_date|date:"M d, Y" }}</small>
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="text-muted text-center py-3">No assignments available for this course.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignment Submissions -->
+            {% if submissions %}
+            <div class="row">
+                <div class="col-12">
+                    <div class="card progress-card">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-file-upload me-2"></i>Assignment Submissions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Assignment</th>
+                                            <th>Submitted</th>
+                                            <th>Status</th>
+                                            <th>Grade</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for submission in submissions %}
+                                        <tr>
+                                            <td>{{ submission.assignment.title }}</td>
+                                            <td>{{ submission.submitted_at|date:"M d, Y H:i" }}</td>
+                                            <td>
+                                                {% if submission.status == 'graded' %}
+                                                    <span class="badge bg-success">Graded</span>
+                                                {% elif submission.status == 'submitted' %}
+                                                    <span class="badge bg-warning">Submitted</span>
+                                                {% else %}
+                                                    <span class="badge bg-secondary">Pending</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                {% if submission.points_earned is not None %}
+                                                    {{ submission.points_earned }}/{{ submission.assignment.max_points }}
+                                                {% else %}
+                                                    <span class="text-muted">-</span>
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a href="{% url 'grade_submission' submission.id %}" class="btn btn-sm btn-outline-primary">
+                                                    <i class="fas fa-eye"></i> View
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
+

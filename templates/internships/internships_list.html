@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Internships & Placements - Skillora{% endblock %}
+
+{% block content %}
+<!-- Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">Internships & Placements</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">Internships</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Filters Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-4 mb-5">
+            <div class="col-12">
+                <div class="bg-light rounded p-4">
+                    <form method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Search</label>
+                            <input type="text" class="form-control" name="search" value="{{ search_query }}" placeholder="Search internships...">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" name="type">
+                                <option value="">All Types</option>
+                                <option value="internship" {% if selected_type == 'internship' %}selected{% endif %}>Internship</option>
+                                <option value="industrial_training" {% if selected_type == 'industrial_training' %}selected{% endif %}>Industrial Training</option>
+                                <option value="placement" {% if selected_type == 'placement' %}selected{% endif %}>Full-time Placement</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Location</label>
+                            <select class="form-select" name="location">
+                                <option value="">All Locations</option>
+                                {% for location in locations %}
+                                <option value="{{ location }}" {% if selected_location == location %}selected{% endif %}>{{ location }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Industry</label>
+                            <select class="form-select" name="industry">
+                                <option value="">All Industries</option>
+                                {% for industry in industries %}
+                                <option value="{{ industry }}" {% if selected_industry == industry %}selected{% endif %}>{{ industry }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button type="submit" class="btn btn-primary me-2">Filter</button>
+                            <a href="{% url 'internships_list' %}" class="btn btn-outline-secondary">Clear</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recommended Internships for Students -->
+        {% if recommended_internships %}
+        <div class="row mb-5">
+            <div class="col-12">
+                <h3 class="mb-4">Recommended for You</h3>
+                <div class="row g-4">
+                    {% for internship in recommended_internships|slice:":3" %}
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card h-100 border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-light text-primary">{{ internship.get_internship_type_display }}</span>
+                                    {% if internship.has_placement_potential %}
+                                    <span class="badge bg-warning text-dark">Placement Potential</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ internship.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ internship.company.company_name }}</h6>
+                                <p class="card-text">{{ internship.description|truncatewords:20 }}</p>
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        <i class="fa fa-map-marker-alt me-1"></i>{{ internship.location }}
+                                        <i class="fa fa-clock ms-3 me-1"></i>{{ internship.duration_months }} months
+                                    </small>
+                                </div>
+                                {% if internship.stipend_min %}
+                                <div class="mb-2">
+                                    <small class="text-success">
+                                        <i class="fa fa-money-bill-wave me-1"></i>
+                                        ₹{{ internship.stipend_min }}{% if internship.stipend_max %} - ₹{{ internship.stipend_max }}{% endif %}/month
+                                    </small>
+                                </div>
+                                {% endif %}
+                                <div class="mb-2">
+                                    <small class="text-info">
+                                        <i class="fa fa-users me-1"></i>{{ internship.seats_remaining }} seats remaining
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <a href="{% url 'internship_detail' internship.id %}" class="btn btn-primary btn-sm">View Details</a>
+                                <small class="text-muted float-end">Deadline: {{ internship.application_deadline|date:"M d, Y" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- All Internships -->
+        <div class="row">
+            <div class="col-12">
+                <h3 class="mb-4">All Opportunities ({{ internships.count }})</h3>
+                {% if internships %}
+                <div class="row g-4">
+                    {% for internship in internships %}
+                    <div class="col-lg-6 col-md-12">
+                        <div class="card h-100">
+                            <div class="card-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-primary">{{ internship.get_internship_type_display }}</span>
+                                    {% if internship.has_placement_potential %}
+                                    <span class="badge bg-warning text-dark">Placement Potential</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ internship.title }}</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">{{ internship.company.company_name }}</h6>
+                                <p class="card-text">{{ internship.description|truncatewords:25 }}</p>
+                                
+                                <div class="row mb-2">
+                                    <div class="col-6">
+                                        <small class="text-muted">
+                                            <i class="fa fa-map-marker-alt me-1"></i>{{ internship.location }}
+                                        </small>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">
+                                            <i class="fa fa-clock me-1"></i>{{ internship.duration_months }} months
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                {% if internship.stipend_min %}
+                                <div class="mb-2">
+                                    <small class="text-success">
+                                        <i class="fa fa-money-bill-wave me-1"></i>
+                                        ₹{{ internship.stipend_min }}{% if internship.stipend_max %} - ₹{{ internship.stipend_max }}{% endif %}/month
+                                    </small>
+                                </div>
+                                {% endif %}
+                                
+                                <div class="mb-2">
+                                    <small class="text-info">
+                                        <i class="fa fa-users me-1"></i>{{ internship.seats_remaining }} seats remaining
+                                    </small>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <small class="text-muted">
+                                        Skills: {{ internship.required_skills|truncatewords:5 }}
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="card-footer d-flex justify-content-between align-items-center">
+                                <a href="{% url 'internship_detail' internship.id %}" class="btn btn-primary btn-sm">View Details</a>
+                                <small class="text-muted">Deadline: {{ internship.application_deadline|date:"M d, Y" }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-5">
+                    <h4>No internships found</h4>
+                    <p class="text-muted">Try adjusting your filters or check back later for new opportunities.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

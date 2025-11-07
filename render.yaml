@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: skillora
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn skillora_project.wsgi:application --bind 0.0.0.0:$PORT"
+    plan: free
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: false
+      - key: ALLOWED_HOSTS
+        value: "*"
+    autoDeploy: false

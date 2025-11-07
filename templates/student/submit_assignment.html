@@ -1,0 +1,218 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Submit Assignment - {{ assignment.title }} | Skillora</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+    
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Django Messages -->
+    {% if messages %}
+        <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050;">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'student_home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'student_home' %}" class="nav-item nav-link">
+                    <i class="fas fa-home me-1"></i>DASHBOARD
+                </a>
+                <a href="{% url 'student_course_content' course.id %}" class="nav-item nav-link active">
+                    <i class="fas fa-book me-1"></i>COURSE
+                </a>
+                <a href="{% url 'profile' %}" class="nav-item nav-link">
+                    <i class="fas fa-cog me-1"></i>SETTINGS
+                </a>
+                <a href="{% url 'logout' %}" class="nav-item nav-link">
+                    <i class="fas fa-sign-out-alt me-1"></i>LOGOUT
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Submit Assignment Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2><i class="fas fa-upload text-primary me-3"></i>Submit Assignment</h2>
+                            <p class="text-muted mb-0">Course: <strong>{{ course.title }}</strong></p>
+                            <p class="text-muted mb-0">Assignment: <strong>{{ assignment.title }}</strong></p>
+                        </div>
+                        <a href="{% url 'student_course_content' course.id %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Course
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Assignment Details -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Assignment Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Description:</strong> {{ assignment.description }}</p>
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <p><strong>Due Date:</strong> 
+                                        <span class="{% if assignment.is_overdue %}text-danger{% else %}text-dark{% endif %}">
+                                            {{ assignment.due_date|date:"M d, Y g:i A" }}
+                                        </span>
+                                    </p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Points:</strong> {{ assignment.max_points }} points</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <p><strong>Type:</strong> {{ assignment.get_assignment_type_display }}</p>
+                                </div>
+                            </div>
+                            {% if assignment.attachment %}
+                            <div class="mt-3">
+                                <a href="{{ assignment.attachment.url }}" class="btn btn-sm btn-outline-primary" download>
+                                    <i class="fas fa-download me-1"></i>Download Assignment File
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submission Form -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card shadow">
+                        <div class="card-body p-5">
+                            <form method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                
+                                <!-- Submission Text -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-file-text text-primary me-2"></i>Submission Text (Optional)
+                                    </label>
+                                    {{ form.submission_text }}
+                                    {% if form.submission_text.errors %}
+                                        <div class="text-danger">{{ form.submission_text.errors }}</div>
+                                    {% endif %}
+                                    <small class="text-muted">You can provide a written response or notes about your submission here.</small>
+                                </div>
+
+                                <!-- Submission File -->
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">
+                                        <i class="fas fa-file-upload text-primary me-2"></i>Upload File (Required)
+                                    </label>
+                                    {{ form.submission_file }}
+                                    {% if form.submission_file.errors %}
+                                        <div class="text-danger">{{ form.submission_file.errors }}</div>
+                                    {% endif %}
+                                    <small class="text-muted">Accepted formats: PDF, DOC, DOCX, PPT, PPTX, ZIP, RAR, TXT, JPG, JPEG, PNG, GIF, BMP</small>
+                                    {% if submission and submission.submission_file %}
+                                    <div class="mt-2">
+                                        <small class="text-muted">Current file: </small>
+                                        <a href="{{ submission.submission_file.url }}" target="_blank" class="text-primary">
+                                            {{ submission.submission_file.name|slice:"20:" }}
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Submit Button -->
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-primary btn-lg">
+                                        <i class="fas fa-paper-plane me-2"></i>Submit Assignment
+                                    </button>
+                                    <a href="{% url 'student_course_content' course.id %}" class="btn btn-outline-secondary">
+                                        Cancel
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Submit Assignment End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5">
+        <div class="container py-5">
+            <div class="row">
+                <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                    &copy; <a class="border-bottom" href="{% url 'home' %}">Skillora</a>, All Right Reserved.
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
+

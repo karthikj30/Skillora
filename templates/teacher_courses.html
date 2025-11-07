@@ -1,0 +1,339 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skillora : My Courses</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}">
+    
+    <!-- Custom CSS -->
+    <style>
+        .course-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .navbar-nav .nav-link.active {
+            background-color: #fb873f;
+            color: white !important;
+            border-radius: 5px;
+        }
+        .stats-badge {
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Django Messages -->
+    {% if messages %}
+        <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050;">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'teacher_home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'teacher_home' %}" class="nav-item nav-link">
+                    <i class="fas fa-tachometer-alt me-1"></i>DASHBOARD
+                </a>
+                <a href="{% url 'teacher_courses' %}" class="nav-item nav-link active">
+                    <i class="fas fa-book me-1"></i>COURSES
+                </a>
+                <a href="{% url 'teacher_students' %}" class="nav-item nav-link">
+                    <i class="fas fa-users me-1"></i>STUDENTS
+                </a>
+                <a href="{% url 'teacher_assignments' %}" class="nav-item nav-link">
+                    <i class="fas fa-tasks me-1"></i>ASSIGNMENTS
+                </a>
+                <a href="{% url 'teacher_announcements' %}" class="nav-item nav-link">
+                    <i class="fas fa-bullhorn me-1"></i>ANNOUNCE
+                </a>
+                <a href="{% url 'teacher_payments' %}" class="nav-item nav-link">
+                    <i class="fas fa-credit-card me-1"></i>PAYMENTS
+                </a>
+                <a href="{% url 'profile' %}" class="nav-item nav-link">
+                    <i class="fas fa-cog me-1"></i>SETTINGS
+                </a>
+                <a href="{% url 'logout' %}" class="nav-item nav-link">
+                    <i class="fas fa-sign-out-alt me-1"></i>LOGOUT
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Courses Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2">My Courses</h2>
+                            <p class="text-muted mb-0">Manage and monitor your course offerings</p>
+                        </div>
+                        <a href="{% url 'create_course' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Create New Course
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Stats -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-book fa-2x mb-2"></i>
+                            <h4>{{ courses|length }}</h4>
+                            <p class="mb-0">Total Courses</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-success text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-2x mb-2"></i>
+                            <h4>{{ teacher.total_students }}</h4>
+                            <p class="mb-0">Total Students</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-warning text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-line fa-2x mb-2"></i>
+                            <h4>{{ teacher.student_progress_avg }}%</h4>
+                            <p class="mb-0">Avg Progress</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <div class="card bg-info text-white">
+                        <div class="card-body text-center">
+                            <i class="fas fa-star fa-2x mb-2"></i>
+                            <h4>{{ teacher.rating }}</h4>
+                            <p class="mb-0">Rating</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course List -->
+            <div class="row g-4">
+                {% if courses %}
+                    {% for course in courses %}
+                    <div class="col-lg-6 col-xl-4">
+                        <div class="card course-card card-hover h-100">
+                            <div class="card-img-top position-relative">
+                                {% if course.image %}
+                                    <img src="{{ course.image.url }}" class="card-img-top" alt="{{ course.title }}" style="height: 200px; object-fit: cover; width: 100%;">
+                                {% else %}
+                                    <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px; width: 100%;">
+                                        <i class="fas fa-book text-white fa-3x"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-primary">{{ course.category }}</span>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ course.title }}</h5>
+                                <p class="card-text text-muted">{{ course.description|truncatewords:20 }}</p>
+                                
+                                <div class="row mb-3">
+                                    <div class="col-6">
+                                        <small class="text-muted">
+                                            <i class="fas fa-clock me-1"></i>{{ course.duration }}
+                                        </small>
+                                    </div>
+                                    <div class="col-6">
+                                        <small class="text-muted">
+                                            <i class="fas fa-signal me-1"></i>{{ course.level }}
+                                        </small>
+                                    </div>
+                                </div>
+                                
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <span class="h5 text-primary mb-0">${{ course.price }}</span>
+                                    <span class="badge badge-soft stats-badge">
+                                        <i class="fas fa-users me-1"></i>{{ course.students_enrolled.all|length }} students
+                                    </span>
+                                </div>
+                                
+                                <div class="btn-group w-100" role="group">
+                                    <button class="btn btn-outline-primary btn-sm" onclick="editCourse({{ course.id }})">
+                                        <i class="fas fa-edit me-1"></i>Edit
+                                    </button>
+                                    <button class="btn btn-outline-info btn-sm" onclick="viewCourse({{ course.id }})">
+                                        <i class="fas fa-eye me-1"></i>View
+                                    </button>
+                                    <button class="btn btn-outline-success btn-sm" onclick="manageStudents({{ course.id }})">
+                                        <i class="fas fa-users me-1"></i>Students
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body text-center py-5">
+                                <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                                <h4 class="text-muted">No Courses Yet</h4>
+                                <p class="text-muted mb-4">Start creating your first course to begin teaching!</p>
+                                <a href="{% url 'create_course' %}" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-plus me-2"></i>Create Your First Course
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Courses End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Quick Link</h4>
+                    <p><a class="text-light" href="{% url 'about' %}">About Us</a></p>
+                    <p><a class="text-light" href="{% url 'contact' %}">Contact Us</a></p>
+                    <p><a class="text-light" href="">Privacy Policy</a></p>
+                    <p><a class="text-light" href="">Terms & Condition</a></p>
+                    <p><a class="text-light" href="">FAQs & Help</a></p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Contact</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, Bangalore, Karnataka</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+91 8683045908</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>skillora@gmail.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Teacher Resources</h4>
+                    <p>Access teaching materials, course templates, and professional development resources.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'profile' %}" class="btn btn-outline-light">Update Profile</a>
+                        <a href="{% url 'teacher_home' %}" class="btn btn-outline-light">Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="{% url 'home' %}">Skillora</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        function editCourse(courseId) {
+            window.location.href = `/teacher/edit-course/${courseId}/`;
+        }
+        
+        function viewCourse(courseId) {
+            alert(`View course with ID: ${courseId}`);
+            // This would typically redirect to course detail page
+        }
+        
+        function manageStudents(courseId) {
+            alert(`Manage students for course ID: ${courseId}`);
+            // This would typically redirect to student management page
+        }
+        
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+</body>
+
+</html>

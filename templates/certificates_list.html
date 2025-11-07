@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Certificates - Skillora{% endblock %}
+
+{% block content %}
+<div class="container-xxl py-5">
+  <div class="container">
+    <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+      <h6 class="section-title bg-white text-center px-3">Certificates</h6>
+      <h1 class="mb-5" style="color:#fb873f;">My Certificates</h1>
+    </div>
+    {% if certificates %}
+    <div class="row g-4">
+      {% for cert in certificates %}
+      <div class="col-md-6 col-lg-4">
+        <div class="card shadow h-100">
+          <div class="card-body">
+            <h5 class="card-title">{{ cert.course.title }}</h5>
+            <p class="text-muted mb-2">Issued on {{ cert.issued_at|date:"M d, Y" }}</p>
+            <p class="small">Certificate ID: <code>{{ cert.certificate_id }}</code></p>
+            <div class="d-flex" style="gap: 0.5rem;">
+              <a class="btn btn-outline-primary btn-sm" title="View Certificate" href="{% url 'view_certificate' cert.certificate_id %}" target="_blank">
+                <i class="fa fa-eye me-1"></i> View
+              </a>
+              <a class="btn btn-primary btn-sm" title="Download Certificate" href="{% url 'view_certificate' cert.certificate_id %}?download=1" target="_blank">
+                <i class="fa fa-download me-1"></i> Download
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center">
+      <p class="text-muted">No certificates yet. Complete a course to earn one.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+

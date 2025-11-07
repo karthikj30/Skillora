@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment Success - Skillora{% endblock %}
+
+{% block content %}
+<!-- Payment Success Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card text-center">
+                    <div class="card-body py-5">
+                        <div class="mb-4">
+                            <i class="fa fa-check-circle text-success" style="font-size: 5rem;"></i>
+                        </div>
+                        
+                        <h2 class="text-success mb-3">Payment Successful!</h2>
+                        <p class="text-muted mb-4">Thank you for your purchase. You have been successfully enrolled in the following courses:</p>
+                        
+                        <div class="row mb-4">
+                            {% for course in courses %}
+                            <div class="col-md-6 mb-3">
+                                <div class="card border-success">
+                                    <div class="card-body">
+                                        <h6 class="card-title text-success">{{ course.title }}</h6>
+                                        <p class="card-text text-muted">{{ course.category }}</p>
+                                        <small class="text-muted">₹{{ course.price }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="alert alert-success">
+                            <h5 class="alert-heading">Payment Details</h5>
+                            <p class="mb-1"><strong>Payment ID:</strong> {{ payment.payment_id }}</p>
+                            <p class="mb-1"><strong>Amount:</strong> ₹{{ payment.amount }}</p>
+                            <p class="mb-0"><strong>Date:</strong> {{ payment.completed_at|date:"F d, Y" }}</p>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                            <a href="{% url 'download_receipt' payment.payment_id %}" class="btn btn-primary btn-lg">
+                                <i class="fa fa-download me-2"></i>Download Receipt
+                            </a>
+                            <a href="{% url 'student_home' %}" class="btn btn-outline-primary btn-lg">
+                                <i class="fa fa-graduation-cap me-2"></i>Go to Dashboard
+                            </a>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <p class="text-muted">
+                                <i class="fa fa-envelope me-2"></i>
+                                A confirmation email has been sent to your registered email address.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Payment Success End -->
+{% endblock %}

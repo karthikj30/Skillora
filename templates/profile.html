@@ -1,0 +1,396 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skillora : Profile</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}">
+</head>
+
+<body>
+    <!-- Spinner removed -->
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span style="color: #fb873f;">ora</span> - Profile</p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                {% if profile.role == 'teacher' %}
+                    <a href="{% url 'teacher_home' %}" class="nav-item nav-link">Dashboard</a>
+                {% elif profile.role == 'company' %}
+                    <a href="{% url 'company_home' %}" class="nav-item nav-link">Dashboard</a>
+                {% else %}
+                    <a href="{% url 'home' %}" class="nav-item nav-link">Home</a>
+                {% endif %}
+                <a href="{% url 'profile' %}" class="nav-item nav-link active">Profile</a>
+                <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Header Start -->
+    <div class="container-fluid bg-primary py-3 mb-3 hero-header">
+        <div class="container py-3">
+            <div class="row justify-content-center py-5">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">Profile Settings</h1>
+                    <p class="fs-5 text-white animated slideInDown mb-0">Update your {{ profile.role|title }} profile information</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- Profile Start -->
+    <div class="container-xxl py-5" style="position: relative; z-index: 2;">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Profile Form -->
+                <div class="col-lg-8 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="mb-0">{{ profile.role|title }} Profile Information</h4>
+                        </div>
+                        <div class="card-body">
+                            {% if profile_form %}
+                                <form method="POST" enctype="multipart/form-data" id="profile_form">
+                                    {% csrf_token %}
+                                    
+                                    {% if profile.role == 'student' %}
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.profile_picture.id_for_label }}" class="form-label">Profile Picture</label>
+                                                {{ profile_form.profile_picture }}
+                                                {% if profile.profile_picture %}
+                                                    <small class="text-muted d-block mt-1">Current: <a href="{{ profile.profile_picture.url }}" target="_blank">{{ profile.profile_picture.name }}</a></small>
+                                                {% endif %}
+                                                <small class="text-muted d-block mt-1">You can also change your photo using the "Change Photo" button in the Profile Summary section.</small>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.bio.id_for_label }}" class="form-label">Bio</label>
+                                                {{ profile_form.bio }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.phone.id_for_label }}" class="form-label">Phone</label>
+                                                {{ profile_form.phone }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.address.id_for_label }}" class="form-label">Address</label>
+                                                {{ profile_form.address }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.skills.id_for_label }}" class="form-label">Skills</label>
+                                                {{ profile_form.skills }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.experience.id_for_label }}" class="form-label">Experience</label>
+                                                {{ profile_form.experience }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.education.id_for_label }}" class="form-label">Education</label>
+                                                {{ profile_form.education }}
+                                            </div>
+                                        </div>
+                                    {% elif profile.role == 'teacher' %}
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label for="id_profile_picture" class="form-label">Profile Picture</label>
+                                                <input type="file" name="profile_picture" accept="image/*" class="form-control" id="id_profile_picture">
+                                                {% if profile.profile_picture %}
+                                                    <small class="text-muted d-block mt-1">Current: <a href="{{ profile.profile_picture.url }}" target="_blank">{{ profile.profile_picture.name }}</a></small>
+                                                {% endif %}
+                                                <small class="text-muted d-block mt-1">You can also change your photo using the "Change Photo" button in the Profile Summary section.</small>
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.specialization.id_for_label }}" class="form-label">Specialization</label>
+                                                {{ profile_form.specialization }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.experience_years.id_for_label }}" class="form-label">Years of Experience</label>
+                                                {{ profile_form.experience_years }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.bio.id_for_label }}" class="form-label">Bio</label>
+                                                {{ profile_form.bio }}
+                                            </div>
+                                        </div>
+                                    {% elif profile.role == 'company' %}
+                                        <div class="row g-3">
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.company_name.id_for_label }}" class="form-label">Company Name</label>
+                                                {{ profile_form.company_name }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.industry.id_for_label }}" class="form-label">Industry</label>
+                                                {{ profile_form.industry }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.company_size.id_for_label }}" class="form-label">Company Size</label>
+                                                {{ profile_form.company_size }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.website.id_for_label }}" class="form-label">Website</label>
+                                                {{ profile_form.website }}
+                                            </div>
+                                            <div class="col-12">
+                                                <label for="{{ profile_form.description.id_for_label }}" class="form-label">Company Description</label>
+                                                {{ profile_form.description }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <div class="row mt-4">
+                                        <div class="col-12">
+                                            <button type="submit" class="btn btn-primary py-3 px-5">Update Profile</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            {% else %}
+                                <p class="text-muted">Profile form not available for this role.</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Summary -->
+                <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Profile Summary</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="text-center mb-4">
+                                {% if profile.profile_picture %}
+                                    <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="rounded-circle border border-3 border-primary" width="120" height="120" style="object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center border border-3 border-primary" style="width: 120px; height: 120px;">
+                                        <i class="fas fa-user text-white" style="font-size: 3rem;"></i>
+                                    </div>
+                                {% endif %}
+                                <div class="mt-2">
+                                    <label for="id_profile_picture" class="btn btn-sm btn-outline-primary mb-0">
+                                        <i class="fas fa-camera me-1"></i> Change Photo
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <strong>Username:</strong> {{ profile.user.username }}
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Full Name:</strong> {{ profile.user.get_full_name|default:"Not set" }}
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Email:</strong> {{ profile.user.email }}
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Role:</strong> 
+                                    <span class="badge bg-primary">{{ profile.role|title }}</span>
+                                </li>
+                                <li class="mb-2">
+                                    <strong>Member Since:</strong> {{ profile.user.date_joined|date:"M d, Y" }}
+                                </li>
+                                {% if profile.bio %}
+                                <li class="mb-2">
+                                    <strong>Bio:</strong> {{ profile.bio|truncatewords:20 }}
+                                </li>
+                                {% endif %}
+                                {% if profile.phone %}
+                                <li class="mb-2">
+                                    <strong>Phone:</strong> {{ profile.phone }}
+                                </li>
+                                {% endif %}
+                                {% if profile.address %}
+                                <li class="mb-2">
+                                    <strong>Address:</strong> {{ profile.address|truncatewords:10 }}
+                                </li>
+                                {% endif %}
+                                {% if profile.skills %}
+                                <li class="mb-2">
+                                    <strong>Skills:</strong> {{ profile.skills|truncatewords:15 }}
+                                </li>
+                                {% endif %}
+                            </ul>
+
+                            {% if profile.role == 'teacher' %}
+                                <div class="mt-3">
+                                    <h6>Teacher Stats</h6>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Specialization:</strong> {{ role_profile.specialization|default:"Not set" }}</li>
+                                        <li><strong>Experience:</strong> {{ role_profile.experience_years|default:"0" }} years</li>
+                                        {% if role_profile.bio %}
+                                        <li class="mt-2"><strong>Bio:</strong> {{ role_profile.bio|truncatewords:20 }}</li>
+                                        {% endif %}
+                                    </ul>
+                                </div>
+                            {% elif profile.role == 'company' %}
+                                <div class="mt-3">
+                                    <h6>Company Stats</h6>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Industry:</strong> {{ role_profile.industry|default:"Not set" }}</li>
+                                        <li><strong>Size:</strong> {{ role_profile.company_size|default:"Not set" }}</li>
+                                        <li><strong>Jobs Posted:</strong> {{ role_profile.jobs_posted.count }}</li>
+                                    </ul>
+                                </div>
+                            {% elif profile.role == 'student' %}
+                                <div class="mt-3">
+                                    <h6>Student Stats</h6>
+                                    <ul class="list-unstyled">
+                                        <li><strong>Enrollment Date:</strong> {{ role_profile.enrollment_date|date:"M d, Y" }}</li>
+                                        <li><strong>Courses Enrolled:</strong> {{ enrolled_count|default:0 }}</li>
+                                    </ul>
+                                </div>
+                                {% if student_completed_courses %}
+                                <div class="mt-3">
+                                    <h6 class="mb-2">Certificates</h6>
+                                    <div class="list-group small">
+                                        {% for c in student_completed_courses %}
+                                            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="{% url 'student_certificate' c.id %}">
+                                                <span>{{ c.title|truncatechars:32 }}</span>
+                                                <i class="fas fa-external-link-alt"></i>
+                                            </a>
+                                        {% empty %}
+                                            <div class="text-muted">No certificates yet.</div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+
+                    <!-- Quick Actions -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="mb-0">Quick Actions</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                {% if profile.role == 'teacher' %}
+                                    <a href="{% url 'teacher_home' %}" class="btn btn-outline-primary">Back to Dashboard</a>
+                                {% elif profile.role == 'company' %}
+                                    <a href="{% url 'company_home' %}" class="btn btn-outline-primary">Back to Dashboard</a>
+                                {% else %}
+                                    <a href="{% url 'home' %}" class="btn btn-outline-primary">Back to Home</a>
+                                {% endif %}
+                                <a href="{% url 'logout' %}" class="btn btn-outline-danger">Logout</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Profile End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Quick Link</h4>
+                    <p><a class="text-light" href="{% url 'about' %}">About Us</a></p>
+                    <p><a class="text-light" href="{% url 'contact' %}">Contact Us</a></p>
+                    <p><a class="text-light" href="">Privacy Policy</a></p>
+                    <p><a class="text-light" href="">Terms & Condition</a></p>
+                    <p><a class="text-light" href="">FAQs & Help</a></p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Contact</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, Bangalore, Karnataka</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+91 8683045908</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>skillora@gmail.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Profile Management</h4>
+                    <p>Keep your profile updated to get the best experience on our platform.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'profile' %}" class="btn btn-outline-light">Update Profile</a>
+                        <a href="{% url 'contact' %}" class="btn btn-outline-light">Get Help</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="{% url 'home' %}">Skillora</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <script>
+        // Auto-submit form when profile picture is selected
+        document.addEventListener('DOMContentLoaded', function() {
+            const profilePictureInput = document.getElementById('id_profile_picture');
+            if (profilePictureInput) {
+                profilePictureInput.addEventListener('change', function() {
+                    if (this.files && this.files.length > 0) {
+                        document.getElementById('profile_form').submit();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

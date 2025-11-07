@@ -1,0 +1,407 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skillora : Create Course</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}">
+    
+    <!-- Custom CSS -->
+    <style>
+        .form-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .navbar-nav .nav-link.active {
+            background-color: #fb873f;
+            color: white !important;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Django Messages -->
+    {% if messages %}
+        <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050;">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'teacher_home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'home' %}" class="nav-item nav-link">
+                    <i class="fas fa-home me-1"></i>HOME
+                </a>
+                <a href="{% url 'teacher_home' %}" class="nav-item nav-link">
+                    <i class="fas fa-tachometer-alt me-1"></i>DASHBOARD
+                </a>
+                <a href="{% url 'teacher_courses' %}" class="nav-item nav-link">
+                    <i class="fas fa-book me-1"></i>COURSES
+                </a>
+                <a href="{% url 'teacher_students' %}" class="nav-item nav-link">
+                    <i class="fas fa-users me-1"></i>STUDENTS
+                </a>
+                <a href="{% url 'teacher_payments' %}" class="nav-item nav-link">
+                    <i class="fas fa-credit-card me-1"></i>PAYMENTS
+                </a>
+                <a href="{% url 'profile' %}" class="nav-item nav-link">
+                    <i class="fas fa-cog me-1"></i>SETTINGS
+                </a>
+                <a href="{% url 'logout' %}" class="nav-item nav-link">
+                    <i class="fas fa-sign-out-alt me-1"></i>LOGOUT
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Create Course Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h2 class="mb-2">Create New Course</h2>
+                            <p class="text-muted mb-0">Design and launch your next successful course</p>
+                        </div>
+                        <a href="{% url 'teacher_courses' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Courses
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Course Creation Form -->
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card form-card">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0"><i class="fas fa-plus me-2"></i>Course Information</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                
+                                <div class="row g-3">
+                                    <!-- Course Title -->
+                                    <div class="col-12">
+                                        <label for="title" class="form-label">Course Title *</label>
+                                        <input type="text" class="form-control" id="title" name="title" required 
+                                               placeholder="Enter course title">
+                                    </div>
+                                    
+                                    <!-- Course Description -->
+                                    <div class="col-12">
+                                        <label for="description" class="form-label">Course Description *</label>
+                                        <textarea class="form-control" id="description" name="description" rows="4" required
+                                                  placeholder="Describe what students will learn in this course"></textarea>
+                                    </div>
+                                    
+                                    <!-- Category and Level -->
+                                    <div class="col-md-6">
+                                        <label for="category" class="form-label">Category *</label>
+                                        <input type="text" class="form-control" id="category" name="category" required 
+                                               placeholder="Enter category (e.g., Web Development, Design, etc.)">
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="level" class="form-label">Difficulty Level *</label>
+                                        <select class="form-select" id="level" name="level" required>
+                                            <option value="">Select Level</option>
+                                            <option value="Beginner">Beginner</option>
+                                            <option value="Intermediate">Intermediate</option>
+                                            <option value="Advanced">Advanced</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <!-- Price and Duration -->
+                                    <div class="col-md-6">
+                                        <label for="price" class="form-label">Price ($) *</label>
+                                        <input type="text" class="form-control" id="price" name="price" 
+                                               required placeholder="e.g., 0.02, 10.00, Free">
+                                    </div>
+                                    
+                                    <div class="col-md-6">
+                                        <label for="duration" class="form-label">Duration *</label>
+                                        <input type="text" class="form-control" id="duration" name="duration" required
+                                               placeholder="e.g., 10 hours, 6 weeks">
+                                    </div>
+                                    
+                                    <!-- Course Image -->
+                                    <div class="col-12">
+                                        <label for="image" class="form-label">Course Image</label>
+                                        <input type="file" class="form-control" id="image" name="image" 
+                                               accept="image/*">
+                                        <small class="text-muted">Recommended size: 800x600 pixels</small>
+                                    </div>
+                                    
+                                    <!-- Skills -->
+                                    <div class="col-12">
+                                        <label for="skills" class="form-label">Skills You'll Gain</label>
+                                        <textarea class="form-control" id="skills" name="skills" rows="2"
+                                                  placeholder="Enter skills separated by commas (e.g., HTML, CSS, JavaScript, Python)"></textarea>
+                                        <small class="text-muted">List the key skills students will learn in this course</small>
+                                    </div>
+                                    
+                                    <!-- Syllabus -->
+                                    <div class="col-12">
+                                        <label for="syllabus" class="form-label">Course Syllabus</label>
+                                        <textarea class="form-control" id="syllabus" name="syllabus" rows="4"
+                                                  placeholder="Enter course topics, one per line (e.g., Introduction, Module 1, Module 2, etc.)"></textarea>
+                                        <small class="text-muted">List the main topics or modules in your course</small>
+                                    </div>
+                                    
+                                    <!-- Lectures, Language, Deadline, Certificate -->
+                                    <div class="col-md-3">
+                                        <label for="lectures" class="form-label">Number of Lectures</label>
+                                        <input type="number" class="form-control" id="lectures" name="lectures" 
+                                               min="0" value="0">
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="language" class="form-label">Language *</label>
+                                        <select class="form-select" id="language" name="language" required>
+                                            <option value="English" selected>English</option>
+                                            <option value="Spanish">Spanish</option>
+                                            <option value="French">French</option>
+                                            <option value="German">German</option>
+                                            <option value="Hindi">Hindi</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="deadline" class="form-label">Deadline</label>
+                                        <input type="text" class="form-control" id="deadline" name="deadline" 
+                                               placeholder="e.g., Life Time, 30 days" value="Life Time">
+                                        <small class="text-muted">Course access duration</small>
+                                    </div>
+                                    
+                                    <div class="col-md-3">
+                                        <label for="certificate" class="form-label">Certificate</label>
+                                        <select class="form-select" id="certificate" name="certificate">
+                                            <option value="true" selected>Yes</option>
+                                            <option value="false">No</option>
+                                        </select>
+                                        <small class="text-muted">Certificate provided on completion</small>
+                                    </div>
+                                    
+                                    <!-- Additional Information -->
+                                    <div class="col-12">
+                                        <label for="additional_info" class="form-label">Additional Information</label>
+                                        <textarea class="form-control" id="additional_info" name="additional_info" rows="3"
+                                                  placeholder="Any additional details about the course (optional)"></textarea>
+                                    </div>
+                                    
+                                    <!-- Submit Buttons -->
+                                    <div class="col-12">
+                                        <div class="d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary flex-fill">
+                                                <i class="fas fa-save me-2"></i>Create Course
+                                            </button>
+                                            <button type="reset" class="btn btn-outline-secondary">
+                                                <i class="fas fa-undo me-2"></i>Reset
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tips Section -->
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="fas fa-lightbulb me-2 text-warning"></i>Course Creation Tips</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success me-2"></i>Use clear, descriptive titles</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Write compelling descriptions</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Set appropriate pricing</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled">
+                                        <li><i class="fas fa-check text-success me-2"></i>Choose relevant categories</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Use high-quality images</li>
+                                        <li><i class="fas fa-check text-success me-2"></i>Be honest about difficulty level</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Create Course End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Quick Link</h4>
+                    <p><a class="text-light" href="{% url 'about' %}">About Us</a></p>
+                    <p><a class="text-light" href="{% url 'contact' %}">Contact Us</a></p>
+                    <p><a class="text-light" href="">Privacy Policy</a></p>
+                    <p><a class="text-light" href="">Terms & Condition</a></p>
+                    <p><a class="text-light" href="">FAQs & Help</a></p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Contact</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, Bangalore, Karnataka</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+91 8683045908</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>skillora@gmail.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Teacher Resources</h4>
+                    <p>Access teaching materials, course templates, and professional development resources.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'profile' %}" class="btn btn-outline-light">Update Profile</a>
+                        <a href="{% url 'teacher_home' %}" class="btn btn-outline-light">Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="{% url 'home' %}">Skillora</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <!-- Custom JavaScript -->
+    <script>
+        // Form validation and enhancement
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.querySelector('form');
+            const priceInput = document.getElementById('price');
+            
+            // Price input formatting
+            priceInput.addEventListener('input', function(e) {
+                let value = e.target.value;
+                if (value && !isNaN(value)) {
+                    e.target.value = parseFloat(value).toFixed(2);
+                }
+            });
+            
+            // Form submission enhancement
+            form.addEventListener('submit', function(e) {
+                const requiredFields = form.querySelectorAll('[required]');
+                let isValid = true;
+                
+                requiredFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                    } else {
+                        field.classList.remove('is-invalid');
+                    }
+                });
+                
+                if (!isValid) {
+                    e.preventDefault();
+                    alert('Please fill in all required fields.');
+                }
+            });
+        });
+        
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+    </script>
+</body>
+
+</html>

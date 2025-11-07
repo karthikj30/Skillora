@@ -1,0 +1,234 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{{ material.title }} - View Material | Skillora</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+    
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    
+    <style>
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+            max-width: 100%;
+            background: #000;
+        }
+        .video-container iframe,
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .note-content {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            min-height: 200px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'teacher_home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'teacher_home' %}" class="nav-item nav-link">
+                    <i class="fas fa-home me-1"></i>DASHBOARD
+                </a>
+                <a href="{% url 'teacher_courses' %}" class="nav-item nav-link active">
+                    <i class="fas fa-book me-1"></i>COURSES
+                </a>
+                <a href="{% url 'teacher_students' %}" class="nav-item nav-link">
+                    <i class="fas fa-users me-1"></i>STUDENTS
+                </a>
+                <a href="{% url 'profile' %}" class="nav-item nav-link">
+                    <i class="fas fa-cog me-1"></i>SETTINGS
+                </a>
+                <a href="{% url 'logout' %}" class="nav-item nav-link">
+                    <i class="fas fa-sign-out-alt me-1"></i>LOGOUT
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- View Material Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-10 mx-auto">
+                    <!-- Header -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h4 class="mb-0">
+                                        {% if material.material_type == 'video' %}
+                                            <i class="fas fa-video me-2"></i>
+                                        {% elif material.material_type == 'note' %}
+                                            <i class="fas fa-sticky-note me-2"></i>
+                                        {% elif material.material_type == 'file' %}
+                                            <i class="fas fa-file me-2"></i>
+                                        {% else %}
+                                            <i class="fas fa-link me-2"></i>
+                                        {% endif %}
+                                        {{ material.title }}
+                                    </h4>
+                                    <small class="d-block mt-2">
+                                        <i class="fas fa-book me-1"></i>{{ material.course.title }}
+                                    </small>
+                                </div>
+                                <div>
+                                    <a href="{% url 'teacher_course_detail' material.course.id %}" class="btn btn-light btn-sm">
+                                        <i class="fas fa-arrow-left me-1"></i>Back to Course
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            {% if material.description %}
+                            <p class="text-muted mb-3">{{ material.description }}</p>
+                            {% endif %}
+                            <div class="d-flex flex-wrap gap-3">
+                                <span class="badge bg-info">
+                                    <i class="fas fa-tag me-1"></i>{{ material.get_material_type_display }}
+                                </span>
+                                <span class="badge bg-secondary">
+                                    <i class="fas fa-calendar me-1"></i>{{ material.created_at|date:"M d, Y" }}
+                                </span>
+                                {% if material.is_published %}
+                                <span class="badge bg-success">
+                                    <i class="fas fa-check me-1"></i>Published
+                                </span>
+                                {% else %}
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-clock me-1"></i>Draft
+                                </span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="card">
+                        <div class="card-body">
+                            {% if material.material_type == 'video' %}
+                                {% if material.youtube_video_id %}
+                                    <div class="video-container mb-3">
+                                        <iframe src="{{ material.get_youtube_embed_url }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                    </div>
+                                    {% if material.url %}
+                                    <div class="text-center mb-3">
+                                        <a href="{{ material.url }}" target="_blank" class="btn btn-outline-danger">
+                                            <i class="fab fa-youtube me-1"></i>Watch on YouTube
+                                        </a>
+                                    </div>
+                                    {% endif %}
+                                {% elif material.file %}
+                                    <div class="video-container">
+                                        <video controls style="width: 100%; height: 100%;">
+                                            <source src="{{ material.file.url }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    </div>
+                                {% elif material.url %}
+                                    <div class="text-center p-5">
+                                        <i class="fab fa-youtube fa-4x text-danger mb-3"></i>
+                                        <p class="mb-3">Video Link</p>
+                                        <a href="{{ material.url }}" target="_blank" class="btn btn-primary btn-lg">
+                                            <i class="fab fa-youtube me-2"></i>Watch Video
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% elif material.material_type == 'note' %}
+                                <div class="note-content">
+                                    {{ material.content|linebreaks }}
+                                </div>
+                            {% elif material.material_type == 'file' %}
+                                {% if material.file %}
+                                    <div class="text-center p-5">
+                                        <i class="fas fa-file-pdf fa-5x text-primary mb-3"></i>
+                                        <h5 class="mb-3">{{ material.title }}</h5>
+                                        <p class="text-muted mb-4">{{ material.description|default:"File attachment" }}</p>
+                                        <a href="{{ material.file.url }}" target="_blank" class="btn btn-primary btn-lg">
+                                            <i class="fas fa-download me-2"></i>Download File
+                                        </a>
+                                    </div>
+                                {% endif %}
+                            {% endif %}
+
+                            <!-- Actions -->
+                            <div class="mt-4 pt-4 border-top">
+                                <div class="d-flex justify-content-between">
+                                    <a href="{% url 'teacher_course_detail' material.course.id %}" class="btn btn-outline-secondary">
+                                        <i class="fas fa-arrow-left me-1"></i>Back to Course
+                                    </a>
+                                    <div>
+                                        <a href="{% url 'delete_material' material.id %}" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this material? This action cannot be undone.');">
+                                            <i class="fas fa-trash me-1"></i>Delete Material
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- View Material End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5">
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="{% url 'home' %}">Skillora</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,516 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skillora : Career Paths</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="career paths, skill development, job progression" name="keywords">
+    <meta content="Explore career paths and the skills needed to advance in your chosen field" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+</head>
+
+<body>
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show bg-white position-fixed translate-middle w-100 vh-100 top-50 start-50 d-flex align-items-center justify-content-center">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+    <!-- Spinner End -->
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span
+                    style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'home' %}" class="nav-item nav-link">Home</a>
+                <a href="{% url 'about' %}" class="nav-item nav-link">About</a>
+                <a href="{% url 'courses' %}" class="nav-item nav-link">Skills</a>
+                <a href="{% url 'jobs' %}" class="nav-item nav-link">Jobs</a>
+                <div class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle active" data-bs-toggle="dropdown">Pages</a>
+                    <div class="dropdown-menu fade-down m-0">
+                        <a href="{% url 'testimonials' %}" class="dropdown-item">Success Stories</a>
+                        <a href="{% url 'career_paths' %}" class="dropdown-item">Career Paths</a>
+                    </div>
+                </div>
+                <a href="{% url 'contact' %}" class="nav-item nav-link">Contact</a>
+                <a href="{% url 'login' %}" class="nav-item nav-link"><i class="fa fa-user"></i></a>
+                <a href="#" class="nav-item nav-link">
+                    <div id="google_translate_element"></div>
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Header Start -->
+    <div class="container-fluid bg-primary py-5 mb-5 page-header">
+        <div class="container py-5">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <h1 class="display-3 text-white animated slideInDown">Career Paths</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center">
+                            <li class="breadcrumb-item"><a class="text-white" href="index.html">Home</a></li>
+                            <li class="breadcrumb-item text-white active" aria-current="page">Career Paths</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Header End -->
+
+    <!-- Career Paths Section Start -->
+    <div class="container-xxl py-5">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center px-3">Career Development</h6>
+                <h1 class="mb-5" style="color: #fb873f;">Choose Your Career Path</h1>
+                <p class="mb-5">Explore different career trajectories and the skills you need to advance in your chosen field. Each path shows progression from entry-level to senior positions.</p>
+            </div>
+
+            <!-- Data Science Career Path -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="bg-light p-4 rounded shadow">
+                        <h3 class="mb-4" style="color: #fb873f;">📊 Data Science Career Path</h3>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-chart-bar fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Data Analyst</h5>
+                                        <p class="card-text small">Entry Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Excel</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">SQL</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Tableau</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹50K - ₹70K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-chart-line fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Data Scientist</h5>
+                                        <p class="card-text small">Mid Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Python</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">R</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">ML</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹80K - ₹120K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-brain fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">ML Engineer</h5>
+                                        <p class="card-text small">Senior Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">TensorFlow</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">PyTorch</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">AWS</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹120K - ₹180K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-cogs fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">AI Director</h5>
+                                        <p class="card-text small">Executive</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Strategy</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Leadership</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Research</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹180K+</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Software Development Career Path -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="bg-light p-4 rounded shadow">
+                        <h3 class="mb-4" style="color: #fb873f;">💻 Software Development Career Path</h3>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-code fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Junior Developer</h5>
+                                        <p class="card-text small">Entry Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">JavaScript</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">HTML/CSS</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Git</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹60K - ₹80K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-laptop-code fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Full Stack Developer</h5>
+                                        <p class="card-text small">Mid Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">React</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Node.js</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">MongoDB</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹80K - ₹120K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-server fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Senior Developer</h5>
+                                        <p class="card-text small">Senior Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Architecture</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Microservices</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Docker</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹120K - ₹160K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-users fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Tech Lead</h5>
+                                        <p class="card-text small">Leadership</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Leadership</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Mentoring</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Strategy</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹150K+</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cloud Computing Career Path -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="bg-light p-4 rounded shadow">
+                        <h3 class="mb-4" style="color: #fb873f;">☁️ Cloud Computing Career Path</h3>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-cloud fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Cloud Support</h5>
+                                        <p class="card-text small">Entry Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">AWS</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Azure</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Linux</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹50K - ₹70K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-cloud-upload-alt fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Cloud Engineer</h5>
+                                        <p class="card-text small">Mid Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Terraform</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Kubernetes</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">CI/CD</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹80K - ₹130K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-route fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Cloud Architect</h5>
+                                        <p class="card-text small">Senior Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Architecture</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Security</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Networking</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹130K - ₹180K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-crown fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">CTO/VP Engineering</h5>
+                                        <p class="card-text small">Executive</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Strategy</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Leadership</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Innovation</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹200K+</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Digital Marketing Career Path -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="bg-light p-4 rounded shadow">
+                        <h3 class="mb-4" style="color: #fb873f;">📱 Digital Marketing Career Path</h3>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-bullhorn fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Marketing Assistant</h5>
+                                        <p class="card-text small">Entry Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Social Media</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Content</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Analytics</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹40K - ₹60K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-chart-pie fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Digital Marketing Specialist</h5>
+                                        <p class="card-text small">Mid Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">SEO</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">PPC</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Email</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹60K - ₹90K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-chart-line fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">Marketing Manager</h5>
+                                        <p class="card-text small">Senior Level</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Strategy</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Team Lead</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">ROI</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹90K - ₹130K</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <div class="card h-100 border-0 shadow-sm">
+                                    <div class="card-body text-center">
+                                        <i class="fa fa-trophy fa-3x mb-3" style="color: #fb873f;"></i>
+                                        <h5 class="card-title">CMO</h5>
+                                        <p class="card-text small">Executive</p>
+                                        <div class="mt-3">
+                                            <span class="badge bg-light text-dark me-1 mb-1">Leadership</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Vision</span>
+                                            <span class="badge bg-light text-dark me-1 mb-1">Growth</span>
+                                        </div>
+                                        <p class="card-text mt-3 small">₹150K+</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Career Paths Section End -->
+
+    <!-- Skills Assessment Section Start -->
+    <div class="container-xxl py-5 bg-light">
+        <div class="container">
+            <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+                <h6 class="section-title bg-white text-center px-3">Assessment</h6>
+                <h1 class="mb-5" style="color: #fb873f;">Assess Your Skills</h1>
+                <p class="mb-5">Take our skill assessment to understand where you are in your career path and what skills you need to develop next.</p>
+            </div>
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="service-item text-center pt-3 shadow">
+                        <div class="p-4">
+                            <i class="fa fa-clipboard-check fa-3x mb-4" style="color: #fb873f;"></i>
+                            <h5 class="mb-3">Skill Assessment</h5>
+                            <p>Evaluate your current skill level across different technologies and domains.</p>
+                            <button class="btn btn-primary mt-3">Take Assessment</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="service-item text-center pt-3 shadow">
+                        <div class="p-4">
+                            <i class="fa fa-road fa-3x mb-4" style="color: #fb873f;"></i>
+                            <h5 class="mb-3">Career Roadmap</h5>
+                            <p>Get a personalized roadmap showing the skills you need to reach your career goals.</p>
+                            <button class="btn btn-primary mt-3">Get Roadmap</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="service-item text-center pt-3 shadow">
+                        <div class="p-4">
+                            <i class="fa fa-graduation-cap fa-3x mb-4" style="color: #fb873f;"></i>
+                            <h5 class="mb-3">Learning Plan</h5>
+                            <p>Receive a customized learning plan with courses and resources to develop your skills.</p>
+                            <button class="btn btn-primary mt-3">Create Plan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Skills Assessment Section End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-white-50 footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Get In Touch</h5>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Skill Street, Learning City, LC 12345</p>
+                    <p class="mb-2"><i class="fa fa-phone me-3"></i>+012 345 67890</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>info@skillora.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Quick Links</h5>
+                    <a class="btn btn-link" href="">About Us</a>
+                    <a class="btn btn-link" href="">Contact Us</a>
+                    <a class="btn btn-link" href="">Our Services</a>
+                    <a class="btn btn-link" href="">Privacy Policy</a>
+                    <a class="btn btn-link" href="">Terms & Condition</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Popular Skills</h5>
+                    <a class="btn btn-link" href="">Data Analysis</a>
+                    <a class="btn btn-link" href="">Programming</a>
+                    <a class="btn btn-link" href="">Cloud Computing</a>
+                    <a class="btn btn-link" href="">Digital Marketing</a>
+                    <a class="btn btn-link" href="">UI/UX Design</a>
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <h5 class="text-white mb-4">Newsletter</h5>
+                    <p>Subscribe to our newsletter for job opportunities and skill updates</p>
+                    <div class="position-relative mx-auto" style="max-width: 400px;">
+                        <input class="form-control border-0 rounded-pill w-100 ps-4 pe-5 py-3" type="text" placeholder="Your Email" style="height: 48px;">
+                        <button type="button" class="btn shadow-none position-absolute top-0 end-0 mt-1 me-2"><i class="fa fa-paper-plane text-primary"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="#">Skillora</a>, All Right Reserved. 
+                    </div>
+                    <div class="col-md-6 text-center text-md-end">
+                        <div class="footer-menu">
+                            <a href="">Home</a>
+                            <a href="">Cookies</a>
+                            <a href="">Help</a>
+                            <a href="">FQAs</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>   
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+
+</html>

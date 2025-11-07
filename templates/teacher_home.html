@@ -1,0 +1,1251 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skillora : Teacher Dashboard</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Favicon -->
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600&family=Nunito:wght@600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+
+    <!-- Template Stylesheet -->
+    <link href="{% static 'css/style.css' %}">
+    
+    <!-- Custom CSS for Dashboard -->
+    <style>
+        .dashboard-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: none;
+            border-radius: 15px;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        }
+        .stats-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 15px;
+        }
+        .stats-card.orange {
+            background: linear-gradient(135deg, #fb873f 0%, #f093fb 100%);
+        }
+        .stats-card.green {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .stats-card.success {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .calendar-day {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin: 1px;
+            min-height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+        .calendar-day:hover {
+            background-color: #e3f2fd;
+            transform: scale(1.05);
+            border-color: #2196f3;
+        }
+        .calendar-day.today {
+            background-color: #fb873f;
+            color: white;
+            font-weight: bold;
+            border-color: #fb873f;
+        }
+        .calendar-day.has-event {
+            background-color: #e8f5e8;
+            border: 2px solid #4caf50;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        .calendar-day.empty {
+            background-color: transparent;
+            cursor: default;
+            border: none;
+        }
+        .calendar-day.empty:hover {
+            transform: none;
+            background-color: transparent;
+            border-color: transparent;
+        }
+        .message-bubble {
+            max-width: 85%;
+            word-wrap: break-word;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .message.received .message-bubble {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 1px solid #dee2e6;
+        }
+        .message.sent .message-bubble {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            border: 1px solid #0056b3;
+        }
+        .avatar img {
+            border: 2px solid #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .message-input-container {
+            border-top: 1px solid #e9ecef;
+            padding-top: 15px;
+        }
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 3px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 3px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+        .typing-dots {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: #6c757d;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        .typing-dots span:nth-child(1) {
+            animation-delay: -0.32s;
+        }
+        .typing-dots span:nth-child(2) {
+            animation-delay: -0.16s;
+        }
+        @keyframes typing {
+            0%, 80%, 100% {
+                transform: scale(0.8);
+                opacity: 0.5;
+            }
+            40% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .quick-action-btn {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+        }
+        .quick-action-btn:hover {
+            transform: scale(1.05);
+        }
+        .navbar-nav .nav-link.active {
+            background-color: #fb873f;
+            color: white !important;
+            border-radius: 5px;
+        }
+        .welcome-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 2rem;
+        }
+        .course-table {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .course-table th {
+            background-color: #f8f9fa;
+            border: none;
+            font-weight: 600;
+        }
+        .no-data-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 15px;
+            text-align: center;
+            padding: 3rem 2rem;
+        }
+        .btn-custom {
+            border-radius: 25px;
+            padding: 10px 25px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Django Messages -->
+    {% if messages %}
+        <div class="position-fixed top-0 start-50 translate-middle-x p-3" style="z-index: 1050;">
+            {% for message in messages %}
+                <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'teacher_home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span style="color: #fb873f;">ora</span></p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'teacher_home' %}" class="nav-item nav-link active">
+                    <i class="fas fa-tachometer-alt me-1"></i>DASHBOARD
+                </a>
+                <a href="{% url 'teacher_courses' %}" class="nav-item nav-link">
+                    <i class="fas fa-book me-1"></i>COURSES
+                </a>
+                <a href="{% url 'teacher_students' %}" class="nav-item nav-link">
+                    <i class="fas fa-users me-1"></i>STUDENTS
+                </a>
+                <a href="{% url 'teacher_assignments' %}" class="nav-item nav-link">
+                    <i class="fas fa-tasks me-1"></i>ASSIGNMENTS
+                </a>
+                <a href="{% url 'teacher_announcements' %}" class="nav-item nav-link">
+                    <i class="fas fa-bullhorn me-1"></i>ANNOUNCE
+                </a>
+                <a href="{% url 'teacher_payments' %}" class="nav-item nav-link">
+                    <i class="fas fa-credit-card me-1"></i>PAYMENTS
+                </a>
+                <a href="{% url 'profile' %}" class="nav-item nav-link">
+                    <i class="fas fa-cog me-1"></i>SETTINGS
+                </a>
+                <a href="{% url 'logout' %}" class="nav-item nav-link">
+                    <i class="fas fa-sign-out-alt me-1"></i>LOGOUT
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Dashboard Start -->
+    <div class="container-fluid py-5">
+        <div class="container">
+            <!-- Welcome Header -->
+            <div class="row mb-5">
+                <div class="col-12">
+                    <div class="welcome-header wow fadeInUp" data-wow-delay="0.1s">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="mb-3">Welcome back, {{ teacher.user.get_full_name|default:teacher.user.username }}! 👋</h1>
+                                <p class="mb-0 fs-5">Here's what's happening with your courses today. Ready to inspire the next generation?</p>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-chalkboard-teacher fa-4x text-white-50"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Row - User Profile and Stats -->
+            <div class="row g-4 mb-5">
+                <!-- User Profile Card -->
+                <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="card dashboard-card card-hover h-100">
+                        <div class="card-body text-center p-4">
+                            <div class="mb-4">
+                                {% if user_profile and user_profile.profile_picture %}
+                                    <img src="{{ user_profile.profile_picture.url }}" alt="Profile" class="rounded-circle border-4 border-primary" width="100" height="100" style="object-fit: cover;">
+                                {% elif teacher.user.first_name or teacher.user.last_name %}
+                                    <img src="{% static 'img/instructor-1.jpg' %}" alt="Profile" class="rounded-circle border-4 border-primary" width="100" height="100" style="object-fit: cover;">
+                                {% else %}
+                                    <div class="bg-primary rounded-circle d-inline-flex align-items-center justify-content-center border-4 border-primary" style="width: 100px; height: 100px;">
+                                        <i class="fas fa-user text-white" style="font-size: 2.5rem;"></i>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <h4 class="card-title fw-bold">{{ teacher.user.get_full_name|default:teacher.user.username }}</h4>
+                            <p class="text-primary fw-semibold">{{ teacher.specialization|default:"Not specified" }}</p>
+                            <div class="text-warning mb-3">
+                                {% for i in "12345" %}
+                                    {% if teacher.rating >= forloop.counter %}
+                                        <i class="fas fa-star"></i>
+                                    {% else %}
+                                        <i class="far fa-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                                <span class="ms-2 text-muted">({{ teacher.rating|floatformat:2 }})</span>
+                            </div>
+                            <small class="text-muted d-block mb-3">{{ teacher.experience_years|default:"0" }} years experience</small>
+                            <a href="{% url 'profile' %}" class="btn btn-primary btn-custom">
+                                <i class="fas fa-edit me-2"></i>Edit Profile
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Current Courses Card -->
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="card stats-card dashboard-card card-hover h-100">
+                        <div class="card-body text-center p-3">
+                            <i class="fas fa-book fa-2x mb-3"></i>
+                            <h3 class="fw-bold mb-2">{{ teacher.total_courses|default:"0" }}</h3>
+                            <h6 class="card-title mb-3">Current Courses</h6>
+                            <a href="{% url 'teacher_courses' %}" class="btn btn-light btn-sm btn-custom">View All</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upcoming Classes Card -->
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="card stats-card orange dashboard-card card-hover h-100">
+                        <div class="card-body text-center p-3">
+                            <i class="fas fa-calendar-alt fa-2x mb-3"></i>
+                            <h3 class="fw-bold mb-2">{{ teacher.upcoming_classes|default:"0" }}</h3>
+                            <h6 class="card-title mb-3">Upcoming Classes</h6>
+                            <button class="btn btn-light btn-sm btn-custom" onclick="scheduleClass()">Schedule</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Student Progress Card -->
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.7s">
+                    <div class="card stats-card green dashboard-card card-hover h-100">
+                        <div class="card-body text-center p-3">
+                            <i class="fas fa-chart-line fa-2x mb-3"></i>
+                            <h3 class="fw-bold mb-2">{{ teacher.student_progress_avg|default:"0.00" }}%</h3>
+                            <h6 class="card-title mb-3">Student Progress</h6>
+                            <a href="{% url 'student_progress_analytics' %}" class="btn btn-light btn-sm btn-custom">Track</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Students Card -->
+                <div class="col-lg-2 col-md-6 wow fadeInUp" data-wow-delay="0.9s">
+                    <div class="card stats-card success dashboard-card card-hover h-100">
+                        <div class="card-body text-center p-3">
+                            <i class="fas fa-users fa-2x mb-3"></i>
+                            <h3 class="fw-bold mb-2">{{ actual_total_students|default:"0" }}</h3>
+                            <h6 class="card-title mb-3">Total Students</h6>
+                            <a href="{% url 'teacher_students' %}" class="btn btn-light btn-sm btn-custom">Manage</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Row - Course List, Recent Activities, Quick Actions -->
+            <div class="row g-4 mb-5">
+                <!-- Course List -->
+                <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="card dashboard-card card-hover h-100">
+                        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-book me-2"></i>My Courses</h5>
+                            <a href="{% url 'teacher_courses' %}" class="btn btn-light btn-sm btn-custom">View All</a>
+                        </div>
+                        <div class="card-body p-0">
+                            {% if courses_created %}
+                                <div class="table-responsive course-table">
+                                    <table class="table table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th class="px-3">Course</th>
+                                                <th class="px-3">Students</th>
+                                                <th class="px-3">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for course_data in courses_with_student_counts|slice:":5" %}
+                                            <tr>
+                                                <td class="px-3 fw-semibold">{{ course_data.course.title }}</td>
+                                                <td class="px-3">
+                                                    <span class="badge bg-primary rounded-pill">{{ course_data.student_count }}</span>
+                                                </td>
+                                                <td class="px-3">
+                                                    <div class="btn-group" role="group">
+                                                        <a class="btn btn-sm btn-outline-info" href="{% url 'teacher_course_detail' course_data.course.id %}" title="Manage Course">
+                                                            <i class="fas fa-cog"></i>
+                                                        </a>
+                                                        <a class="btn btn-sm btn-outline-success" href="{% url 'course_detail' course_data.course.id %}" title="View Course">
+                                                            <i class="fas fa-eye"></i>
+                                                        </a>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="text-center p-3">
+                                    <a href="{% url 'create_course' %}" class="btn btn-success btn-custom">
+                                        <i class="fas fa-plus me-2"></i>Create New Course
+                                    </a>
+                                </div>
+                            {% else %}
+                                <div class="text-center p-4">
+                                    <i class="fas fa-book fa-3x text-muted mb-3"></i>
+                                    <h6 class="text-muted">No Courses Yet</h6>
+                                    <p class="text-muted small">Start creating your first course!</p>
+                                    <a href="{% url 'create_course' %}" class="btn btn-primary btn-sm btn-custom">
+                                        <i class="fas fa-plus me-1"></i>Create Course
+                                    </a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Upload Notes & Videos -->
+                <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.3s">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-upload me-2"></i>Upload Notes & Videos</h5>
+                            <span class="badge bg-light text-dark">{{ courses_created.count }} Courses</span>
+                        </div>
+                        <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                            <form method="post" action="{% url 'quick_upload_material' %}" enctype="multipart/form-data" id="quickUploadForm">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label for="course_select" class="form-label small fw-bold">Select Course:</label>
+                                    <select name="course_id" id="course_select" class="form-select form-select-sm" required>
+                                        <option value="">Choose a course...</option>
+                                        {% for course in courses_created %}
+                                        <option value="{{ course.id }}">{{ course.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="material_type" class="form-label small fw-bold">Type:</label>
+                                    <select name="material_type" id="material_type" class="form-select form-select-sm" required>
+                                        <option value="note">Note/Document</option>
+                                        <option value="video">Video</option>
+                                        <option value="file">File</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="material_title" class="form-label small fw-bold">Title:</label>
+                                    <input type="text" name="title" id="material_title" class="form-control form-control-sm" placeholder="Enter title" required>
+                                </div>
+                                
+                                <div class="mb-3" id="note_content_div">
+                                    <label for="note_content" class="form-label small fw-bold">Notes Content:</label>
+                                    <textarea name="content" id="note_content" class="form-control form-control-sm" rows="4" placeholder="Enter your notes here..."></textarea>
+                                </div>
+                                
+                                <div class="mb-3" id="video_file_div" style="display:none;">
+                                    <label for="video_file" class="form-label small fw-bold">Video File:</label>
+                                    <input type="file" name="file" id="video_file" class="form-control form-control-sm" accept="video/*">
+                                </div>
+                                
+                                <div class="mb-3" id="youtube_url_div" style="display:none;">
+                                    <label for="youtube_url" class="form-label small fw-bold">YouTube URL:</label>
+                                    <input type="url" name="youtube_url" id="youtube_url" class="form-control form-control-sm" placeholder="https://www.youtube.com/watch?v=...">
+                                    <small class="text-muted">Or upload a video file above</small>
+                                </div>
+                                
+                                <div class="mb-3" id="file_upload_div" style="display:none;">
+                                    <label for="file_upload" class="form-label small fw-bold">File:</label>
+                                    <input type="file" name="file" id="file_upload" class="form-control form-control-sm" accept=".pdf,.doc,.docx,.ppt,.pptx">
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="material_description" class="form-label small fw-bold">Description (optional):</label>
+                                    <textarea name="description" id="material_description" class="form-control form-control-sm" rows="2" placeholder="Brief description..."></textarea>
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success btn-sm w-100">
+                                    <i class="fas fa-upload me-1"></i>Upload Material
+                                </button>
+                            </form>
+                            
+                            {% if messages %}
+                            <div class="mt-3">
+                                {% for message in messages %}
+                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show py-2" role="alert">
+                                    <small>{{ message }}</small>
+                                    <button type="button" class="btn-close btn-close-sm" data-bs-dismiss="alert"></button>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                function toggleMaterialFields() {
+                    const type = document.getElementById('material_type').value;
+                    const noteDiv = document.getElementById('note_content_div');
+                    const videoFileDiv = document.getElementById('video_file_div');
+                    const youtubeDiv = document.getElementById('youtube_url_div');
+                    const fileDiv = document.getElementById('file_upload_div');
+                    const noteContent = document.getElementById('note_content');
+                    
+                    // Hide all first
+                    noteDiv.style.display = 'none';
+                    videoFileDiv.style.display = 'none';
+                    youtubeDiv.style.display = 'none';
+                    fileDiv.style.display = 'none';
+                    noteContent.required = false;
+                    
+                    // Show relevant fields
+                    if (type === 'note') {
+                        noteDiv.style.display = 'block';
+                        noteContent.required = true;
+                    } else if (type === 'video') {
+                        videoFileDiv.style.display = 'block';
+                        youtubeDiv.style.display = 'block';
+                    } else if (type === 'file') {
+                        fileDiv.style.display = 'block';
+                    }
+                }
+                
+                // Initialize on page load
+                document.addEventListener('DOMContentLoaded', function() {
+                    toggleMaterialFields();
+                    document.getElementById('material_type').addEventListener('change', toggleMaterialFields);
+                });
+                </script>
+
+                <!-- My Uploaded Materials & Assignments -->
+                <div class="col-lg-4 wow fadeInUp" data-wow-delay="0.5s">
+                    <div class="card dashboard-card h-100">
+                        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0"><i class="fas fa-folder-open me-2"></i>My Uploads</h5>
+                            <span class="badge bg-light text-dark">{{ total_materials|add:total_assignments }} Items</span>
+                        </div>
+                        <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                            <!-- Materials Section -->
+                            {% if all_materials %}
+                                <h6 class="fw-bold mb-3 text-primary">
+                                    <i class="fas fa-file-alt me-2"></i>Materials ({{ all_materials.count }})
+                                </h6>
+                                {% for material in all_materials|slice:":5" %}
+                                <div class="d-flex align-items-start mb-3 p-2 bg-light rounded">
+                                    <div class="me-2">
+                                        {% if material.material_type == 'video' %}
+                                            <i class="fas fa-video text-danger"></i>
+                                        {% elif material.material_type == 'note' %}
+                                            <i class="fas fa-sticky-note text-warning"></i>
+                                        {% elif material.material_type == 'file' %}
+                                            <i class="fas fa-file text-primary"></i>
+                                        {% else %}
+                                            <i class="fas fa-link text-info"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="fw-bold d-block">{{ material.title|truncatechars:25 }}</small>
+                                        <small class="text-muted d-block">{{ material.course.title }}</small>
+                                        <small class="text-muted">{{ material.created_at|date:"M d" }}</small>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'view_material' material.id %}" class="btn btn-sm btn-outline-info" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'delete_material' material.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this material?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% if all_materials.count > 5 %}
+                                    <a href="{% url 'teacher_courses' %}" class="btn btn-sm btn-outline-primary w-100 mt-2">
+                                        View All Materials
+                                    </a>
+                                {% endif %}
+                                <hr class="my-3">
+                            {% endif %}
+                            
+                            <!-- Assignments Section -->
+                            {% if all_assignments %}
+                                <h6 class="fw-bold mb-3 text-warning">
+                                    <i class="fas fa-tasks me-2"></i>Assignments ({{ all_assignments.count }})
+                                </h6>
+                                {% for assignment in all_assignments|slice:":5" %}
+                                <div class="d-flex align-items-start mb-3 p-2 bg-light rounded">
+                                    <div class="me-2">
+                                        <i class="fas fa-clipboard-list text-warning"></i>
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <small class="fw-bold d-block">{{ assignment.title|truncatechars:25 }}</small>
+                                        <small class="text-muted d-block">{{ assignment.course.title }}</small>
+                                        <small class="text-muted">Due: {{ assignment.due_date|date:"M d" }}</small>
+                                    </div>
+                                    <div class="btn-group btn-group-sm">
+                                        <a href="{% url 'teacher_course_detail' assignment.course.id %}" class="btn btn-sm btn-outline-info" title="View">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'delete_assignment' assignment.id %}" class="btn btn-sm btn-outline-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this assignment?');">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                                {% if all_assignments.count > 5 %}
+                                    <a href="{% url 'teacher_courses' %}" class="btn btn-sm btn-outline-warning w-100 mt-2">
+                                        View All Assignments
+                                    </a>
+                                {% endif %}
+                            {% endif %}
+                            
+                            {% if not all_materials and not all_assignments %}
+                                <div class="text-center p-4">
+                                    <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                                    <h6 class="text-muted">No Uploads Yet</h6>
+                                    <p class="text-muted small">Start uploading materials and assignments!</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enhanced Quick Actions -->
+            <div class="row g-4">
+                <div class="col-12 wow fadeInUp" data-wow-delay="0.1s">
+                    <div class="card dashboard-card">
+                        <div class="card-header bg-warning text-white">
+                            <h5 class="mb-0"><i class="fas fa-rocket me-2"></i>Quick Actions & Tools</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <!-- Course Management -->
+                                <div class="col-md-2 mb-3">
+                                    <a href="{% url 'create_course' %}" class="btn btn-outline-success w-100 quick-action-btn btn-custom">
+                                        <i class="fas fa-plus me-2"></i>Create Course
+                                    </a>
+                                </div>
+                                <div class="col-md-2 mb-3">
+                                    <a href="{% url 'teacher_courses' %}" class="btn btn-outline-primary w-100 quick-action-btn btn-custom">
+                                        <i class="fas fa-book me-2"></i>My Courses
+                                    </a>
+                                </div>
+                                
+                                <!-- Student Management -->
+                                <div class="col-md-2 mb-3">
+                                    <a href="{% url 'teacher_students' %}" class="btn btn-outline-info w-100 quick-action-btn btn-custom">
+                                        <i class="fas fa-users me-2"></i>Students
+                                    </a>
+                                </div>
+                                
+                                <!-- Grading -->
+                                <div class="col-md-2 mb-3">
+                                    <button class="btn btn-outline-warning w-100 quick-action-btn btn-custom" onclick="showPendingGrading()">
+                                        <i class="fas fa-clipboard-check me-2"></i>Grade Work
+                                        {% if pending_grading > 0 %}
+                                            <span class="badge bg-danger ms-1">{{ pending_grading }}</span>
+                                        {% endif %}
+                                    </button>
+                                </div>
+                                
+                                <!-- Profile & Settings -->
+                                <div class="col-md-2 mb-3">
+                                    <a href="{% url 'profile' %}" class="btn btn-outline-secondary w-100 quick-action-btn btn-custom">
+                                        <i class="fas fa-user-edit me-2"></i>Profile
+                                    </a>
+                                </div>
+                                
+                                <!-- Payments -->
+                                <div class="col-md-2 mb-3">
+                                    <a href="{% url 'teacher_payments' %}" class="btn btn-outline-dark w-100 quick-action-btn btn-custom">
+                                        <i class="fas fa-credit-card me-2"></i>Payments
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <!-- Classroom Tools Row -->
+                            <hr class="my-4">
+                            <h6 class="fw-bold mb-3"><i class="fas fa-tools text-primary me-2"></i>Classroom Tools</h6>
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-primary w-100 quick-action-btn btn-custom" onclick="bulkUpload()">
+                                        <i class="fas fa-upload me-2"></i>Bulk Upload Materials
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-success w-100 quick-action-btn btn-custom" onclick="exportGrades()">
+                                        <i class="fas fa-download me-2"></i>Export Grades
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-info w-100 quick-action-btn btn-custom" onclick="studentAnalytics()">
+                                        <i class="fas fa-chart-bar me-2"></i>Analytics
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-outline-warning w-100 quick-action-btn btn-custom" onclick="scheduleClass()">
+                                        <i class="fas fa-calendar-plus me-2"></i>Schedule Class
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Dashboard End -->
+
+    <!-- Footer Start -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5 wow fadeIn" data-wow-delay="0.1s">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Quick Link</h4>
+                    <p><a class="text-light" href="{% url 'about' %}">About Us</a></p>
+                    <p><a class="text-light" href="{% url 'contact' %}">Contact Us</a></p>
+                    <p><a class="text-light" href="">Privacy Policy</a></p>
+                    <p><a class="text-light" href="">Terms & Condition</a></p>
+                    <p><a class="text-light" href="">FAQs & Help</a></p>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Contact</h4>
+                    <p class="mb-2"><i class="fa fa-map-marker-alt me-3"></i>123 Street, Bangalore, Karnataka</p>
+                    <p class="mb-2"><i class="fa fa-phone-alt me-3"></i>+91 8683045908</p>
+                    <p class="mb-2"><i class="fa fa-envelope me-3"></i>skillora@gmail.com</p>
+                    <div class="d-flex pt-2">
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-twitter"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-outline-light btn-social" href=""><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h4 class="text-white mb-3">Teacher Resources</h4>
+                    <p>Access teaching materials, course templates, and professional development resources.</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'profile' %}" class="btn btn-outline-light">Update Profile</a>
+                        <a href="{% url 'teacher_courses' %}" class="btn btn-outline-light">My Courses</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="copyright">
+                <div class="row">
+                    <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                        &copy; <a class="border-bottom" href="{% url 'home' %}">Skillora</a>, All Right Reserved.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Footer End -->
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-lg btn-primary btn-lg-square back-to-top"><i class="bi bi-arrow-up"></i></a>
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <!-- Custom Dashboard JavaScript -->
+    <script>
+        // Global variables
+        let selectedCourseId = null;
+        
+        // Course selector functionality
+        function updateCourseActions() {
+            const selector = document.getElementById('courseSelector');
+            const actions = document.getElementById('courseActions');
+            selectedCourseId = selector.value;
+            
+            if (selectedCourseId) {
+                actions.style.display = 'block';
+            } else {
+                actions.style.display = 'none';
+            }
+        }
+        
+        // Classroom quick actions
+        function addMaterial() {
+            if (!selectedCourseId) {
+                showToast('Please select a course first', 'warning');
+                return;
+            }
+            window.location.href = `/teacher/course/${selectedCourseId}/add-material/`;
+        }
+        
+        function addAssignment() {
+            if (!selectedCourseId) {
+                showToast('Please select a course first', 'warning');
+                return;
+            }
+            window.location.href = `/teacher/course/${selectedCourseId}/add-assignment/`;
+        }
+        
+        function addAnnouncement() {
+            if (!selectedCourseId) {
+                showToast('Please select a course first', 'warning');
+                return;
+            }
+            window.location.href = `/teacher/course/${selectedCourseId}/add-announcement/`;
+        }
+        
+        function viewProgress() {
+            if (!selectedCourseId) {
+                showToast('Please select a course first', 'warning');
+                return;
+            }
+            window.location.href = `/teacher/course/${selectedCourseId}/student-progress/`;
+        }
+        
+        // Pending grading modal
+        function showPendingGrading() {
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.innerHTML = `
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-clipboard-check me-2"></i>Pending Grading
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2">Loading pending submissions...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+            
+            // Simulate loading pending submissions
+            setTimeout(() => {
+                modal.querySelector('.modal-body').innerHTML = `
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        You have <strong>{{ pending_grading }}</strong> submissions waiting for grading.
+                    </div>
+                    <p>To grade submissions:</p>
+                    <ol>
+                        <li>Go to your course management page</li>
+                        <li>Click on an assignment</li>
+                        <li>View submissions and provide grades</li>
+                    </ol>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'teacher_courses' %}" class="btn btn-primary">
+                            <i class="fas fa-book me-2"></i>Go to Courses
+                        </a>
+                    </div>
+                `;
+            }, 1500);
+            
+            // Clean up modal after it's hidden
+            modal.addEventListener('hidden.bs.modal', function() {
+                document.body.removeChild(modal);
+            });
+        }
+        
+        // Bulk upload functionality
+        function bulkUpload() {
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fas fa-upload me-2"></i>Bulk Upload Materials
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                This feature allows you to upload multiple files at once.
+                            </div>
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Select Course</label>
+                                    <select class="form-control" required>
+                                        <option value="">Choose course...</option>
+                                        {% for course in courses_created %}
+                                            <option value="{{ course.id }}">{{ course.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Select Files</label>
+                                    <input type="file" class="form-control" multiple 
+                                           accept=".pdf,.doc,.docx,.ppt,.pptx,.mp4,.avi,.mov">
+                                    <small class="text-muted">Supported: PDF, DOC, DOCX, PPT, PPTX, MP4, AVI, MOV</small>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary">
+                                <i class="fas fa-upload me-2"></i>Upload Files
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+            
+            // Clean up modal after it's hidden
+            modal.addEventListener('hidden.bs.modal', function() {
+                document.body.removeChild(modal);
+            });
+        }
+        
+        // Export grades functionality
+        function exportGrades() {
+            showToast('Grades export feature coming soon!', 'info');
+        }
+        
+        // Student analytics
+        function studentAnalytics() {
+            showToast('Student analytics feature coming soon!', 'info');
+        }
+        
+        // Dashboard functionality
+        function scheduleClass() {
+            // Redirect to schedule class page
+            window.location.href = "{% url 'create_scheduled_class' %}";
+        }
+        
+        function editCourse(courseTitle) {
+            // Redirect to course edit page
+            window.location.href = `{% url 'teacher_courses' %}?edit=${encodeURIComponent(courseTitle)}`;
+        }
+        
+        function viewCourse(courseTitle) {
+            // Show course details in a modal
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.innerHTML = `
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Course: ${courseTitle}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Course Information</h6>
+                            <p><strong>Title:</strong> ${courseTitle}</p>
+                            <p><strong>Students:</strong> 6 enrolled</p>
+                            <p><strong>Status:</strong> Active</p>
+                            <hr>
+                            <h6>Recent Activity</h6>
+                            <ul>
+                                <li>New student enrolled - 2 hours ago</li>
+                                <li>Assignment submitted - 1 day ago</li>
+                                <li>Course updated - 3 days ago</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Edit Course</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+            
+            // Clean up modal after it's hidden
+            modal.addEventListener('hidden.bs.modal', function() {
+                document.body.removeChild(modal);
+            });
+        }
+        
+        function addEvent() {
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Add Calendar Event</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label class="form-label">Event Title</label>
+                                    <input type="text" class="form-control" placeholder="Enter event title">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date</label>
+                                    <input type="date" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Time</label>
+                                    <input type="time" class="form-control">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Description</label>
+                                    <textarea class="form-control" rows="3" placeholder="Event description"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary">Add Event</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+            
+            // Clean up modal after it's hidden
+            modal.addEventListener('hidden.bs.modal', function() {
+                document.body.removeChild(modal);
+            });
+        }
+        
+        function selectDate(day) {
+            // Highlight selected date
+            document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+            event.target.classList.add('selected');
+            
+            // Show events for selected date
+            const events = getEventsForDate(day);
+            if (events.length > 0) {
+                showEventModal(day, events);
+            } else {
+                showToast(`No events scheduled for ${day}`, 'info');
+            }
+        }
+        
+        function getEventsForDate(day) {
+            // Sample events - in real app, this would fetch from database
+            const eventMap = {
+                10: ['Team Meeting - 2:00 PM', 'Course Review - 4:00 PM'],
+                15: ['Student Consultation - 10:00 AM', 'Webinar Prep - 3:00 PM'],
+                17: ['React Class - 10:00 AM', 'JavaScript Review - 2:00 PM'],
+                20: ['Assessment Due - 11:59 PM'],
+                25: ['Monthly Review - 1:00 PM']
+            };
+            return eventMap[day] || [];
+        }
+        
+        function showEventModal(day, events) {
+            const modal = document.createElement('div');
+            modal.className = 'modal fade';
+            modal.innerHTML = `
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Events for ${day}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <ul class="list-group list-group-flush">
+                                ${events.map(event => `<li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <span>${event}</span>
+                                    <span class="badge bg-primary rounded-pill">Today</span>
+                                </li>`).join('')}
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" onclick="addEvent()">Add New Event</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+            const modalInstance = new bootstrap.Modal(modal);
+            modalInstance.show();
+            
+            // Clean up modal after it's hidden
+            modal.addEventListener('hidden.bs.modal', function() {
+                document.body.removeChild(modal);
+            });
+        }
+        
+        function openMessages() {
+            // Redirect to messages page or show full messages modal
+            alert('Opening full messages interface...');
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (message) {
+                // Add message to chat
+                const chatContainer = document.querySelector('.chat-messages');
+                const currentTime = new Date().toLocaleTimeString('en-US', { 
+                    hour: 'numeric', 
+                    minute: '2-digit',
+                    hour12: true 
+                });
+                
+                const newMessage = document.createElement('div');
+                newMessage.className = 'message sent mb-3';
+                newMessage.innerHTML = `
+                    <div class="d-flex align-items-start justify-content-end">
+                        <div class="message-content">
+                            <div class="bg-primary text-white p-3 rounded message-bubble">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-white-50">You</small>
+                                    <small class="text-white-50">${currentTime}</small>
+                                </div>
+                                <p class="mb-0">${message}</p>
+                            </div>
+                        </div>
+                        <div class="avatar ms-2">
+                            <img src="{% static 'img/instructor-1.jpg' %}" alt="You" class="rounded-circle" width="32" height="32" style="object-fit: cover;">
+                        </div>
+                    </div>
+                `;
+                chatContainer.appendChild(newMessage);
+                
+                // Clear input
+                input.value = '';
+                
+                // Scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                // Show success message
+                showToast('Message sent successfully!', 'success');
+                
+                // Simulate typing indicator and response (optional)
+                setTimeout(() => {
+                    showTypingIndicator();
+                }, 1000);
+            } else {
+                showToast('Please enter a message', 'warning');
+            }
+        }
+        
+        function showTypingIndicator() {
+            const chatContainer = document.querySelector('.chat-messages');
+            const typingIndicator = document.createElement('div');
+            typingIndicator.className = 'message received mb-3 typing-indicator';
+            typingIndicator.innerHTML = `
+                <div class="d-flex align-items-start">
+                    <div class="avatar me-2">
+                        <img src="{% static 'img/instructor-1.jpg' %}" alt="Student" class="rounded-circle" width="32" height="32" style="object-fit: cover;">
+                    </div>
+                    <div class="message-content">
+                        <div class="bg-light p-3 rounded message-bubble">
+                            <div class="d-flex align-items-center">
+                                <div class="typing-dots">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                                <small class="text-muted ms-2">John is typing...</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            chatContainer.appendChild(typingIndicator);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            // Remove typing indicator after 3 seconds
+            setTimeout(() => {
+                if (typingIndicator.parentNode) {
+                    typingIndicator.remove();
+                }
+            }, 3000);
+        }
+        
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.className = `toast align-items-center text-white bg-${type} border-0 position-fixed top-0 end-0 m-3`;
+            toast.style.zIndex = '9999';
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">${message}</div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            document.body.appendChild(toast);
+            
+            const toastInstance = new bootstrap.Toast(toast);
+            toastInstance.show();
+            
+            // Remove toast after it's hidden
+            toast.addEventListener('hidden.bs.toast', function() {
+                document.body.removeChild(toast);
+            });
+        }
+        
+        // Auto-hide messages after 5 seconds
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                const bsAlert = new bootstrap.Alert(alert);
+                bsAlert.close();
+            });
+        }, 5000);
+        
+        // Initialize tooltips
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+        
+        // Add selected class to calendar days
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('calendar-day')) {
+                document.querySelectorAll('.calendar-day').forEach(d => d.classList.remove('selected'));
+                e.target.classList.add('selected');
+            }
+        });
+    </script>
+</body>
+
+</html>

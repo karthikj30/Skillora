@@ -1,0 +1,717 @@
+{% load static %}
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Skillora : Student Dashboard</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="student dashboard, enrolled courses, progress" name="keywords">
+    <meta content="Student dashboard showing enrolled courses, progress and recommendations" name="description">
+
+    <link href="{% static 'img/icons/icon.png' %}" rel="icon">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+</head>
+
+<body>
+    <!-- Navbar Start -->
+    <nav class="navbar navbar-expand-lg bg-white navbar-light shadow sticky-top p-0">
+        <a href="{% url 'student_home' %}" class="navbar-brand d-flex align-items-center px-4 px-lg-5">
+            <p class="m-0 fw-bold" style="font-size: 25px;"><img src="{% static 'img/icons/icon.png' %}" alt="" height="50px">Skill<span style="color: #fb873f;">ora</span> - Student</p>
+        </a>
+        <button type="button" class="navbar-toggler me-4" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" style="border: none;">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav ms-auto p-4 p-lg-0">
+                <a href="{% url 'student_home' %}" class="nav-item nav-link active">Dashboard</a>
+                <a href="{% url 'courses' %}" class="nav-item nav-link">Browse Skills</a>
+                <a href="{% url 'cart' %}" class="nav-item nav-link">
+                    <i class="fa fa-shopping-cart me-1"></i>Cart
+                </a>
+                <a href="{% url 'jobs' %}" class="nav-item nav-link">Jobs</a>
+                <a href="{% url 'profile' %}" class="nav-item nav-link">Profile</a>
+                <a href="{% url 'logout' %}" class="nav-item nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <!-- Navbar End -->
+
+    <!-- Dashboard Header -->
+    <div class="container-fluid py-5" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+        <div class="container">
+            <div class="row align-items-center text-white">
+                <div class="col-md-8">
+                    <h1 class="mb-2">Welcome back, {{ request.user.get_full_name|default:request.user.username }}! 👋</h1>
+                    <p class="mb-0">Keep learning. Your progress updates in real-time as you complete lessons.</p>
+                </div>
+                <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                    <a href="{% url 'courses' %}" class="btn btn-light">Find a new skill</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="container py-4">
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-book-open fa-2x mb-2" style="color:#fb873f"></i>
+                        <h3 class="fw-bold mb-1">{{ total_enrolled|default:'0' }}</h3>
+                        <div class="text-muted">Enrolled Courses</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-check-circle fa-2x mb-2 text-success"></i>
+                        <h3 class="fw-bold mb-1">{{ completed_courses|default:'0' }}</h3>
+                        <div class="text-muted">Completed</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-2x mb-2" style="color:#0aa"></i>
+                        <h3 class="fw-bold mb-1">{{ avg_progress|default:'0.0' }}%</h3>
+                        <div class="text-muted">Average Progress</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabs: My Courses / Saved / Completed / Progress -->
+    <div class="container py-4">
+        <ul class="nav nav-tabs" id="studentTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="my-courses-tab" data-bs-toggle="tab" data-bs-target="#my-courses" type="button" role="tab">My Courses</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved" type="button" role="tab">Saved</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="completed-tab" data-bs-toggle="tab" data-bs-target="#completed" type="button" role="tab">Completed</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="applied-jobs-tab" data-bs-toggle="tab" data-bs-target="#applied-jobs" type="button" role="tab">Applied Jobs</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <a class="nav-link" id="my-certificates-link" href="{% url 'my_certificates' %}">My Certificates</a>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress-chart" type="button" role="tab">Progress</button>
+            </li>
+        </ul>
+        <div class="tab-content pt-3">
+            <div class="tab-pane fade show active" id="my-courses" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">Your Courses</h3>
+                    <a href="{% url 'courses' %}" class="btn btn-outline-primary btn-sm">Browse More</a>
+                </div>
+                <div class="row g-4">
+                    {% if course_progress_data %}
+                        {% for course_data in course_progress_data %}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card card-hover h-100 shadow-sm">
+                                <img class="card-img-top" src="{{ course_data.course|course_image_url }}" alt="{{ course_data.course.title }}" style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-1">{{ course_data.course.title }}</h5>
+                                    <small class="text-muted">{{ course_data.course.category }} • {{ course_data.course.level }}</small>
+                                    <div class="mt-3">
+                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <small class="text-muted">Progress</small>
+                                            <small class="fw-bold text-primary">{{ course_data.progress_percentage|floatformat:1 }}%</small>
+                                        </div>
+                                        <div class="progress slim" data-course-id="{{ course_data.course.id }}">
+                                            <div class="progress-bar" role="progressbar" style="width: {{ course_data.progress_percentage }}%" aria-valuenow="{{ course_data.progress_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a href="{% url 'student_course_content' course_data.course.id %}" class="btn btn-primary btn-sm">Continue</a>
+                                            <a href="{% url 'student_toggle_save' course_data.course.id %}" class="btn btn-outline-secondary btn-sm" title="Save course">
+                                                <i class="far fa-bookmark"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" title="Remove course" onclick="removeCourse({{ course_data.course.id }}, '{{ course_data.course.title }}')">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <small class="text-muted"><i class="fas fa-clock me-1"></i>{{ course_data.course.duration }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% elif enrolled_courses %}
+                        {% for course in enrolled_courses %}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card card-hover h-100 shadow-sm">
+                                <img class="card-img-top" src="{{ course|course_image_url }}" alt="{{ course.title }}" style="height: 180px; object-fit: cover;">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-1">{{ course.title }}</h5>
+                                    <small class="text-muted">{{ course.category }} • {{ course.level }}</small>
+                                    <div class="mt-3">
+                                        <div class="progress slim" data-course-id="{{ course.id }}">
+                                            <div class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card-footer bg-white">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="btn-group">
+                                            <a href="{% url 'student_course_content' course.id %}" class="btn btn-primary btn-sm">Continue</a>
+                                            <a href="{% url 'student_toggle_save' course.id %}" class="btn btn-outline-secondary btn-sm" title="Save course">
+                                                <i class="far fa-bookmark"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" title="Remove course" onclick="removeCourse({{ course.id }}, '{{ course.title }}')">
+                                                <i class="fas fa-times"></i>
+                                            </button>
+                                        </div>
+                                        <small class="text-muted"><i class="fas fa-clock me-1"></i>{{ course.duration }}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12 text-center">
+                            <p class="text-muted">You have not enrolled in any courses yet.</p>
+                            <a href="{% url 'courses' %}" class="btn btn-primary">Find a course</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Applied Jobs Tab -->
+            <div class="tab-pane fade" id="applied-jobs" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">Applied Jobs</h3>
+                    <a href="{% url 'jobs' %}" class="btn btn-outline-primary btn-sm">Browse Jobs</a>
+                </div>
+                <div class="row g-3">
+                    {% if job_applications %}
+                        {% for app in job_applications %}
+                        <div class="col-12">
+                            <div class="card shadow-sm">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ app.job.title }} <span class="badge bg-secondary ms-2">{{ app.job.job_type }}</span></h6>
+                                        <small class="text-muted">{{ app.job.company }} • {{ app.job.location }} • Applied on {{ app.applied_date|date:"M d, Y" }}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge {% if app.status == 'pending' %}bg-warning text-dark{% elif app.status == 'accepted' %}bg-success{% elif app.status == 'rejected' %}bg-danger{% else %}bg-info{% endif %}">{{ app.get_status_display }}</span>
+                                        <a href="{% url 'view_job_application' app.id %}" class="btn btn-sm btn-outline-primary ms-2">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="col-12 text-center">
+                            <p class="text-muted">You haven't applied to any jobs yet.</p>
+                            <a href="{% url 'jobs' %}" class="btn btn-primary">Find Jobs</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="saved" role="tabpanel">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="mb-0">Saved</h3>
+                </div>
+                <div class="row g-4">
+                    {% for course in student.saved_courses.all %}
+                    <div class="col-lg-3 col-md-6">
+                        <div class="card card-hover h-100 shadow-sm">
+                            <img class="card-img-top" src="{{ course|course_image_url }}" alt="{{ course.title }}" style="height: 160px; object-fit: cover;">
+                            <div class="card-body">
+                                <h6 class="card-title mb-1">{{ course.title }}</h6>
+                                <small class="text-muted">{{ course.category }}</small>
+                            </div>
+                            <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                                <a href="{% url 'course_detail' course.id %}" class="btn btn-outline-primary btn-sm">View</a>
+                                <a href="{% url 'student_toggle_save' course.id %}" class="btn btn-outline-secondary btn-sm"><i class="far fa-bookmark"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="col-12 text-center"><p class="text-muted">No saved courses.</p></div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="completed" role="tabpanel">
+                <h3 class="mb-3">Completed Courses</h3>
+                <div class="row g-4">
+                    {% for course in completed_courses_list %}
+                        <div class="col-lg-4 col-md-6">
+                            <div class="card h-100 shadow-sm">
+                                <div class="card-body">
+                                    <h5 class="card-title mb-1">{{ course.title }}</h5>
+                                    <small class="text-muted">{{ course.category }} • {{ course.level }}</small>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div class="col-12 text-center"><p class="text-muted">No completed courses yet.</p></div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="tab-pane fade" id="progress-chart" role="tabpanel">
+                <h3 class="mb-3">Progress</h3>
+                <canvas id="progressCanvas" height="120"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recommendations -->
+    <div class="container py-4">
+        <h3 class="mb-3">Recommended For You</h3>
+        <div class="row g-4">
+            {% for course in recommended_courses %}
+            <div class="col-lg-3 col-md-6">
+                <div class="card h-100 shadow-sm">
+                    <img class="card-img-top" src="{{ course|course_image_url }}" alt="{{ course.title }}" style="height: 160px; object-fit: cover;">
+                    <div class="card-body">
+                        <h6 class="card-title mb-1">{{ course.title }}</h6>
+                        <small class="text-muted">{{ course.category }} • {{ course.level }}</small>
+                    </div>
+                    <div class="card-footer bg-white d-flex justify-content-between align-items-center">
+                        <a href="{% url 'course_detail' course.id %}" class="btn btn-outline-primary btn-sm">View</a>
+                        <small class="fw-bold">₹ {{ course.price }}</small>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12 text-center"><p class="text-muted">No recommendations available.</p></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="container-fluid bg-dark text-light footer pt-5 mt-5">
+        <div class="container py-5">
+            <div class="row g-5">
+                <div class="col-lg-6">
+                    <h4 class="text-white mb-3">Keep Learning</h4>
+                    <p class="mb-0">Come back every day and keep your streak going.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'lib/wow/wow.min.js' %}"></script>
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Build chart data from context
+        const progressMap = {{ progress_map_json|safe }} || {};
+        const labels = [];
+        const values = [];
+        {% if course_progress_data %}
+            {% for course_data in course_progress_data %}
+                labels.push(`{{ course_data.course.title|escapejs }}`);
+                values.push(parseFloat({{ course_data.progress_percentage }}) || 0);
+            {% endfor %}
+        {% else %}
+            {% for course in enrolled_courses %}
+                labels.push(`{{ course.title|escapejs }}`);
+                const pct = progressMap['{{ course.id }}'] ?? progressMap[{{ course.id }}] ?? 0;
+                values.push(parseFloat(pct) || 0);
+            {% endfor %}
+        {% endif %}
+        
+        const ctx = document.getElementById('progressCanvas');
+        if (ctx) {
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: 'Progress %',
+                        data: values,
+                        backgroundColor: '#fb873f',
+                    }]
+                },
+                options: {
+                    scales: { y: { beginAtZero: true, max: 100 } }
+                }
+            });
+        }
+        
+        // Remove course function
+        function removeCourse(courseId, courseTitle) {
+            if (confirm(`Are you sure you want to remove "${courseTitle}" from your courses? This action cannot be undone.`)) {
+                window.location.href = `/student/course/${courseId}/remove/`;
+            }
+        }
+    </script>
+
+    <!-- Career Guidance Chatbot -->
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; width: 380px; max-width: calc(100vw - 40px);">
+        <!-- Chatbot Toggle Button -->
+        <button id="chatbot-toggle" class="btn btn-primary rounded-circle shadow-lg" style="width: 60px; height: 60px; position: absolute; bottom: 0; right: 0; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <i class="fas fa-comments fa-2x"></i>
+        </button>
+
+        <!-- Chatbot Window -->
+        <div id="chatbot-window" class="card shadow-lg d-flex flex-column" style="display: none; height: 600px; max-height: calc(100vh - 100px); border-radius: 15px; overflow: hidden; background: white;">
+            <!-- Chatbot Header -->
+            <div class="card-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; padding: 15px;">
+                <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-rocket me-2"></i>
+                        <div>
+                            <h6 class="mb-0 fw-bold">Career Guidance Bot</h6>
+                            <small>Discover your perfect career path!</small>
+                        </div>
+                    </div>
+                    <button id="chatbot-close" class="btn btn-sm text-white" style="background: rgba(255,255,255,0.2); border: none;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Messages Area -->
+            <div id="chatbot-messages" class="card-body" style="height: calc(100% - 200px); overflow-y: auto; padding: 15px; background: #f8f9fa;">
+                <!-- Initial bot message will be added here -->
+            </div>
+
+            <!-- Suggested Topics -->
+            <div id="chatbot-suggestions" class="px-3 pb-2" style="border-top: 1px solid #e0e0e0; background: white;">
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn" data-topic="Technology">
+                        <i class="fas fa-laptop me-1"></i>Technology
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn" data-topic="Healthcare">
+                        <i class="fas fa-heart me-1"></i>Healthcare
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn" data-topic="Creative Arts">
+                        <i class="fas fa-palette me-1"></i>Creative Arts
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn" data-topic="Business">
+                        <i class="fas fa-briefcase me-1"></i>Business
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary suggestion-btn" data-topic="Education">
+                        <i class="fas fa-graduation-cap me-1"></i>Education
+                    </button>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="card-footer border-0 p-3" style="background: white;">
+                <div class="input-group">
+                    <input type="text" id="chatbot-input" class="form-control" placeholder="Tell me about your interests..." style="border-radius: 20px; border: 1px solid #e0e0e0;">
+                    <button id="chatbot-send" class="btn btn-primary" style="border-radius: 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; margin-left: 5px;">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        #chatbot-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        #chatbot-messages::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        #chatbot-messages::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+        .message-bubble {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .message-bubble.user {
+            justify-content: flex-end;
+        }
+        .message-bubble.bot {
+            justify-content: flex-start;
+        }
+        .message-content {
+            max-width: 75%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+        .message-bubble.bot .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-left-radius: 4px;
+        }
+        .message-bubble.user .message-content {
+            background: #e3f2fd;
+            color: #333;
+            border-bottom-right-radius: 4px;
+        }
+        .bot-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+        .career-card {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        .career-card h6 {
+            color: #667eea;
+            font-weight: bold;
+        }
+        .roadmap-step {
+            background: #f0f4ff;
+            border-left: 4px solid #667eea;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 4px;
+        }
+    </style>
+
+    <script>
+        let chatbotOpen = false;
+        const chatbotToggle = document.getElementById('chatbot-toggle');
+        const chatbotWindow = document.getElementById('chatbot-window');
+        const chatbotClose = document.getElementById('chatbot-close');
+        const chatbotMessages = document.getElementById('chatbot-messages');
+        const chatbotInput = document.getElementById('chatbot-input');
+        const chatbotSend = document.getElementById('chatbot-send');
+
+        // Toggle chatbot
+        chatbotToggle.addEventListener('click', () => {
+            chatbotOpen = !chatbotOpen;
+            if (chatbotOpen) {
+                chatbotWindow.style.display = 'flex';
+                chatbotToggle.style.display = 'none';
+                if (chatbotMessages.children.length === 0) {
+                    sendInitialMessage();
+                }
+            } else {
+                chatbotWindow.style.display = 'none';
+                chatbotToggle.style.display = 'block';
+            }
+        });
+
+        chatbotClose.addEventListener('click', () => {
+            chatbotOpen = false;
+            chatbotWindow.style.display = 'none';
+            chatbotToggle.style.display = 'block';
+        });
+
+        // Send initial message
+        function sendInitialMessage() {
+            fetch('{% url "chatbot_api" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ message: '' })
+            })
+            .then(response => response.json())
+            .then(data => {
+                addBotMessage(data.message);
+                if (data.suggestions) {
+                    updateSuggestions(data.suggestions);
+                }
+            });
+        }
+
+        // Send message
+        function sendMessage(message) {
+            if (!message.trim()) return;
+
+            addUserMessage(message);
+            chatbotInput.value = '';
+
+            fetch('{% url "chatbot_api" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ message: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.type === 'careers') {
+                    addCareerCards(data.careers, data.message);
+                } else {
+                    addBotMessage(data.message);
+                    if (data.suggestions) {
+                        updateSuggestions(data.suggestions);
+                    }
+                }
+            });
+        }
+
+        // Add user message
+        function addUserMessage(message) {
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble user';
+            bubble.innerHTML = `
+                <div class="message-content">${message}</div>
+            `;
+            chatbotMessages.appendChild(bubble);
+            scrollToBottom();
+        }
+
+        // Add bot message
+        function addBotMessage(message) {
+            const bubble = document.createElement('div');
+            bubble.className = 'message-bubble bot';
+            const lines = message.split('\n');
+            const formattedMessage = lines.map(line => {
+                if (line.trim().startsWith('•')) {
+                    return `<div style="margin: 5px 0;">${line}</div>`;
+                }
+                return line;
+            }).join('<br>');
+            bubble.innerHTML = `
+                <div class="bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-content">${formattedMessage}</div>
+            `;
+            chatbotMessages.appendChild(bubble);
+            scrollToBottom();
+        }
+
+        // Add career cards
+        function addCareerCards(careers, introMessage) {
+            addBotMessage(introMessage);
+            careers.forEach(career => {
+                const card = document.createElement('div');
+                card.className = 'career-card';
+                card.innerHTML = `
+                    <h6>${career.title}</h6>
+                    <p class="mb-2">${career.description}</p>
+                    <p class="small mb-1"><strong>Key Skills:</strong> ${career.skills}</p>
+                    <p class="small mb-1"><strong>Salary Range:</strong> ${career.salary}</p>
+                    <p class="small mb-2"><strong>Job Growth:</strong> ${career.growth}</p>
+                    <button class="btn btn-sm btn-primary view-roadmap-btn" data-career='${JSON.stringify(career)}'>
+                        <i class="fas fa-map me-1"></i>View Career Roadmap
+                    </button>
+                `;
+                chatbotMessages.appendChild(card);
+            });
+            scrollToBottom();
+
+            // Add roadmap button listeners
+            document.querySelectorAll('.view-roadmap-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const career = JSON.parse(this.getAttribute('data-career'));
+                    showRoadmap(career);
+                });
+            });
+        }
+
+        // Show roadmap
+        function showRoadmap(career) {
+            addBotMessage(`I've generated a detailed career roadmap for ${career.title}! Check the roadmap below.`);
+            const roadmapCard = document.createElement('div');
+            roadmapCard.className = 'career-card';
+            roadmapCard.innerHTML = `
+                <h6>Career Roadmap: ${career.title}</h6>
+                <p class="small mb-3">${career.description}</p>
+                <div style="max-height: 300px; overflow-y: auto;">
+                    ${career.roadmap.map((step, idx) => `
+                        <div class="roadmap-step">
+                            <strong>Step ${idx + 1}:</strong> ${step.step} <span class="text-muted">(${step.duration})</span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            chatbotMessages.appendChild(roadmapCard);
+            scrollToBottom();
+        }
+
+        // Update suggestions
+        function updateSuggestions(suggestions) {
+            const suggestionsDiv = document.getElementById('chatbot-suggestions');
+            suggestionsDiv.innerHTML = `
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    ${suggestions.map(s => `
+                        <button class="btn btn-sm btn-outline-primary suggestion-btn" data-topic="${s}">
+                            <i class="fas fa-${getIconForTopic(s)} me-1"></i>${s}
+                        </button>
+                    `).join('')}
+                </div>
+            `;
+            // Event delegation handles clicks automatically
+        }
+
+        function getIconForTopic(topic) {
+            const icons = {
+                'Technology': 'laptop',
+                'Healthcare': 'heart',
+                'Creative Arts': 'palette',
+                'Business': 'briefcase',
+                'Education': 'graduation-cap'
+            };
+            return icons[topic] || 'tag';
+        }
+
+        function scrollToBottom() {
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+        }
+
+        // Event listeners
+        chatbotSend.addEventListener('click', () => {
+            sendMessage(chatbotInput.value);
+        });
+
+        chatbotInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage(chatbotInput.value);
+            }
+        });
+
+        // Use event delegation for suggestion buttons (handles both initial and dynamically added buttons)
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.suggestion-btn')) {
+                const btn = e.target.closest('.suggestion-btn');
+                const topic = btn.getAttribute('data-topic');
+                if (topic) {
+                    sendMessage(topic);
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
+
+

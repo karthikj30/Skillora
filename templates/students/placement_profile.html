@@ -1,0 +1,182 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Placement Profile - Skillora{% endblock %}
+
+{% block content %}
+<!-- Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">Placement Profile</h1>
+                <p class="fs-5 text-white mb-4 pb-2">Complete your profile to get better internship recommendations</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Profile Form Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">Complete Your Placement Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            
+                            <!-- Academic Information -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Academic Information</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="department" class="form-label">Department *</label>
+                                    <input type="text" class="form-control" id="department" name="department" 
+                                           value="{{ profile.department }}" required>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="year_of_study" class="form-label">Year of Study *</label>
+                                    <select class="form-select" id="year_of_study" name="year_of_study" required>
+                                        <option value="1" {% if profile.year_of_study == 1 %}selected{% endif %}>1st Year</option>
+                                        <option value="2" {% if profile.year_of_study == 2 %}selected{% endif %}>2nd Year</option>
+                                        <option value="3" {% if profile.year_of_study == 3 %}selected{% endif %}>3rd Year</option>
+                                        <option value="4" {% if profile.year_of_study == 4 %}selected{% endif %}>4th Year</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="graduation_year" class="form-label">Graduation Year *</label>
+                                    <input type="number" class="form-control" id="graduation_year" name="graduation_year" 
+                                           value="{{ profile.graduation_year }}" min="2024" max="2030" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="cgpa" class="form-label">CGPA</label>
+                                    <input type="number" class="form-control" id="cgpa" name="cgpa" 
+                                           value="{{ profile.cgpa }}" min="0" max="10" step="0.01">
+                                </div>
+                            </div>
+
+                            <!-- Skills & Resume -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Skills & Resume</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-12">
+                                    <label for="skills" class="form-label">Skills *</label>
+                                    <textarea class="form-control" id="skills" name="skills" rows="3" 
+                                              placeholder="e.g., Python, Java, JavaScript, HTML, CSS, React, Django, Machine Learning" required>{{ profile.skills }}</textarea>
+                                    <small class="text-muted">Enter your skills separated by commas</small>
+                                </div>
+                                <div class="col-12">
+                                    <label for="resume" class="form-label">Resume</label>
+                                    <input type="file" class="form-control" id="resume" name="resume" accept=".pdf,.doc,.docx">
+                                    {% if profile.resume %}
+                                    <small class="text-success">Current resume: <a href="{{ profile.resume.url }}" target="_blank">{{ profile.resume.name }}</a></small>
+                                    {% else %}
+                                    <small class="text-muted">Upload your latest resume (PDF, DOC, DOCX - Max 5MB)</small>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- Preferences -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Preferences</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="preferred_locations" class="form-label">Preferred Locations</label>
+                                    <textarea class="form-control" id="preferred_locations" name="preferred_locations" rows="2" 
+                                              placeholder="e.g., Jaipur, Delhi, Bangalore, Mumbai">{{ profile.preferred_locations }}</textarea>
+                                    <small class="text-muted">Enter locations separated by commas</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="preferred_industries" class="form-label">Preferred Industries</label>
+                                    <textarea class="form-control" id="preferred_industries" name="preferred_industries" rows="2" 
+                                              placeholder="e.g., Technology, Finance, Healthcare, E-commerce">{{ profile.preferred_industries }}</textarea>
+                                    <small class="text-muted">Enter industries separated by commas</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="internship_preferences" class="form-label">Internship Type Preference</label>
+                                    <select class="form-select" id="internship_preferences" name="internship_preferences">
+                                        <option value="internship" {% if profile.internship_preferences == 'internship' %}selected{% endif %}>Internship</option>
+                                        <option value="industrial_training" {% if profile.internship_preferences == 'industrial_training' %}selected{% endif %}>Industrial Training</option>
+                                        <option value="placement" {% if profile.internship_preferences == 'placement' %}selected{% endif %}>Full-time Placement</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Placement Readiness -->
+                            <div class="row g-3 mb-4">
+                                <div class="col-12">
+                                    <h5 class="text-primary">Placement Readiness</h5>
+                                    <hr>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="is_placement_ready" name="is_placement_ready" 
+                                               {% if profile.is_placement_ready %}checked{% endif %}>
+                                        <label class="form-check-label" for="is_placement_ready">
+                                            I am ready for full-time placement opportunities
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="placement_preference_salary_min" class="form-label">Minimum Expected Salary (₹/month)</label>
+                                    <input type="number" class="form-control" id="placement_preference_salary_min" 
+                                           name="placement_preference_salary_min" value="{{ profile.placement_preference_salary_min }}" 
+                                           min="0" step="1000">
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <hr>
+                                    <div class="d-flex justify-content-between">
+                                        <a href="{% url 'student_home' %}" class="btn btn-outline-secondary">
+                                            <i class="fa fa-arrow-left me-2"></i>Back to Dashboard
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fa fa-save me-2"></i>Save Profile
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Profile Form End -->
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // File size validation for resume
+    document.getElementById('resume').addEventListener('change', function() {
+        const file = this.files[0];
+        if (file && file.size > 5 * 1024 * 1024) { // 5MB
+            alert('Resume file size must be less than 5MB');
+            this.value = '';
+        }
+    });
+    
+    // Auto-update graduation year based on current year and year of study
+    document.getElementById('year_of_study').addEventListener('change', function() {
+        const currentYear = new Date().getFullYear();
+        const yearOfStudy = parseInt(this.value);
+        const suggestedGradYear = currentYear + (4 - yearOfStudy);
+        document.getElementById('graduation_year').value = suggestedGradYear;
+    });
+});
+</script>
+{% endblock %}

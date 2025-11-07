@@ -1,0 +1,205 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ internship.title }} - Skillora{% endblock %}
+
+{% block content %}
+<!-- Header Start -->
+<div class="container-fluid bg-primary py-5 mb-5 page-header">
+    <div class="container py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h1 class="display-3 text-white animated slideInDown">{{ internship.title }}</h1>
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb justify-content-center">
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'home' %}">Home</a></li>
+                        <li class="breadcrumb-item"><a class="text-white" href="{% url 'internships_list' %}">Internships</a></li>
+                        <li class="breadcrumb-item text-white active" aria-current="page">{{ internship.title }}</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Header End -->
+
+<!-- Internship Detail Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="row g-5">
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h3 class="mb-0">{{ internship.title }}</h3>
+                            <div>
+                                <span class="badge bg-light text-primary me-2">{{ internship.get_internship_type_display }}</span>
+                                {% if internship.has_placement_potential %}
+                                <span class="badge bg-warning text-dark">Placement Potential</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <h5 class="mb-0 mt-2">{{ internship.company.company_name }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <!-- Match Score for Students -->
+                        {% if match_score > 0 %}
+                        <div class="alert alert-info mb-4">
+                            <h6><i class="fa fa-chart-line me-2"></i>Match Score: {{ match_score|floatformat:0 }}%</h6>
+                            <div class="progress" style="height: 10px;">
+                                <div class="progress-bar" role="progressbar" style="width: {{ match_score }}%"></div>
+                            </div>
+                            <small class="text-muted">Based on your skills, preferences, and profile</small>
+                        </div>
+                        {% endif %}
+
+                        <!-- Application Status -->
+                        {% if has_applied %}
+                        <div class="alert alert-success mb-4">
+                            <h6><i class="fa fa-check-circle me-2"></i>Application Status: {{ application.get_status_display }}</h6>
+                            <small>Applied on: {{ application.applied_at|date:"M d, Y H:i" }}</small>
+                            {% if application.mentor_comments %}
+                            <div class="mt-2">
+                                <strong>Mentor Comments:</strong> {{ application.mentor_comments }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+
+                        <!-- Description -->
+                        <div class="mb-4">
+                            <h5>Description</h5>
+                            <p>{{ internship.description|linebreaks }}</p>
+                        </div>
+
+                        <!-- Requirements -->
+                        <div class="mb-4">
+                            <h5>Requirements</h5>
+                            <p>{{ internship.requirements|linebreaks }}</p>
+                        </div>
+
+                        <!-- Required Skills -->
+                        <div class="mb-4">
+                            <h5>Required Skills</h5>
+                            <div>
+                                {% for skill in internship.get_required_skills_list %}
+                                <span class="badge bg-secondary me-1 mb-1">{{ skill }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        <!-- Company Information -->
+                        <div class="mb-4">
+                            <h5>About {{ internship.company.company_name }}</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Industry:</strong> {{ internship.company.industry }}</p>
+                                    <p><strong>Company Size:</strong> {{ internship.company.company_size }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    {% if internship.company.website %}
+                                    <p><strong>Website:</strong> <a href="{{ internship.company.website }}" target="_blank">{{ internship.company.website }}</a></p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if internship.company.description %}
+                            <p>{{ internship.company.description }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Quick Info -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Quick Information</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <i class="fa fa-map-marker-alt text-primary me-2"></i>
+                            <strong>Location:</strong> {{ internship.location }}
+                        </div>
+                        <div class="mb-3">
+                            <i class="fa fa-clock text-primary me-2"></i>
+                            <strong>Duration:</strong> {{ internship.duration_months }} months
+                        </div>
+                        {% if internship.stipend_min %}
+                        <div class="mb-3">
+                            <i class="fa fa-money-bill-wave text-primary me-2"></i>
+                            <strong>Stipend:</strong> ₹{{ internship.stipend_min }}{% if internship.stipend_max %} - ₹{{ internship.stipend_max }}{% endif %}/month
+                        </div>
+                        {% endif %}
+                        <div class="mb-3">
+                            <i class="fa fa-users text-primary me-2"></i>
+                            <strong>Seats:</strong> {{ internship.seats_remaining }} remaining out of {{ internship.seats_available }}
+                        </div>
+                        <div class="mb-3">
+                            <i class="fa fa-calendar text-primary me-2"></i>
+                            <strong>Start Date:</strong> {{ internship.start_date|date:"M d, Y" }}
+                        </div>
+                        <div class="mb-3">
+                            <i class="fa fa-calendar-check text-primary me-2"></i>
+                            <strong>End Date:</strong> {{ internship.end_date|date:"M d, Y" }}
+                        </div>
+                        <div class="mb-3">
+                            <i class="fa fa-exclamation-triangle text-warning me-2"></i>
+                            <strong>Deadline:</strong> {{ internship.application_deadline|date:"M d, Y H:i" }}
+                        </div>
+                        {% if internship.department_preference %}
+                        <div class="mb-3">
+                            <i class="fa fa-graduation-cap text-primary me-2"></i>
+                            <strong>Preferred Department:</strong> {{ internship.department_preference }}
+                        </div>
+                        {% endif %}
+                        {% if internship.has_placement_potential %}
+                        <div class="mb-3">
+                            <i class="fa fa-briefcase text-success me-2"></i>
+                            <strong>Placement Conversion:</strong> {{ internship.placement_conversion_rate }}%
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Application Action -->
+                <div class="card">
+                    <div class="card-body text-center">
+                        {% if has_applied %}
+                            <h6 class="text-success mb-3">
+                                <i class="fa fa-check-circle me-2"></i>Application Submitted
+                            </h6>
+                            <p class="text-muted">Status: {{ application.get_status_display }}</p>
+                            <a href="{% url 'student_applications' %}" class="btn btn-outline-primary">View My Applications</a>
+                        {% elif internship.seats_remaining <= 0 %}
+                            <h6 class="text-danger mb-3">
+                                <i class="fa fa-times-circle me-2"></i>No Seats Available
+                            </h6>
+                            <p class="text-muted">This internship is fully booked.</p>
+                        {% elif internship.application_deadline < now %}
+                            <h6 class="text-danger mb-3">
+                                <i class="fa fa-clock me-2"></i>Application Closed
+                            </h6>
+                            <p class="text-muted">The application deadline has passed.</p>
+                        {% else %}
+                            <h6 class="text-primary mb-3">Ready to Apply?</h6>
+                            <p class="text-muted mb-3">Submit your application now!</p>
+                            <a href="{% url 'apply_internship' internship.id %}" class="btn btn-primary btn-lg">
+                                <i class="fa fa-paper-plane me-2"></i>Apply Now
+                            </a>
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    Deadline: {{ internship.application_deadline|timeuntil }} remaining
+                                </small>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Internship Detail End -->
+{% endblock %}

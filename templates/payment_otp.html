@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Payment OTP - Skillora{% endblock %}
+
+{% block content %}
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center px-3">Payment</h6>
+            <h1 class="mb-5" style="color: #fb873f;">Verify With OTP</h1>
+        </div>
+
+        <div class="row g-4 justify-content-center">
+            <div class="col-lg-7">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Payment ID: {{ payment.payment_id }}</h5>
+                    </div>
+                    <div class="card-body">
+                        {% if otp_stage == 'choose' %}
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="send">
+                            <h6>Send OTP to:</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="otp_method" id="otp_email_same" value="email_same" checked>
+                                <label class="form-check-label" for="otp_email_same">
+                                    Email ({{ user_email }})
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="otp_method" id="otp_other_email" value="other_email">
+                                <label class="form-check-label" for="otp_other_email">
+                                    Other Email
+                                </label>
+                            </div>
+                            <div class="mb-3" id="other_email_group" style="display:none;">
+                                <input type="email" class="form-control" name="other_email" placeholder="name@example.com">
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="otp_method" id="otp_phone" value="phone">
+                                <label class="form-check-label" for="otp_phone">
+                                    Phone Number
+                                </label>
+                            </div>
+                            <div class="mb-3" id="phone_group" style="display:none;">
+                                <input type="text" class="form-control" name="phone" placeholder="Enter phone number">
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg">Send OTP</button>
+                            </div>
+                        </form>
+                        {% else %}
+                        <div class="alert alert-info">
+                            <i class="fa fa-info-circle me-2"></i>
+                            OTP has been sent to <strong>{{ otp_sent_to }}</strong>.
+                            {% if demo_otp %}
+                            <br><small class="text-muted">Demo OTP: <code>{{ demo_otp }}</code></small>
+                            {% endif %}
+                        </div>
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="verify">
+                            <div class="mb-3">
+                                <label for="otp" class="form-label">Enter 6-digit OTP</label>
+                                <input type="text" class="form-control" id="otp" name="otp" maxlength="6" autocomplete="one-time-code" required>
+                            </div>
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-success btn-lg">Verify & Complete Payment</button>
+                            </div>
+                        </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if otp_stage == 'choose' %}
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const otherEmail = document.getElementById('otp_other_email');
+  const phone = document.getElementById('otp_phone');
+  const emailSame = document.getElementById('otp_email_same');
+  const otherEmailGroup = document.getElementById('other_email_group');
+  const phoneGroup = document.getElementById('phone_group');
+  function toggle(){
+    otherEmailGroup.style.display = otherEmail.checked ? 'block' : 'none';
+    phoneGroup.style.display = phone.checked ? 'block' : 'none';
+  }
+  [otherEmail, phone, emailSame].forEach(el => el.addEventListener('change', toggle));
+  toggle();
+});
+</script>
+{% endif %}
+{% endblock %}
+
+

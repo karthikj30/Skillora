@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart - Skillora{% endblock %}
+
+{% block content %}
+<!-- Cart Start -->
+<div class="container-xxl py-5">
+    <div class="container">
+        <div class="text-center wow fadeInUp" data-wow-delay="0.1s">
+            <h6 class="section-title bg-white text-center px-3">Shopping Cart</h6>
+            <h1 class="mb-5" style="color: #fb873f;">Your Selected Courses</h1>
+        </div>
+        
+        {% if cart_items %}
+        <div class="row g-4">
+            <div class="col-lg-8">
+                {% for item in cart_items %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+                            <div class="col-md-3">
+                                {% if item.course.image %}
+                                    <img src="{{ item.course.image.url }}" class="img-fluid rounded" alt="{{ item.course.title }}" style="height: 120px; object-fit: cover;">
+                                {% else %}
+                                    <img src="{% static 'img/courses/course-1.jpg' %}" class="img-fluid rounded" alt="{{ item.course.title }}" style="height: 120px; object-fit: cover;">
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <h5 class="card-title">{{ item.course.title }}</h5>
+                                <p class="card-text text-muted">{{ item.course.category }} • {{ item.course.level }}</p>
+                                <p class="card-text">{{ item.course.description|truncatewords:20 }}</p>
+                            </div>
+                            <div class="col-md-3 text-end">
+                                <h5 class="text-primary">₹{{ item.course.price }}</h5>
+                                <a href="{% url 'remove_from_cart' item.course.id %}" class="btn btn-outline-danger btn-sm">
+                                    <i class="fa fa-trash"></i> Remove
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Order Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Subtotal:</span>
+                            <span>₹{{ total_amount }}</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tax (18%):</span>
+                            <span>₹{% widthratio total_amount 100 18 %}</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between mb-3">
+                            <strong>Total:</strong>
+                            <strong class="text-primary">₹{% widthratio total_amount 100 118 %}</strong>
+                        </div>
+                        <a href="{% url 'checkout' %}" class="btn btn-primary w-100">
+                            <i class="fa fa-credit-card me-2"></i>Proceed to Checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center">
+            <div class="mb-4">
+                <i class="fa fa-shopping-cart fa-5x text-muted"></i>
+            </div>
+            <h3 class="text-muted">Your cart is empty</h3>
+            <p class="text-muted">Add some courses to get started!</p>
+            <a href="{% url 'courses' %}" class="btn btn-primary">
+                <i class="fa fa-book me-2"></i>Browse Courses
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- Cart End -->
+{% endblock %}
